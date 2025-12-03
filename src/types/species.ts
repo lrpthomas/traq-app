@@ -12,7 +12,11 @@ export interface TreeSpecies {
 }
 
 export type TreeFamily =
+  | 'Actinidiaceae'
+  | 'Adoxaceae'
   | 'Altingiaceae'
+  | 'Anacardiaceae'
+  | 'Annonaceae'
   | 'Aquifoliaceae'
   | 'Araucariaceae'
   | 'Arecaceae'
@@ -23,18 +27,22 @@ export type TreeFamily =
   | 'Cornaceae'
   | 'Cupressaceae'
   | 'Ebenaceae'
+  | 'Elaeagnaceae'
   | 'Ericaceae'
   | 'Eucommiaceae'
   | 'Fabaceae'
   | 'Fagaceae'
   | 'Ginkgoaceae'
+  | 'Grossulariaceae'
   | 'Hamamelidaceae'
   | 'Juglandaceae'
   | 'Lauraceae'
+  | 'Lecythidaceae'
   | 'Lythraceae'
   | 'Magnoliaceae'
   | 'Malvaceae'
   | 'Moraceae'
+  | 'Musaceae'
   | 'Myrtaceae'
   | 'Nyssaceae'
   | 'Oleaceae'
@@ -42,6 +50,7 @@ export type TreeFamily =
   | 'Pinaceae'
   | 'Platanaceae'
   | 'Podocarpaceae'
+  | 'Proteaceae'
   | 'Rhamnaceae'
   | 'Rosaceae'
   | 'Rutaceae'
@@ -52,10 +61,15 @@ export type TreeFamily =
   | 'Styracaceae'
   | 'Taxaceae'
   | 'Theaceae'
-  | 'Ulmaceae';
+  | 'Ulmaceae'
+  | 'Vitaceae';
 
 export const TREE_FAMILIES: TreeFamily[] = [
+  'Actinidiaceae',
+  'Adoxaceae',
   'Altingiaceae',
+  'Anacardiaceae',
+  'Annonaceae',
   'Aquifoliaceae',
   'Araucariaceae',
   'Arecaceae',
@@ -66,18 +80,22 @@ export const TREE_FAMILIES: TreeFamily[] = [
   'Cornaceae',
   'Cupressaceae',
   'Ebenaceae',
+  'Elaeagnaceae',
   'Ericaceae',
   'Eucommiaceae',
   'Fabaceae',
   'Fagaceae',
   'Ginkgoaceae',
+  'Grossulariaceae',
   'Hamamelidaceae',
   'Juglandaceae',
   'Lauraceae',
+  'Lecythidaceae',
   'Lythraceae',
   'Magnoliaceae',
   'Malvaceae',
   'Moraceae',
+  'Musaceae',
   'Myrtaceae',
   'Nyssaceae',
   'Oleaceae',
@@ -85,6 +103,7 @@ export const TREE_FAMILIES: TreeFamily[] = [
   'Pinaceae',
   'Platanaceae',
   'Podocarpaceae',
+  'Proteaceae',
   'Rhamnaceae',
   'Rosaceae',
   'Rutaceae',
@@ -96,6 +115,7 @@ export const TREE_FAMILIES: TreeFamily[] = [
   'Taxaceae',
   'Theaceae',
   'Ulmaceae',
+  'Vitaceae',
 ] as const;
 
 export const TREE_SPECIES: TreeSpecies[] = [
@@ -1341,6 +1361,360 @@ export const TREE_SPECIES: TreeSpecies[] = [
     family: 'Pinaceae' as TreeFamily,
     riskFactors: 'Endangered; blister rust; mountain pine beetle',
   },
+  {
+    scientificName: 'Prunus persica',
+    commonName: 'Peach',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Peach leaf curl; borers; brown rot; short-lived',
+  },
+  {
+    scientificName: 'Prunus persica var. nucipersica',
+    commonName: 'Nectarine',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Peach leaf curl; borers; brown rot; short-lived',
+  },
+  {
+    scientificName: 'Prunus armeniaca',
+    commonName: 'Apricot',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Bacterial canker; brown rot; Eutypa dieback',
+  },
+  {
+    scientificName: 'Prunus domestica',
+    commonName: 'European Plum',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Black knot; brown rot; plum curculio',
+  },
+  {
+    scientificName: 'Prunus salicina',
+    commonName: 'Japanese Plum',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Bacterial canker; brown rot; less hardy',
+  },
+  {
+    scientificName: 'Prunus dulcis',
+    commonName: 'Almond',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Shot hole; brown rot; hull rot; navel orangeworm',
+  },
+  {
+    scientificName: 'Prunus cerasus',
+    commonName: 'Sour Cherry',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Bacterial canker; cherry leaf spot; borers',
+  },
+  {
+    scientificName: 'Malus domestica',
+    commonName: 'Apple',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Fire blight; apple scab; codling moth; cedar apple rust',
+  },
+  {
+    scientificName: 'Pyrus communis',
+    commonName: 'European Pear',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Fire blight; pear psylla; pear decline',
+  },
+  {
+    scientificName: 'Pyrus pyrifolia',
+    commonName: 'Asian Pear',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Fire blight resistant; pear psylla; less cold hardy',
+  },
+  {
+    scientificName: 'Cydonia oblonga',
+    commonName: 'Quince',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Fire blight; quince rust; generally sturdy',
+  },
+  {
+    scientificName: 'Eriobotrya japonica',
+    commonName: 'Loquat',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Fire blight; generally sturdy; frost sensitive fruit',
+  },
+  {
+    scientificName: 'Citrus × sinensis',
+    commonName: 'Sweet Orange',
+    family: 'Rutaceae' as TreeFamily,
+    riskFactors: 'Citrus greening (HLB); citrus canker; frost sensitive',
+  },
+  {
+    scientificName: 'Citrus × limon',
+    commonName: 'Lemon',
+    family: 'Rutaceae' as TreeFamily,
+    riskFactors: 'Citrus greening (HLB); very frost sensitive; thorny',
+  },
+  {
+    scientificName: 'Citrus × paradisi',
+    commonName: 'Grapefruit',
+    family: 'Rutaceae' as TreeFamily,
+    riskFactors: 'Citrus greening (HLB); frost sensitive; large tree',
+  },
+  {
+    scientificName: 'Citrus reticulata',
+    commonName: 'Mandarin',
+    family: 'Rutaceae' as TreeFamily,
+    riskFactors: 'Citrus greening (HLB); alternaria rot; generally smaller',
+  },
+  {
+    scientificName: 'Citrus × latifolia',
+    commonName: 'Persian Lime',
+    family: 'Rutaceae' as TreeFamily,
+    riskFactors: 'Citrus greening (HLB); very frost sensitive; thornless',
+  },
+  {
+    scientificName: 'Citrus maxima',
+    commonName: 'Pomelo',
+    family: 'Rutaceae' as TreeFamily,
+    riskFactors: 'Citrus greening (HLB); frost sensitive; very large fruit',
+  },
+  {
+    scientificName: 'Citrus × aurantium',
+    commonName: 'Sour Orange',
+    family: 'Rutaceae' as TreeFamily,
+    riskFactors: 'Citrus tristeza virus; used as rootstock; thorny',
+  },
+  {
+    scientificName: 'Citrus × limon \'Meyer\'',
+    commonName: 'Meyer Lemon',
+    family: 'Rutaceae' as TreeFamily,
+    riskFactors: 'Citrus greening (HLB); more cold hardy; dwarf habit',
+  },
+  {
+    scientificName: 'Citrus × tangelo',
+    commonName: 'Tangelo',
+    family: 'Rutaceae' as TreeFamily,
+    riskFactors: 'Citrus greening (HLB); hybrid vigor; frost sensitive',
+  },
+  {
+    scientificName: 'Fortunella species',
+    commonName: 'Kumquat',
+    family: 'Rutaceae' as TreeFamily,
+    riskFactors: 'Generally hardier citrus; few problems; small tree',
+  },
+  {
+    scientificName: 'Persea americana',
+    commonName: 'Avocado',
+    family: 'Lauraceae' as TreeFamily,
+    riskFactors: 'Phytophthora root rot; laurel wilt; frost sensitive',
+  },
+  {
+    scientificName: 'Olea europaea',
+    commonName: 'Olive',
+    family: 'Oleaceae' as TreeFamily,
+    riskFactors: 'Olive knot; verticillium wilt; peacock spot',
+  },
+  {
+    scientificName: 'Ficus carica',
+    commonName: 'Common Fig',
+    family: 'Moraceae' as TreeFamily,
+    riskFactors: 'Fig rust; root knot nematode; mosaic virus',
+  },
+  {
+    scientificName: 'Punica granatum',
+    commonName: 'Pomegranate',
+    family: 'Lythraceae' as TreeFamily,
+    riskFactors: 'Few problems; drought tolerant; fruit splitting',
+  },
+  {
+    scientificName: 'Morus nigra',
+    commonName: 'Black Mulberry',
+    family: 'Moraceae' as TreeFamily,
+    riskFactors: 'Bacterial leaf scorch; popcorn disease; staining fruit',
+  },
+  {
+    scientificName: 'Ziziphus jujuba',
+    commonName: 'Jujube',
+    family: 'Rhamnaceae' as TreeFamily,
+    riskFactors: 'Few problems; very drought tolerant; thorny',
+  },
+  {
+    scientificName: 'Diospyros kaki',
+    commonName: 'Japanese Persimmon',
+    family: 'Ebenaceae' as TreeFamily,
+    riskFactors: 'Anthracnose; few problems; astringent varieties',
+  },
+  {
+    scientificName: 'Feijoa sellowiana',
+    commonName: 'Pineapple Guava',
+    family: 'Myrtaceae' as TreeFamily,
+    riskFactors: 'Few problems; frost tolerant; edible flowers',
+  },
+  {
+    scientificName: 'Psidium guajava',
+    commonName: 'Common Guava',
+    family: 'Myrtaceae' as TreeFamily,
+    riskFactors: 'Guava rust; fruit flies; frost sensitive',
+  },
+  {
+    scientificName: 'Mangifera indica',
+    commonName: 'Mango',
+    family: 'Anacardiaceae' as TreeFamily,
+    riskFactors: 'Anthracnose; powdery mildew; very frost sensitive',
+  },
+  {
+    scientificName: 'Litchi chinensis',
+    commonName: 'Lychee',
+    family: 'Sapindaceae' as TreeFamily,
+    riskFactors: 'Few problems; very frost sensitive; slow growing',
+  },
+  {
+    scientificName: 'Annona cherimola',
+    commonName: 'Cherimoya',
+    family: 'Annonaceae' as TreeFamily,
+    riskFactors: 'Few problems; frost sensitive; hand pollination needed',
+  },
+  {
+    scientificName: 'Asimina triloba',
+    commonName: 'Pawpaw',
+    family: 'Annonaceae' as TreeFamily,
+    riskFactors: 'Few problems; native to E. US; shade tolerant',
+  },
+  {
+    scientificName: 'Musa × paradisiaca',
+    commonName: 'Banana',
+    family: 'Musaceae' as TreeFamily,
+    riskFactors: 'Panama disease; black sigatoka; frost kills leaves',
+  },
+  {
+    scientificName: 'Corylus avellana',
+    commonName: 'European Hazelnut',
+    family: 'Betulaceae' as TreeFamily,
+    riskFactors: 'Eastern filbert blight; big bud mite',
+  },
+  {
+    scientificName: 'Corylus americana',
+    commonName: 'American Hazelnut',
+    family: 'Betulaceae' as TreeFamily,
+    riskFactors: 'Eastern filbert blight resistant; shrubby',
+  },
+  {
+    scientificName: 'Corylus colurna',
+    commonName: 'Turkish Hazelnut',
+    family: 'Betulaceae' as TreeFamily,
+    riskFactors: 'Few problems; excellent street tree; blight resistant',
+  },
+  {
+    scientificName: 'Pistacia vera',
+    commonName: 'Pistachio',
+    family: 'Anacardiaceae' as TreeFamily,
+    riskFactors: 'Verticillium wilt; alternaria; Botryosphaeria',
+  },
+  {
+    scientificName: 'Carya illinoinensis',
+    commonName: 'Pecan',
+    family: 'Juglandaceae' as TreeFamily,
+    riskFactors: 'Pecan scab; hickory shuckworm; zinc deficiency',
+  },
+  {
+    scientificName: 'Macadamia integrifolia',
+    commonName: 'Macadamia',
+    family: 'Proteaceae' as TreeFamily,
+    riskFactors: 'Phytophthora; macadamia felted coccid; frost sensitive',
+  },
+  {
+    scientificName: 'Bertholletia excelsa',
+    commonName: 'Brazil Nut',
+    family: 'Lecythidaceae' as TreeFamily,
+    riskFactors: 'Requires rainforest; not cultivated; wild harvest only',
+  },
+  {
+    scientificName: 'Anacardium occidentale',
+    commonName: 'Cashew',
+    family: 'Anacardiaceae' as TreeFamily,
+    riskFactors: 'Anthracnose; dieback; tropical only; caustic shell',
+  },
+  {
+    scientificName: 'Juglans regia',
+    commonName: 'English Walnut',
+    family: 'Juglandaceae' as TreeFamily,
+    riskFactors: 'Walnut blight; thousand cankers disease; codling moth',
+  },
+  {
+    scientificName: 'Prunus armeniaca × Prunus',
+    commonName: 'Pluot/Aprium',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Brown rot; bacterial canker; hybrid vigor',
+  },
+  {
+    scientificName: 'Actinidia deliciosa',
+    commonName: 'Kiwifruit',
+    family: 'Actinidiaceae' as TreeFamily,
+    riskFactors: 'Bacterial canker; Phytophthora; dioecious',
+  },
+  {
+    scientificName: 'Actinidia arguta',
+    commonName: 'Hardy Kiwi',
+    family: 'Actinidiaceae' as TreeFamily,
+    riskFactors: 'Few problems; very cold hardy; smaller fruit',
+  },
+  {
+    scientificName: 'Vaccinium corymbosum',
+    commonName: 'Highbush Blueberry',
+    family: 'Ericaceae' as TreeFamily,
+    riskFactors: 'Mummy berry; stem canker; acidic soil required',
+  },
+  {
+    scientificName: 'Rubus species',
+    commonName: 'Blackberry/Raspberry',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Orange rust; anthracnose; cane borers',
+  },
+  {
+    scientificName: 'Vitis vinifera',
+    commonName: 'Wine Grape',
+    family: 'Vitaceae' as TreeFamily,
+    riskFactors: 'Powdery mildew; phylloxera; Pierce\'s disease',
+  },
+  {
+    scientificName: 'Vitis labrusca',
+    commonName: 'Concord Grape',
+    family: 'Vitaceae' as TreeFamily,
+    riskFactors: 'Downy mildew; black rot; more cold hardy',
+  },
+  {
+    scientificName: 'Sambucus nigra',
+    commonName: 'European Elderberry',
+    family: 'Adoxaceae' as TreeFamily,
+    riskFactors: 'Few problems; suckering; toxic when raw',
+  },
+  {
+    scientificName: 'Ribes species',
+    commonName: 'Currant/Gooseberry',
+    family: 'Grossulariaceae' as TreeFamily,
+    riskFactors: 'White pine blister rust host; powdery mildew',
+  },
+  {
+    scientificName: 'Hippophae rhamnoides',
+    commonName: 'Sea Buckthorn',
+    family: 'Elaeagnaceae' as TreeFamily,
+    riskFactors: 'Few problems; nitrogen fixing; thorny',
+  },
+  {
+    scientificName: 'Elaeagnus umbellata',
+    commonName: 'Autumn Olive',
+    family: 'Elaeagnaceae' as TreeFamily,
+    riskFactors: 'Invasive in E. US; nitrogen fixing; edible fruit',
+  },
+  {
+    scientificName: 'Aronia melanocarpa',
+    commonName: 'Black Chokeberry',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Few problems; very cold hardy; antioxidant fruit',
+  },
+  {
+    scientificName: 'Amelanchier alnifolia',
+    commonName: 'Saskatoon Serviceberry',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Fire blight; rust; edible fruit; native',
+  },
+  {
+    scientificName: 'Crataegus pinnatifida',
+    commonName: 'Chinese Hawthorn',
+    family: 'Rosaceae' as TreeFamily,
+    riskFactors: 'Fire blight; cedar hawthorn rust; edible fruit',
+  },
 ];
 
 /**
@@ -1372,4 +1746,4 @@ export function getSpeciesByFamily(family: TreeFamily): TreeSpecies[] {
 /**
  * Total number of species in the database
  */
-export const SPECIES_COUNT = 207;
+export const SPECIES_COUNT = 266;

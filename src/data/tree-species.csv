@@ -206,3 +206,62 @@ Pinus balfouriana,Foxtail Pine,Pinaceae,Ancient trees; high elevation; generally
 Pinus longaeva,Bristlecone Pine,Pinaceae,Oldest known trees; high elevation; very slow growing
 Pinus flexilis,Limber Pine,Pinaceae,White pine blister rust; high elevation
 Pinus albicaulis,Whitebark Pine,Pinaceae,Endangered; blister rust; mountain pine beetle
+Prunus persica,Peach,Rosaceae,Peach leaf curl; borers; brown rot; short-lived
+Prunus persica var. nucipersica,Nectarine,Rosaceae,Peach leaf curl; borers; brown rot; short-lived
+Prunus armeniaca,Apricot,Rosaceae,Bacterial canker; brown rot; Eutypa dieback
+Prunus domestica,European Plum,Rosaceae,Black knot; brown rot; plum curculio
+Prunus salicina,Japanese Plum,Rosaceae,Bacterial canker; brown rot; less hardy
+Prunus dulcis,Almond,Rosaceae,Shot hole; brown rot; hull rot; navel orangeworm
+Prunus cerasus,Sour Cherry,Rosaceae,Bacterial canker; cherry leaf spot; borers
+Malus domestica,Apple,Rosaceae,Fire blight; apple scab; codling moth; cedar apple rust
+Pyrus communis,European Pear,Rosaceae,Fire blight; pear psylla; pear decline
+Pyrus pyrifolia,Asian Pear,Rosaceae,Fire blight resistant; pear psylla; less cold hardy
+Cydonia oblonga,Quince,Rosaceae,Fire blight; quince rust; generally sturdy
+Eriobotrya japonica,Loquat,Rosaceae,Fire blight; generally sturdy; frost sensitive fruit
+Citrus × sinensis,Sweet Orange,Rutaceae,Citrus greening (HLB); citrus canker; frost sensitive
+Citrus × limon,Lemon,Rutaceae,Citrus greening (HLB); very frost sensitive; thorny
+Citrus × paradisi,Grapefruit,Rutaceae,Citrus greening (HLB); frost sensitive; large tree
+Citrus reticulata,Mandarin,Rutaceae,Citrus greening (HLB); alternaria rot; generally smaller
+Citrus × latifolia,Persian Lime,Rutaceae,Citrus greening (HLB); very frost sensitive; thornless
+Citrus maxima,Pomelo,Rutaceae,Citrus greening (HLB); frost sensitive; very large fruit
+Citrus × aurantium,Sour Orange,Rutaceae,Citrus tristeza virus; used as rootstock; thorny
+Citrus × limon 'Meyer',Meyer Lemon,Rutaceae,Citrus greening (HLB); more cold hardy; dwarf habit
+Citrus × tangelo,Tangelo,Rutaceae,Citrus greening (HLB); hybrid vigor; frost sensitive
+Fortunella species,Kumquat,Rutaceae,Generally hardier citrus; few problems; small tree
+Persea americana,Avocado,Lauraceae,Phytophthora root rot; laurel wilt; frost sensitive
+Olea europaea,Olive,Oleaceae,Olive knot; verticillium wilt; peacock spot
+Ficus carica,Common Fig,Moraceae,Fig rust; root knot nematode; mosaic virus
+Punica granatum,Pomegranate,Lythraceae,Few problems; drought tolerant; fruit splitting
+Morus nigra,Black Mulberry,Moraceae,Bacterial leaf scorch; popcorn disease; staining fruit
+Ziziphus jujuba,Jujube,Rhamnaceae,Few problems; very drought tolerant; thorny
+Diospyros kaki,Japanese Persimmon,Ebenaceae,Anthracnose; few problems; astringent varieties
+Feijoa sellowiana,Pineapple Guava,Myrtaceae,Few problems; frost tolerant; edible flowers
+Psidium guajava,Common Guava,Myrtaceae,Guava rust; fruit flies; frost sensitive
+Mangifera indica,Mango,Anacardiaceae,Anthracnose; powdery mildew; very frost sensitive
+Litchi chinensis,Lychee,Sapindaceae,Few problems; very frost sensitive; slow growing
+Annona cherimola,Cherimoya,Annonaceae,Few problems; frost sensitive; hand pollination needed
+Asimina triloba,Pawpaw,Annonaceae,Few problems; native to E. US; shade tolerant
+Musa × paradisiaca,Banana,Musaceae,Panama disease; black sigatoka; frost kills leaves
+Corylus avellana,European Hazelnut,Betulaceae,Eastern filbert blight; big bud mite
+Corylus americana,American Hazelnut,Betulaceae,Eastern filbert blight resistant; shrubby
+Corylus colurna,Turkish Hazelnut,Betulaceae,Few problems; excellent street tree; blight resistant
+Pistacia vera,Pistachio,Anacardiaceae,Verticillium wilt; alternaria; Botryosphaeria
+Carya illinoinensis,Pecan,Juglandaceae,Pecan scab; hickory shuckworm; zinc deficiency
+Macadamia integrifolia,Macadamia,Proteaceae,Phytophthora; macadamia felted coccid; frost sensitive
+Bertholletia excelsa,Brazil Nut,Lecythidaceae,Requires rainforest; not cultivated; wild harvest only
+Anacardium occidentale,Cashew,Anacardiaceae,Anthracnose; dieback; tropical only; caustic shell
+Juglans regia,English Walnut,Juglandaceae,Walnut blight; thousand cankers disease; codling moth
+Prunus armeniaca × Prunus,Pluot/Aprium,Rosaceae,Brown rot; bacterial canker; hybrid vigor
+Actinidia deliciosa,Kiwifruit,Actinidiaceae,Bacterial canker; Phytophthora; dioecious
+Actinidia arguta,Hardy Kiwi,Actinidiaceae,Few problems; very cold hardy; smaller fruit
+Vaccinium corymbosum,Highbush Blueberry,Ericaceae,Mummy berry; stem canker; acidic soil required
+Rubus species,Blackberry/Raspberry,Rosaceae,Orange rust; anthracnose; cane borers
+Vitis vinifera,Wine Grape,Vitaceae,Powdery mildew; phylloxera; Pierce's disease
+Vitis labrusca,Concord Grape,Vitaceae,Downy mildew; black rot; more cold hardy
+Sambucus nigra,European Elderberry,Adoxaceae,Few problems; suckering; toxic when raw
+Ribes species,Currant/Gooseberry,Grossulariaceae,White pine blister rust host; powdery mildew
+Hippophae rhamnoides,Sea Buckthorn,Elaeagnaceae,Few problems; nitrogen fixing; thorny
+Elaeagnus umbellata,Autumn Olive,Elaeagnaceae,Invasive in E. US; nitrogen fixing; edible fruit
+Aronia melanocarpa,Black Chokeberry,Rosaceae,Few problems; very cold hardy; antioxidant fruit
+Amelanchier alnifolia,Saskatoon Serviceberry,Rosaceae,Fire blight; rust; edible fruit; native
+Crataegus pinnatifida,Chinese Hawthorn,Rosaceae,Fire blight; cedar hawthorn rust; edible fruit
