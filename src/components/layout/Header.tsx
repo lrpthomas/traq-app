@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { TreeDeciduous, Plus, List, Settings, Menu, X } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { TreeDeciduous, Plus, List, Settings, Menu } from 'lucide-react';
+import { useState, useSyncExternalStore } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
@@ -96,23 +96,29 @@ export function Header() {
   );
 }
 
+function subscribeToOnlineStatus(callback: () => void) {
+  window.addEventListener('online', callback);
+  window.addEventListener('offline', callback);
+  return () => {
+    window.removeEventListener('online', callback);
+    window.removeEventListener('offline', callback);
+  };
+}
+
+function getOnlineStatus() {
+  return navigator.onLine;
+}
+
+function getServerSnapshot() {
+  return true; // Assume online during SSR
+}
+
 function OfflineIndicator() {
-  const [isOnline, setIsOnline] = useState(true);
-
-  useEffect(() => {
-    setIsOnline(navigator.onLine);
-
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
+  const isOnline = useSyncExternalStore(
+    subscribeToOnlineStatus,
+    getOnlineStatus,
+    getServerSnapshot
+  );
 
   if (isOnline) return null;
 
