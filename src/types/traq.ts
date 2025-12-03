@@ -8,6 +8,9 @@ export interface Assessment {
   updatedAt: Date;
   status: 'draft' | 'complete';
 
+  // GPS Location (for app/report only, not on PDF form)
+  gpsLocation: GpsLocation | null;
+
   // Page 1 - Header
   header: HeaderInfo;
 
@@ -56,6 +59,15 @@ export interface Assessment {
 
   // Media Attachments (for report)
   mediaIds: string[];
+}
+
+// ============ GPS Location (App/Report only) ============
+export interface GpsLocation {
+  latitude: number;
+  longitude: number;
+  address: string;
+  accuracy?: number; // GPS accuracy in meters
+  timestamp: Date;
 }
 
 // ============ Header Info ============

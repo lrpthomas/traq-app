@@ -1,9 +1,11 @@
 'use client';
 
+import { useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { FormField } from '@/components/form/FormField';
 import { TreeSpeciesInput } from '@/components/form/TreeSpeciesInput';
-import type { Assessment } from '@/types/traq';
+import { LocationPicker } from '@/components/form/LocationPicker';
+import type { Assessment, GpsLocation } from '@/types/traq';
 
 interface Props {
   assessment: Assessment;
@@ -11,6 +13,20 @@ interface Props {
 }
 
 export function HeaderSection({ assessment, updateField }: Props) {
+  const handleLocationChange = useCallback(
+    (location: GpsLocation | null) => {
+      updateField('gpsLocation', location);
+    },
+    [updateField]
+  );
+
+  const handleCopyToAddress = useCallback(
+    (address: string) => {
+      updateField('header.addressTreeLocation', address);
+    },
+    [updateField]
+  );
+
   if (!assessment?.header) {
     return <div className="animate-pulse h-32 bg-gray-100 rounded" />;
   }
@@ -70,6 +86,13 @@ export function HeaderSection({ assessment, updateField }: Props) {
           />
         </FormField>
       </div>
+
+      {/* GPS Location Picker */}
+      <LocationPicker
+        location={assessment.gpsLocation}
+        onLocationChange={handleLocationChange}
+        onCopyToAddress={handleCopyToAddress}
+      />
 
       {/* Sheet Numbers */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

@@ -24,6 +24,9 @@ export function createEmptyAssessment(): Assessment {
     updatedAt: now,
     status: 'draft',
 
+    // GPS Location (app/report only)
+    gpsLocation: null,
+
     // Header
     header: {
       client: '',
@@ -323,6 +326,8 @@ function validateAssessment(assessment: Assessment): Assessment {
   return {
     ...empty,
     ...assessment,
+    // Preserve GPS location if it exists
+    gpsLocation: assessment.gpsLocation || null,
     // Ensure all arrays exist
     targets: Array.isArray(assessment.targets) ? assessment.targets : [createEmptyTarget(1)],
     riskRows: Array.isArray(assessment.riskRows) ? assessment.riskRows : [createEmptyRiskRow()],
