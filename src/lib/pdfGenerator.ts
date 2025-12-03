@@ -1,11 +1,9 @@
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { PDFDocument } from 'pdf-lib';
 import type { Assessment } from '@/types/traq';
-import { LABELS } from './riskMatrix';
 
 /**
  * PDF Form Field Mapping
- * Maps assessment data paths to PDF form field names
- * The field names need to match the actual form field names in the PDF
+ * Field names extracted from the official ISA TRAQ fillable PDF form
  */
 
 /**
@@ -21,232 +19,330 @@ export async function generateFilledPDF(assessment: Assessment): Promise<Uint8Ar
   const pdfDoc = await PDFDocument.load(templateBytes);
   const form = pdfDoc.getForm();
 
-  try {
-    // Try to fill text fields - field names will vary based on PDF
-    fillTextField(form, 'Client', assessment.header.client);
-    fillTextField(form, 'Date', assessment.header.date);
-    fillTextField(form, 'Time', assessment.header.time);
-    fillTextField(form, 'Address  Tree Location', assessment.header.addressTreeLocation);
-    fillTextField(form, 'Tree No', assessment.header.treeNo);
-    fillTextField(form, 'Sheet', assessment.header.sheetNumber.toString());
-    fillTextField(form, 'of', assessment.header.sheetTotal.toString());
-    fillTextField(form, 'Tree Species', assessment.header.treeSpecies);
-    fillTextField(form, 'DBH', assessment.header.dbh);
-    fillTextField(form, 'Height', assessment.header.height);
-    fillTextField(form, 'Crown Spread', assessment.header.crownSpreadDia);
-    fillTextField(form, 'Assessors', assessment.header.assessors);
-    fillTextField(form, 'Tools Used', assessment.header.toolsUsed);
-    fillTextField(form, 'Time Frame', assessment.header.timeFrame);
+  // ============================================
+  // HEADER SECTION
+  // ============================================
+  fillText(form, 'Client', assessment.header.client);
+  fillText(form, 'Date', assessment.header.date);
+  fillText(form, 'Time', assessment.header.time);
+  fillText(form, 'AddressTree location', assessment.header.addressTreeLocation);
+  fillText(form, 'Tree no', assessment.header.treeNo);
+  fillText(form, 'Sheet', assessment.header.sheetNumber?.toString());
+  fillText(form, 'of', assessment.header.sheetTotal?.toString());
+  fillText(form, 'Tree species', assessment.header.treeSpecies);
+  fillText(form, 'dbh', assessment.header.dbh);
+  fillText(form, 'Height', assessment.header.height);
+  fillText(form, 'Crown spread dia', assessment.header.crownSpreadDia);
+  fillText(form, 'Assessors', assessment.header.assessors);
+  fillText(form, 'Tools used', assessment.header.toolsUsed);
+  fillText(form, 'Time frame', assessment.header.timeFrame);
 
-    // Target Assessments
-    for (let i = 0; i < assessment.targets.length; i++) {
-      const target = assessment.targets[i];
-      const num = i + 1;
-      fillTextField(form, `Target ${num}`, target.targetDescription);
-      fillTextField(form, `Target Protection ${num}`, target.targetProtection);
-
-      // Occupancy rate
-      if (target.occupancyRate) {
-        fillTextField(form, `Occupancy ${num}`, target.occupancyRate.toString());
-      }
-    }
-
-    // Site Factors
-    fillTextField(form, 'History of Failures', assessment.siteFactors.historyOfFailures);
-    fillTextField(form, 'Prevailing Wind Direction', assessment.siteFactors.prevailingWindDirection);
-
-    // Topography
-    if (assessment.siteFactors.topography.slopePercent) {
-      fillTextField(form, 'Slope', assessment.siteFactors.topography.slopePercent.toString());
-    }
-    fillTextField(form, 'Aspect', assessment.siteFactors.topography.aspect);
-
-    // Site Changes description
-    fillTextField(form, 'Site Changes Describe', assessment.siteFactors.siteChanges.describe);
-
-    // Soil Conditions
-    if (assessment.siteFactors.soilConditions.pavementOverRootsPercent) {
-      fillTextField(
-        form,
-        'Pavement Over Roots',
-        assessment.siteFactors.soilConditions.pavementOverRootsPercent.toString()
-      );
-    }
-    fillTextField(form, 'Soil Conditions Describe', assessment.siteFactors.soilConditions.describe);
-
-    // Weather
-    fillTextField(form, 'Weather Describe', assessment.siteFactors.commonWeather.describe);
-
-    // Tree Health
-    if (assessment.treeHealth.vigor) {
-      fillTextField(form, 'Vigor', LABELS.vigor[assessment.treeHealth.vigor]);
-    }
-    if (assessment.treeHealth.foliage.normalPercent) {
-      fillTextField(form, 'Normal', assessment.treeHealth.foliage.normalPercent.toString());
-    }
-    if (assessment.treeHealth.foliage.chloroticPercent) {
-      fillTextField(form, 'Chlorotic', assessment.treeHealth.foliage.chloroticPercent.toString());
-    }
-    if (assessment.treeHealth.foliage.necroticPercent) {
-      fillTextField(form, 'Necrotic', assessment.treeHealth.foliage.necroticPercent.toString());
-    }
-    fillTextField(form, 'Pests Biotic', assessment.treeHealth.pestsBiotic);
-    fillTextField(form, 'Abiotic', assessment.treeHealth.abiotic);
-    fillTextField(form, 'Species Failure Profile', assessment.treeHealth.speciesFailureProfile.describe);
-
-    // Load Factors
-    if (assessment.loadFactors.windExposure) {
-      fillTextField(form, 'Wind Exposure', LABELS.windExposure[assessment.loadFactors.windExposure]);
-    }
-    fillTextField(form, 'Wind Funneling', assessment.loadFactors.windFunneling);
-    if (assessment.loadFactors.relativeCrownSize) {
-      fillTextField(form, 'Relative Crown Size', LABELS.crownSize[assessment.loadFactors.relativeCrownSize]);
-    }
-    if (assessment.loadFactors.crownDensity) {
-      fillTextField(form, 'Crown Density', LABELS.density[assessment.loadFactors.crownDensity]);
-    }
-    if (assessment.loadFactors.interiorBranches) {
-      fillTextField(form, 'Interior Branches', LABELS.interiorBranches[assessment.loadFactors.interiorBranches]);
-    }
-    fillTextField(form, 'Vines Mistletoe Moss', assessment.loadFactors.vinesMistletoeMoss);
-    fillTextField(form, 'Recent Expected Change', assessment.loadFactors.recentOrExpectedChangeInLoadFactors);
-
-    // Crown and Branches
-    if (assessment.crownAndBranches.lcrPercent) {
-      fillTextField(form, 'LCR', assessment.crownAndBranches.lcrPercent.toString());
-    }
-    if (assessment.crownAndBranches.deadTwigsBranches.percentOverall) {
-      fillTextField(
-        form,
-        'Dead Twigs Percent',
-        assessment.crownAndBranches.deadTwigsBranches.percentOverall.toString()
-      );
-    }
-    fillTextField(form, 'Dead Twigs Max Dia', assessment.crownAndBranches.deadTwigsBranches.maxDia);
-    if (assessment.crownAndBranches.brokenHangers.number) {
-      fillTextField(form, 'Hangers Number', assessment.crownAndBranches.brokenHangers.number.toString());
-    }
-    fillTextField(form, 'Hangers Max Dia', assessment.crownAndBranches.brokenHangers.maxDia);
-    fillTextField(form, 'Pruning Other', assessment.crownAndBranches.pruningHistory.other);
-    fillTextField(form, 'Cracks Describe', assessment.crownAndBranches.cracks.describe);
-    fillTextField(form, 'Codominant Describe', assessment.crownAndBranches.codominant.describe);
-    fillTextField(form, 'Weak Attachments Describe', assessment.crownAndBranches.weakAttachments.describe);
-    if (assessment.crownAndBranches.cavityNestHole.percentCirc) {
-      fillTextField(form, 'Cavity Percent', assessment.crownAndBranches.cavityNestHole.percentCirc.toString());
-    }
-    fillTextField(form, 'Previous Failures Describe', assessment.crownAndBranches.previousBranchFailures.describe);
-    fillTextField(form, 'Heartwood Decay Describe', assessment.crownAndBranches.heartwoodDecay.describe);
-    fillTextField(form, 'Response Growth Crown', assessment.crownAndBranches.responseGrowth);
-    fillTextField(form, 'Conditions Crown', assessment.crownAndBranches.conditionsOfConcern);
-
-    // Branch Failure Assessment
-    for (let i = 0; i < assessment.crownAndBranches.failureAssessments.length; i++) {
-      const fa = assessment.crownAndBranches.failureAssessments[i];
-      const num = i + 1;
-      fillTextField(form, `Branch Part Size ${num}`, fa.partSize);
-      fillTextField(form, `Branch Fall Distance ${num}`, fa.fallDistance);
-      if (fa.loadOnDefect) {
-        fillTextField(form, `Branch Load ${num}`, LABELS.loadOnDefect[fa.loadOnDefect]);
-      }
-      if (fa.likelihoodOfFailure) {
-        fillTextField(form, `Branch LOF ${num}`, LABELS.likelihoodOfFailure[fa.likelihoodOfFailure]);
-      }
-    }
-
-    // Trunk
-    if (assessment.trunk.cavityNestHole.percentCirc) {
-      fillTextField(form, 'Trunk Cavity Percent', assessment.trunk.cavityNestHole.percentCirc.toString());
-    }
-    fillTextField(form, 'Trunk Cavity Depth', assessment.trunk.cavityNestHole.depth);
-    if (assessment.trunk.lean.degrees) {
-      fillTextField(form, 'Lean Degrees', assessment.trunk.lean.degrees.toString());
-    }
-    fillTextField(form, 'Lean Corrected', assessment.trunk.lean.corrected);
-    fillTextField(form, 'Response Growth Trunk', assessment.trunk.responseGrowth);
-    fillTextField(form, 'Conditions Trunk', assessment.trunk.conditionsOfConcern);
-    fillTextField(form, 'Trunk Part Size', assessment.trunk.partSize);
-    fillTextField(form, 'Trunk Fall Distance', assessment.trunk.fallDistance);
-    if (assessment.trunk.loadOnDefect) {
-      fillTextField(form, 'Trunk Load', LABELS.loadOnDefect[assessment.trunk.loadOnDefect]);
-    }
-    if (assessment.trunk.likelihoodOfFailure) {
-      fillTextField(form, 'Trunk LOF', LABELS.likelihoodOfFailure[assessment.trunk.likelihoodOfFailure]);
-    }
-
-    // Roots
-    fillTextField(form, 'Collar Depth', assessment.rootsAndRootCollar.depth);
-    if (assessment.rootsAndRootCollar.cavity.percentCirc) {
-      fillTextField(form, 'Root Cavity Percent', assessment.rootsAndRootCollar.cavity.percentCirc.toString());
-    }
-    fillTextField(form, 'Cut Roots Distance', assessment.rootsAndRootCollar.cutDamagedRoots.distanceFromTrunk);
-    fillTextField(form, 'Response Growth Roots', assessment.rootsAndRootCollar.responseGrowth);
-    fillTextField(form, 'Conditions Roots', assessment.rootsAndRootCollar.conditionsOfConcern);
-    fillTextField(form, 'Roots Part Size', assessment.rootsAndRootCollar.partSize);
-    fillTextField(form, 'Roots Fall Distance', assessment.rootsAndRootCollar.fallDistance);
-    if (assessment.rootsAndRootCollar.loadOnDefect) {
-      fillTextField(form, 'Roots Load', LABELS.loadOnDefect[assessment.rootsAndRootCollar.loadOnDefect]);
-    }
-    if (assessment.rootsAndRootCollar.likelihoodOfFailure) {
-      fillTextField(form, 'Roots LOF', LABELS.likelihoodOfFailure[assessment.rootsAndRootCollar.likelihoodOfFailure]);
-    }
-
-    // Risk Categorization Rows (Page 2)
-    for (let i = 0; i < assessment.riskRows.length && i < 4; i++) {
-      const row = assessment.riskRows[i];
-      const num = i + 1;
-      fillTextField(form, `Risk Target ${num}`, row.target);
-      if (row.treePart) {
-        fillTextField(form, `Risk Part ${num}`, LABELS.treePart[row.treePart]);
-      }
-      fillTextField(form, `Risk Conditions ${num}`, row.conditionsOfConcern);
-      if (row.likelihoodOfFailure) {
-        fillTextField(form, `Risk LOF ${num}`, LABELS.likelihoodOfFailure[row.likelihoodOfFailure]);
-      }
-      if (row.likelihoodOfImpact) {
-        fillTextField(form, `Risk LOI ${num}`, LABELS.likelihoodOfImpact[row.likelihoodOfImpact]);
-      }
-      if (row.failureAndImpact) {
-        fillTextField(form, `Risk FI ${num}`, LABELS.failureAndImpact[row.failureAndImpact]);
-      }
-      if (row.consequences) {
-        fillTextField(form, `Risk Consequences ${num}`, LABELS.consequences[row.consequences]);
-      }
-      if (row.riskRating) {
-        fillTextField(form, `Risk Rating ${num}`, LABELS.riskRating[row.riskRating]);
-      }
-    }
-
-    // Notes
-    fillTextField(form, 'Notes', assessment.notes);
-
-    // Mitigation Options
-    for (let i = 0; i < assessment.mitigationOptions.length && i < 4; i++) {
-      const option = assessment.mitigationOptions[i];
-      const num = i + 1;
-      fillTextField(form, `Mitigation ${num}`, option.description);
-      if (option.residualRisk) {
-        fillTextField(form, `Residual Risk ${num}`, option.residualRisk);
-      }
-    }
-
-    // Overall Ratings
-    if (assessment.overallTreeRiskRating) {
-      fillTextField(form, 'Overall Risk Rating', LABELS.riskRating[assessment.overallTreeRiskRating]);
-    }
-    if (assessment.overallResidualRisk) {
-      fillTextField(form, 'Overall Residual Risk', assessment.overallResidualRisk);
-    }
-    fillTextField(form, 'Recommended Inspection', assessment.recommendedInspectionInterval);
-    fillTextField(form, 'Data Status', assessment.dataStatus);
-    fillTextField(form, 'Advanced Assessment', assessment.advancedAssessmentTypeReason);
-    fillTextField(form, 'Limitations Describe', assessment.inspectionLimitations.describe);
-
-  } catch {
-    // Continue even if some fields fail - the PDF will be partially filled
+  // ============================================
+  // TARGET ASSESSMENT SECTION
+  // ============================================
+  if (assessment.targets[0]) {
+    fillText(form, 'Target description1', assessment.targets[0].targetDescription);
+    fillText(form, 'Target protection1', assessment.targets[0].targetProtection);
+    fillText(form, 'Occupancy rate 1 rare 2  occasional 3  frequent 4  constant',
+      assessment.targets[0].occupancyRate?.toString());
+  }
+  if (assessment.targets[1]) {
+    fillText(form, 'Target description2', assessment.targets[1].targetDescription);
+    fillText(form, 'Target protection2', assessment.targets[1].targetProtection);
+    fillText(form, 'Occupancy rate 1 rare 2  occasional 3  frequent 4  constant_2',
+      assessment.targets[1].occupancyRate?.toString());
+  }
+  if (assessment.targets[2]) {
+    fillText(form, 'Target description3', assessment.targets[2].targetDescription);
+    fillText(form, 'Target protection3', assessment.targets[2].targetProtection);
+    fillText(form, 'Occupancy rate 1 rare 2  occasional 3  frequent 4  constant_3',
+      assessment.targets[2].occupancyRate?.toString());
+  }
+  if (assessment.targets[3]) {
+    fillText(form, 'Target description4', assessment.targets[3].targetDescription);
+    fillText(form, 'Target protection4', assessment.targets[3].targetProtection);
+    fillText(form, 'Occupancy rate 1 rare 2  occasional 3  frequent 4  constant_4',
+      assessment.targets[3].occupancyRate?.toString());
   }
 
-  // Flatten the form so fields can't be edited
-  form.flatten();
+  // ============================================
+  // SITE FACTORS SECTION
+  // ============================================
+  fillText(form, 'History of failures', assessment.siteFactors.historyOfFailures);
+  fillText(form, 'Prevailing wind direction', assessment.siteFactors.prevailingWindDirection);
+  fillText(form, 'Describe', assessment.siteFactors.siteChanges.describe);
+
+  // Site Changes checkboxes
+  checkBox(form, 'Site changes  None', assessment.siteFactors.siteChanges.none);
+  checkBox(form, 'Grade change', assessment.siteFactors.siteChanges.gradeChange);
+  checkBox(form, 'Site clearing', assessment.siteFactors.siteChanges.siteClearing);
+  checkBox(form, 'Changed soil hydrology', assessment.siteFactors.siteChanges.changedSoilHydrology);
+  checkBox(form, 'Root cuts', assessment.siteFactors.siteChanges.rootCuts);
+
+  // Soil Conditions checkboxes
+  checkBox(form, 'Soil conditions Limited volume', assessment.siteFactors.soilConditions.limitedVolume);
+  checkBox(form, 'Saturated', assessment.siteFactors.soilConditions.saturated);
+  checkBox(form, 'Shallow', assessment.siteFactors.soilConditions.shallow);
+  checkBox(form, 'Compacted', assessment.siteFactors.soilConditions.compacted);
+  checkBox(form, 'Pavement over roots', !!assessment.siteFactors.soilConditions.pavementOverRootsPercent);
+
+  // Common Weather checkboxes
+  checkBox(form, 'Common weather  Strong winds', assessment.siteFactors.commonWeather.strongWinds);
+  checkBox(form, 'Ice', assessment.siteFactors.commonWeather.ice);
+  checkBox(form, 'Snow', assessment.siteFactors.commonWeather.snow);
+  checkBox(form, 'Heavy rain', assessment.siteFactors.commonWeather.heavyRain);
+
+  // ============================================
+  // TREE HEALTH SECTION
+  // ============================================
+  // Vigor checkboxes
+  checkBox(form, 'Vigor Low', assessment.treeHealth.vigor === 'low');
+  checkBox(form, 'Normal', assessment.treeHealth.vigor === 'normal');
+  checkBox(form, 'High', assessment.treeHealth.vigor === 'high');
+
+  // Foliage
+  fillText(form, 'Normal_4', assessment.treeHealth.foliage.normalPercent?.toString());
+  checkBox(form, 'Foliage None seasonal', assessment.treeHealth.foliage.noneSeasonal);
+  checkBox(form, 'None dead', assessment.treeHealth.foliage.noneDead);
+
+  // Pests
+  fillText(form, 'PestsBiotic', assessment.treeHealth.pestsBiotic);
+
+  // Species failure profile
+  checkBox(form, 'Species failure profile Branches', assessment.treeHealth.speciesFailureProfile.branches);
+  checkBox(form, 'Trunk', assessment.treeHealth.speciesFailureProfile.trunk);
+  checkBox(form, 'Roots', assessment.treeHealth.speciesFailureProfile.roots);
+
+  // ============================================
+  // LOAD FACTORS SECTION
+  // ============================================
+  // Wind Exposure
+  checkBox(form, 'Wind exposure Protected', assessment.loadFactors.windExposure === 'protected');
+  checkBox(form, 'Partial', assessment.loadFactors.windExposure === 'partial');
+  checkBox(form, 'Full', assessment.loadFactors.windExposure === 'full');
+  checkBox(form, 'Wind funneling', !!assessment.loadFactors.windFunneling);
+
+  // Crown Size
+  checkBox(form, 'Relative crown size  Small', assessment.loadFactors.relativeCrownSize === 'small');
+  // Medium and Large checkboxes would need to be identified
+
+  // Crown Density
+  checkBox(form, 'Crown density Sparse', assessment.loadFactors.crownDensity === 'sparse');
+  checkBox(form, 'Normal_2', assessment.loadFactors.crownDensity === 'normal');
+  checkBox(form, 'Dense', assessment.loadFactors.crownDensity === 'dense');
+
+  // Interior Branches
+  checkBox(form, 'Interior branches Few', assessment.loadFactors.interiorBranches === 'few');
+  checkBox(form, 'Normal_3', assessment.loadFactors.interiorBranches === 'normal');
+  checkBox(form, 'Dense_2', assessment.loadFactors.interiorBranches === 'dense');
+
+  checkBox(form, 'Unbalanced crown', assessment.crownAndBranches.unbalancedCrown);
+
+  // ============================================
+  // CROWN AND BRANCHES SECTION
+  // ============================================
+  fillText(form, 'LCR', assessment.crownAndBranches.lcrPercent?.toString());
+
+  // Dead twigs/branches
+  checkBox(form, 'Dead twigsbranches', !!assessment.crownAndBranches.deadTwigsBranches.percentOverall);
+  fillText(form, 'Max dia', assessment.crownAndBranches.deadTwigsBranches.maxDia);
+
+  // Broken/Hangers
+  fillText(form, 'Number', assessment.crownAndBranches.brokenHangers.number?.toString());
+  fillText(form, 'Max dia_2', assessment.crownAndBranches.brokenHangers.maxDia);
+
+  // Pruning History
+  checkBox(form, 'Crown   cleaned', assessment.crownAndBranches.pruningHistory.crownCleaned);
+  checkBox(form, 'Reduced', assessment.crownAndBranches.pruningHistory.reduced);
+  checkBox(form, 'Thinned', assessment.crownAndBranches.pruningHistory.thinned);
+  checkBox(form, 'Topped', assessment.crownAndBranches.pruningHistory.topped);
+  checkBox(form, 'Liontailed', assessment.crownAndBranches.pruningHistory.lionTailed);
+  checkBox(form, 'Flush cuts', assessment.crownAndBranches.pruningHistory.flushCuts);
+  fillText(form, 'Other', assessment.crownAndBranches.pruningHistory.other);
+
+  // Defects
+  checkBox(form, 'Cracks', assessment.crownAndBranches.cracks.present);
+  checkBox(form, 'Codominant', assessment.crownAndBranches.codominant.present);
+  checkBox(form, 'Weak attachments', assessment.crownAndBranches.weakAttachments.present);
+  checkBox(form, 'Overextended branches', assessment.crownAndBranches.overExtendedBranches);
+  checkBox(form, 'Previous branch failures', assessment.crownAndBranches.previousBranchFailures.present);
+  checkBox(form, 'DeadMissing bark', assessment.crownAndBranches.deadMissingBark);
+  checkBox(form, 'CankersGallsBurls', assessment.crownAndBranches.cankersGallsBurls);
+  checkBox(form, 'Conks', assessment.crownAndBranches.conks);
+  checkBox(form, 'Heartwood decay', assessment.crownAndBranches.heartwoodDecay.present);
+
+  // Response Growth - Crown (text field, not checkboxes for this type)
+  fillText(form, 'Response growth', assessment.crownAndBranches.responseGrowth);
+
+  fillText(form, 'Conditions of concern', assessment.crownAndBranches.conditionsOfConcern);
+
+  // Crown failure assessment
+  if (assessment.crownAndBranches.failureAssessments[0]) {
+    const fa = assessment.crownAndBranches.failureAssessments[0];
+    fillText(form, 'Part Size', fa.partSize);
+    fillText(form, 'Fall Distance', fa.fallDistance);
+    // Likelihood of failure checkboxes
+    checkBox(form, 'Likelihood of failure Improbable', fa.likelihoodOfFailure === 'improbable');
+    checkBox(form, 'Possible', fa.likelihoodOfFailure === 'possible');
+    checkBox(form, 'Probable', fa.likelihoodOfFailure === 'probable');
+    checkBox(form, 'Imminent', fa.likelihoodOfFailure === 'imminent');
+  }
+
+  // ============================================
+  // TRUNK SECTION
+  // ============================================
+  // Trunk defects
+  checkBox(form, 'DeadMissing bark_2', assessment.trunk.deadMissingBark);
+  checkBox(form, 'Abnormal bark texturecolor', assessment.trunk.abnormalBarkTextureColor);
+  checkBox(form, 'Stem girdling', false); // Not in type - using root collar field
+  checkBox(form, 'Codominant stems', assessment.trunk.codominantStems);
+  checkBox(form, 'Included bark', assessment.trunk.includedBark);
+  checkBox(form, 'Cracks_2', assessment.trunk.cracks);
+  checkBox(form, 'Decay', false); // General decay not separate in type
+  checkBox(form, 'ConksMushrooms', assessment.trunk.conksMushrooms);
+  checkBox(form, 'Sapwood damagedecay', assessment.trunk.sapwoodDamageDecay);
+  checkBox(form, 'CankersGallsBurls_2', assessment.trunk.cankersGallsBurls);
+  checkBox(form, 'Sap ooze', assessment.trunk.sapOoze);
+  checkBox(form, 'Cavity', assessment.trunk.cavityNestHole.present);
+  checkBox(form, 'Lightning damage', assessment.trunk.lightningDamage);
+  checkBox(form, 'Heartwood decay_2', assessment.trunk.heartwoodDecay);
+  checkBox(form, 'Poor taper', assessment.trunk.poorTaper);
+
+  // Trunk cavity
+  fillText(form, 'circ', assessment.trunk.cavityNestHole.percentCirc?.toString());
+  fillText(form, 'Depth', assessment.trunk.cavityNestHole.depth);
+
+  // Lean
+  fillText(form, 'Lean', assessment.trunk.lean.degrees?.toString());
+  fillText(form, 'Corrected', assessment.trunk.lean.corrected);
+
+  // Response Growth - Trunk (text field)
+  fillText(form, 'Response growth_2', assessment.trunk.responseGrowth);
+
+  fillText(form, 'Conditions of concern_2', assessment.trunk.conditionsOfConcern);
+  fillText(form, 'Part Size_3', assessment.trunk.partSize);
+  fillText(form, 'Fall Distance_2', assessment.trunk.fallDistance);
+
+  // Trunk likelihood of failure
+  checkBox(form, 'Likelihood of failure Improbable_3', assessment.trunk.likelihoodOfFailure === 'improbable');
+  checkBox(form, 'Possible_3', assessment.trunk.likelihoodOfFailure === 'possible');
+  checkBox(form, 'Probable_3', assessment.trunk.likelihoodOfFailure === 'probable');
+  checkBox(form, 'Imminent_3', assessment.trunk.likelihoodOfFailure === 'imminent');
+
+  // ============================================
+  // ROOTS AND ROOT COLLAR SECTION
+  // ============================================
+  checkBox(form, 'Collar buriedNot visible', assessment.rootsAndRootCollar.collarBuriedNotVisible);
+  checkBox(form, 'Stem girdling', assessment.rootsAndRootCollar.stemGirdling);
+  checkBox(form, 'Dead', assessment.rootsAndRootCollar.dead);
+  checkBox(form, 'Decay', assessment.rootsAndRootCollar.decay);
+  checkBox(form, 'Ooze', assessment.rootsAndRootCollar.ooze);
+  checkBox(form, 'ConksMushrooms_2', assessment.rootsAndRootCollar.conksMushrooms);
+  checkBox(form, 'Cracks_3', assessment.rootsAndRootCollar.cracks);
+  checkBox(form, 'CutDamaged roots', assessment.rootsAndRootCollar.cutDamagedRoots.present);
+  checkBox(form, 'Root plate lifting', assessment.rootsAndRootCollar.rootPlateLifting);
+  checkBox(form, 'Soil weakness', assessment.rootsAndRootCollar.soilWeakness);
+
+  fillText(form, 'CavityNest hole', assessment.rootsAndRootCollar.cavity.percentCirc?.toString());
+  fillText(form, 'Depth_2', assessment.rootsAndRootCollar.depth);
+  fillText(form, 'Distance from trunk', assessment.rootsAndRootCollar.cutDamagedRoots.distanceFromTrunk);
+
+  // Response Growth - Roots (text field)
+  fillText(form, 'Response growth_3', assessment.rootsAndRootCollar.responseGrowth);
+
+  fillText(form, 'Conditions of concern_3', assessment.rootsAndRootCollar.conditionsOfConcern);
+  fillText(form, 'Part Size_4', assessment.rootsAndRootCollar.partSize);
+  fillText(form, 'Fall Distance_3', assessment.rootsAndRootCollar.fallDistance);
+
+  // Roots likelihood of failure
+  checkBox(form, 'Likelihood of failure Improbable_4', assessment.rootsAndRootCollar.likelihoodOfFailure === 'improbable');
+  checkBox(form, 'Possible_4', assessment.rootsAndRootCollar.likelihoodOfFailure === 'possible');
+  checkBox(form, 'Probable_4', assessment.rootsAndRootCollar.likelihoodOfFailure === 'probable');
+  checkBox(form, 'Imminent_4', assessment.rootsAndRootCollar.likelihoodOfFailure === 'imminent');
+
+  // ============================================
+  // RISK CATEGORIZATION (PAGE 2)
+  // ============================================
+  // Risk rows - these field names are complex, mapping the first few
+  if (assessment.riskRows[0]) {
+    fillText(form, 'Target Target  number or descriptionRow1', assessment.riskRows[0].target);
+    fillText(form, 'Tree partRow1', assessment.riskRows[0].treePart);
+    fillText(form, 'Risk rating from Matrix 2Row1', assessment.riskRows[0].riskRating);
+  }
+  if (assessment.riskRows[1]) {
+    fillText(form, 'Target Target  number or descriptionRow2', assessment.riskRows[1].target);
+    fillText(form, 'Tree partRow2', assessment.riskRows[1].treePart);
+    fillText(form, 'Risk rating from Matrix 2Row2', assessment.riskRows[1].riskRating);
+  }
+
+  // ============================================
+  // NOTES
+  // ============================================
+  // Split notes across multiple lines if needed
+  const notes = assessment.notes || '';
+  const noteLines = notes.split('\n');
+  fillText(form, 'Notes explanations descriptions 1', noteLines[0]);
+  fillText(form, 'Notes explanations descriptions 2', noteLines[1]);
+  fillText(form, 'Notes explanations descriptions 3', noteLines[2]);
+  fillText(form, 'Notes explanations descriptions 4', noteLines[3]);
+  fillText(form, 'Notes explanations descriptions 5', noteLines[4]);
+
+  // ============================================
+  // MITIGATION OPTIONS
+  // ============================================
+  if (assessment.mitigationOptions[0]) {
+    fillText(form, '1', assessment.mitigationOptions[0].description);
+    fillText(form, 'Residual risk', assessment.mitigationOptions[0].residualRisk);
+  }
+  if (assessment.mitigationOptions[1]) {
+    fillText(form, '2', assessment.mitigationOptions[1].description);
+    fillText(form, 'Residual risk_2', assessment.mitigationOptions[1].residualRisk);
+  }
+  if (assessment.mitigationOptions[2]) {
+    fillText(form, '3', assessment.mitigationOptions[2].description);
+    fillText(form, 'Residual risk_3', assessment.mitigationOptions[2].residualRisk);
+  }
+  if (assessment.mitigationOptions[3]) {
+    fillText(form, '4', assessment.mitigationOptions[3].description);
+    fillText(form, 'Residual risk_4', assessment.mitigationOptions[3].residualRisk);
+  }
+
+  // ============================================
+  // OVERALL RATINGS
+  // ============================================
+  // Overall Risk Rating checkboxes
+  checkBox(form, 'Low_2', assessment.overallTreeRiskRating === 'low');
+  checkBox(form, 'Moderate_5', assessment.overallTreeRiskRating === 'moderate');
+  checkBox(form, 'High_3', assessment.overallTreeRiskRating === 'high');
+  checkBox(form, 'Extreme', assessment.overallTreeRiskRating === 'extreme');
+
+  // Data Status
+  checkBox(form, 'Final', assessment.dataStatus === 'final');
+  checkBox(form, 'Preliminary   Advanced assessment needed', assessment.dataStatus === 'preliminary');
+  // Advanced assessment
+  checkBox(form, 'No', !assessment.advancedAssessmentNeeded);
+
+  fillText(form, 'YesTypeReason', assessment.advancedAssessmentTypeReason);
+  fillText(form, 'Recommended inspection interval', assessment.recommendedInspectionInterval);
+
+  // Residual Risk
+  checkBox(form, 'Low_3', assessment.overallResidualRisk === 'low');
+  checkBox(form, 'Moderate_6', assessment.overallResidualRisk === 'moderate');
+  checkBox(form, 'High_4', assessment.overallResidualRisk === 'high');
+  checkBox(form, 'Extreme_2', assessment.overallResidualRisk === 'extreme');
+
+  // ============================================
+  // INSPECTION LIMITATIONS
+  // ============================================
+  checkBox(form, 'Inspection limitations', true); // Header checkbox
+  checkBox(form, 'None_2', assessment.inspectionLimitations.none);
+  checkBox(form, 'Visibility', assessment.inspectionLimitations.visibility);
+  checkBox(form, 'Access', assessment.inspectionLimitations.access);
+  checkBox(form, 'Vines', assessment.inspectionLimitations.vines);
+  fillText(form, 'Root collar buried  Describe', assessment.inspectionLimitations.describe);
+
+  // Flatten the form so fields can't be edited (optional)
+  // form.flatten();
 
   // Return the PDF bytes
   return pdfDoc.save();
@@ -255,14 +351,36 @@ export async function generateFilledPDF(assessment: Assessment): Promise<Uint8Ar
 /**
  * Helper to safely fill a text field
  */
-function fillTextField(form: ReturnType<PDFDocument['getForm']>, fieldName: string, value: string) {
+function fillText(
+  form: ReturnType<PDFDocument['getForm']>,
+  fieldName: string,
+  value: string | undefined | null
+) {
+  if (!value) return;
   try {
     const field = form.getTextField(fieldName);
-    if (field && value) {
-      field.setText(value);
-    }
+    field.setText(value);
   } catch {
-    // Field not found - this is expected since field names may vary
+    // Field not found - continue silently
+    console.debug(`Text field not found: ${fieldName}`);
+  }
+}
+
+/**
+ * Helper to safely check a checkbox
+ */
+function checkBox(
+  form: ReturnType<PDFDocument['getForm']>,
+  fieldName: string,
+  checked: boolean | undefined
+) {
+  if (!checked) return;
+  try {
+    const field = form.getCheckBox(fieldName);
+    field.check();
+  } catch {
+    // Field not found - continue silently
+    console.debug(`Checkbox field not found: ${fieldName}`);
   }
 }
 
@@ -293,11 +411,12 @@ export async function downloadFilledPDF(assessment: Assessment) {
  * This creates a new PDF from scratch rather than filling a template
  */
 export async function generateReportPDF(assessment: Assessment): Promise<Uint8Array> {
+  const { StandardFonts, rgb } = await import('pdf-lib');
   const pdfDoc = await PDFDocument.create();
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-  const pageWidth = 612; // Letter size
+  const pageWidth = 612;
   const pageHeight = 792;
   const margin = 50;
   const lineHeight = 14;
@@ -306,31 +425,6 @@ export async function generateReportPDF(assessment: Assessment): Promise<Uint8Ar
   function addPage() {
     const page = pdfDoc.addPage([pageWidth, pageHeight]);
     y = pageHeight - margin;
-    return page;
-  }
-
-  function drawText(
-    page: ReturnType<typeof pdfDoc.addPage>,
-    text: string,
-    options: { bold?: boolean; size?: number; indent?: number } = {}
-  ) {
-    const size = options.size || 10;
-    const x = margin + (options.indent || 0);
-    const usedFont = options.bold ? boldFont : font;
-
-    if (y < margin + lineHeight) {
-      page = addPage();
-    }
-
-    page.drawText(text, {
-      x,
-      y,
-      size,
-      font: usedFont,
-      color: rgb(0, 0, 0),
-    });
-
-    y -= lineHeight * (size / 10);
     return page;
   }
 
@@ -377,7 +471,6 @@ export async function generateReportPDF(assessment: Assessment): Promise<Uint8Ar
     return page;
   }
 
-  // Start building the report
   let page = addPage();
 
   // Title
@@ -408,9 +501,7 @@ export async function generateReportPDF(assessment: Assessment): Promise<Uint8Ar
   page = drawField(
     page,
     'Overall Tree Risk Rating',
-    assessment.overallTreeRiskRating
-      ? LABELS.riskRating[assessment.overallTreeRiskRating].toUpperCase()
-      : 'Not calculated'
+    assessment.overallTreeRiskRating?.toUpperCase() || 'Not calculated'
   );
   page = drawField(
     page,
@@ -419,55 +510,26 @@ export async function generateReportPDF(assessment: Assessment): Promise<Uint8Ar
   );
   page = drawField(page, 'Recommended Inspection Interval', assessment.recommendedInspectionInterval);
 
-  // Risk Rows
-  if (assessment.riskRows.length > 0) {
-    page = drawSection(page, 'Risk Categorization');
-    for (const row of assessment.riskRows) {
-      const rating = row.riskRating ? LABELS.riskRating[row.riskRating] : '-';
-      page = drawField(
-        page,
-        `${row.target || 'Target'} - ${row.treePart ? LABELS.treePart[row.treePart] : 'Part'}`,
-        `${row.conditionsOfConcern || '-'} | Risk: ${rating}`
-      );
-    }
-  }
-
-  // Mitigation
-  if (assessment.mitigationOptions.length > 0) {
-    page = drawSection(page, 'Mitigation Options');
-    for (const option of assessment.mitigationOptions) {
-      page = drawField(
-        page,
-        `Option ${option.optionNumber}`,
-        `${option.description || '-'} | Residual Risk: ${option.residualRisk || '-'}`
-      );
-    }
-  }
-
   // Notes
   if (assessment.notes) {
     page = drawSection(page, 'Notes');
-    page = drawText(page, assessment.notes);
-  }
-
-  // Data Status
-  page = drawSection(page, 'Assessment Status');
-  page = drawField(page, 'Data Status', assessment.dataStatus);
-  page = drawField(page, 'Advanced Assessment Needed', assessment.advancedAssessmentNeeded ? 'Yes' : 'No');
-  if (assessment.advancedAssessmentNeeded) {
-    page = drawField(page, 'Type/Reason', assessment.advancedAssessmentTypeReason);
-  }
-
-  // Inspection Limitations
-  const limitations = [];
-  if (assessment.inspectionLimitations.none) limitations.push('None');
-  if (assessment.inspectionLimitations.visibility) limitations.push('Visibility');
-  if (assessment.inspectionLimitations.access) limitations.push('Access');
-  if (assessment.inspectionLimitations.vines) limitations.push('Vines');
-  if (assessment.inspectionLimitations.rootCollarBuried) limitations.push('Root Collar Buried');
-  page = drawField(page, 'Inspection Limitations', limitations.join(', ') || 'None');
-  if (assessment.inspectionLimitations.describe) {
-    page = drawField(page, 'Limitations Details', assessment.inspectionLimitations.describe);
+    const words = assessment.notes.split(' ');
+    let line = '';
+    for (const word of words) {
+      if (font.widthOfTextAtSize(line + ' ' + word, 10) < pageWidth - margin * 2) {
+        line += (line ? ' ' : '') + word;
+      } else {
+        if (y < margin + lineHeight) page = addPage();
+        page.drawText(line, { x: margin, y, size: 10, font, color: rgb(0, 0, 0) });
+        y -= lineHeight;
+        line = word;
+      }
+    }
+    if (line) {
+      if (y < margin + lineHeight) page = addPage();
+      page.drawText(line, { x: margin, y, size: 10, font, color: rgb(0, 0, 0) });
+      y -= lineHeight;
+    }
   }
 
   // Footer
