@@ -21,10 +21,6 @@ export async function generateFilledPDF(assessment: Assessment): Promise<Uint8Ar
   const pdfDoc = await PDFDocument.load(templateBytes);
   const form = pdfDoc.getForm();
 
-  // Get all form fields for debugging
-  const fields = form.getFields();
-  console.log('PDF Form Fields:', fields.map(f => f.getName()));
-
   try {
     // Try to fill text fields - field names will vary based on PDF
     fillTextField(form, 'Client', assessment.header.client);
@@ -245,8 +241,7 @@ export async function generateFilledPDF(assessment: Assessment): Promise<Uint8Ar
     fillTextField(form, 'Advanced Assessment', assessment.advancedAssessmentTypeReason);
     fillTextField(form, 'Limitations Describe', assessment.inspectionLimitations.describe);
 
-  } catch (error) {
-    console.error('Error filling PDF fields:', error);
+  } catch {
     // Continue even if some fields fail - the PDF will be partially filled
   }
 
@@ -268,22 +263,6 @@ function fillTextField(form: ReturnType<PDFDocument['getForm']>, fieldName: stri
     }
   } catch {
     // Field not found - this is expected since field names may vary
-    // Log for debugging but don't throw
-    console.debug(`Field not found: ${fieldName}`);
-  }
-}
-
-/**
- * Helper to safely check a checkbox
- */
-function checkCheckbox(form: ReturnType<PDFDocument['getForm']>, fieldName: string, checked: boolean) {
-  try {
-    const field = form.getCheckBox(fieldName);
-    if (field && checked) {
-      field.check();
-    }
-  } catch {
-    console.debug(`Checkbox not found: ${fieldName}`);
   }
 }
 

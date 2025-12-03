@@ -11,6 +11,8 @@ Progressive Web App for Tree Risk Assessment Qualified (TRAQ) form completion ba
 - **PDF**: pdf-lib (form filling), custom report generation
 - **PWA**: Serwist (service worker)
 - **Mobile**: Capacitor (iOS/Android wrapper)
+- **Testing**: Vitest + React Testing Library
+- **Validation**: Zod schemas
 
 ## Project Structure
 ```
@@ -45,16 +47,53 @@ src/
 │   ├── db/
 │   │   └── index.ts              # Dexie database setup
 │   ├── riskMatrix.ts             # Risk calculation matrices
+│   ├── validation.ts             # Zod validation schemas
 │   ├── fieldHelp.ts              # Tooltip/help content
 │   ├── pdfGenerator.ts           # PDF generation
 │   └── utils.ts                  # Utility functions
 ├── types/
-│   └── traq.ts                   # TypeScript interfaces (matches 2017 PDF)
+│   ├── traq.ts                   # TypeScript interfaces (matches 2017 PDF)
+│   └── species.ts                # Tree species types (auto-generated)
 ├── hooks/
 │   ├── useAssessment.ts          # Assessment CRUD operations
-│   └── useMemory.ts              # Answer memory system
+│   ├── useMemory.ts              # Answer memory system
+│   ├── useMedia.ts               # Media/photo handling
+│   └── useTreeSpecies.ts         # Species data loading
+├── test/
+│   └── setup.ts                  # Vitest test setup
 └── data/
     └── tree-species.csv          # Tree species dropdown data
+```
+
+## Commands
+
+### Development
+```bash
+npm run dev              # Start dev server
+npm run build            # Production build
+npm run start            # Start production server
+npm run lint             # ESLint
+```
+
+### Testing
+```bash
+npm run test             # Run tests in watch mode
+npm run test:run         # Run tests once
+npm run test:coverage    # Run tests with coverage report
+```
+
+### Native Apps (Capacitor)
+```bash
+npm run build:native     # Build for native (static export)
+npm run native:ios       # Build and open iOS project
+npm run native:android   # Build and open Android project
+npm run cap:sync         # Sync web assets to native projects
+```
+
+### Data Utilities
+```bash
+npm run validate:data    # Validate tree-species.csv
+npm run generate:types   # Generate species TypeScript types from CSV
 ```
 
 ## Form Structure (Matches ISA 2017 Form)
@@ -78,24 +117,33 @@ src/
 - **Matrix 2**: Failure & Impact × Consequences → Risk Rating
 - **Overall Risk**: Highest individual risk rating from all rows
 
-## Commands
-```bash
-# Development
-npm run dev              # Start dev server
+Key functions in `src/lib/riskMatrix.ts`:
+- `calculateFailureAndImpact()` - Matrix 1 calculation
+- `calculateRiskRating()` - Matrix 2 calculation
+- `calculateFullRisk()` - Complete risk from all inputs
+- `getOverallRiskRating()` - Get highest risk from array
 
-# Production
-npm run build            # Production build
-npm run start            # Start production server
+## Validation
 
-# Native Apps (Capacitor)
-npm run build:native     # Build for native (static export)
-npm run native:ios       # Build and open iOS project
-npm run native:android   # Build and open Android project
+Use Zod schemas from `src/lib/validation.ts` for form data validation:
 
-# Utilities
-npm run lint             # ESLint
-npm run cap:sync         # Sync web assets to native projects
+```typescript
+import { assessmentSchema, validateHeaderInfo, getValidationErrors } from '@/lib/validation';
+
+// Validate full assessment
+const result = assessmentSchema.safeParse(data);
+if (!result.success) {
+  const errors = getValidationErrors(result.error);
+}
+
+// Validate specific sections
+const headerResult = validateHeaderInfo(headerData);
 ```
+
+Key validation helpers:
+- `percentageSchema` - Validates 0-100 range
+- `isValidPercentage()` - Quick percentage check
+- `validateFoliagePercentages()` - Ensures foliage percentages sum ≤ 100
 
 ## Key Features
 1. **Form Sections**: All ISA TRAQ form fields with tooltips/help from instructions
@@ -116,12 +164,51 @@ npm run cap:sync         # Sync web assets to native projects
 - Components: PascalCase (e.g., `TreeHealthSection.tsx`)
 - Hooks: camelCase with `use` prefix (e.g., `useAssessment.ts`)
 - Types: PascalCase matching ISA form terminology
+- Tests: Co-located with source files (e.g., `riskMatrix.test.ts`)
 - Use `cn()` utility for conditional classNames
 - All form fields wrapped with `<FormField>` for tooltips
 - Offline-first: Always save to IndexedDB
+- Validate data with Zod schemas before critical operations
+
+## Testing Patterns
+
+### Unit Tests
+Tests are co-located with source files. Use Vitest:
+
+```typescript
+import { describe, it, expect } from 'vitest'
+
+describe('functionName', () => {
+  it('should do something', () => {
+    expect(result).toBe(expected)
+  })
+})
+```
+
+### Key Test Files
+- `src/lib/riskMatrix.test.ts` - Risk calculation logic (55 tests)
+- `src/lib/validation.test.ts` - Zod validation schemas (31 tests)
+
+### Running Specific Tests
+```bash
+npm run test -- riskMatrix     # Run only riskMatrix tests
+npm run test -- validation     # Run only validation tests
+```
 
 ## PDF Template
 Place the official ISA TRAQ PDF form at: `public/templates/traq-form.pdf`
 
-The PDF field names need to be mapped in `src/lib/pdfGenerator.ts`. Run the generator
-and check console logs to see available field names from the PDF.
+The PDF field names are mapped in `src/lib/pdfGenerator.ts`. To debug field names,
+temporarily enable console logging in the `generateFilledPDF` function.
+
+## Code Quality
+
+### Before Committing
+1. Run tests: `npm run test:run`
+2. Run linting: `npm run lint`
+3. Validate data: `npm run validate:data`
+
+### Type Safety
+- TypeScript strict mode is enabled
+- All assessment data types are defined in `src/types/traq.ts`
+- Zod schemas provide runtime validation matching TypeScript types
