@@ -19,7 +19,7 @@ export function SiteFactorsSection({ assessment, updateField }: Props) {
   return (
     <div className="space-y-6">
       {/* History of Failures */}
-      <FormField fieldPath="siteFactors.historyOfFailures" label="History of Failures">
+      <FormField required fieldPath="siteFactors.historyOfFailures" label="History of Failures">
         <Textarea
           id="siteFactors.historyOfFailures"
           value={siteFactors.historyOfFailures}
@@ -40,7 +40,7 @@ export function SiteFactorsSection({ assessment, updateField }: Props) {
             onChange={(checked) => updateField('siteFactors.topography.flat', checked)}
           />
 
-          <FormField fieldPath="siteFactors.topography.slopePercent" label="Slope %">
+          <FormField required fieldPath="siteFactors.topography.slopePercent" label="Slope %">
             <Input
               id="siteFactors.topography.slopePercent"
               type="number"
@@ -52,7 +52,7 @@ export function SiteFactorsSection({ assessment, updateField }: Props) {
             />
           </FormField>
 
-          <FormField fieldPath="siteFactors.topography.aspect" label="Aspect">
+          <FormField required fieldPath="siteFactors.topography.aspect" label="Aspect">
             <Input
               id="siteFactors.topography.aspect"
               value={siteFactors.topography.aspect}
@@ -98,7 +98,7 @@ export function SiteFactorsSection({ assessment, updateField }: Props) {
             onChange={(checked) => updateField('siteFactors.siteChanges.rootCuts', checked)}
           />
         </div>
-        <FormField fieldPath="siteFactors.siteChanges.describe" label="Describe">
+        <FormField required fieldPath="siteFactors.siteChanges.describe" label="Describe">
           <Input
             id="siteFactors.siteChanges.describe"
             value={siteFactors.siteChanges.describe}
@@ -155,7 +155,7 @@ export function SiteFactorsSection({ assessment, updateField }: Props) {
               placeholder="%"
             />
           </FormField>
-          <FormField fieldPath="siteFactors.soilConditions.describe" label="Describe">
+          <FormField required fieldPath="siteFactors.soilConditions.describe" label="Describe">
             <Input
               id="siteFactors.soilConditions.describe"
               value={siteFactors.soilConditions.describe}
@@ -208,7 +208,7 @@ export function SiteFactorsSection({ assessment, updateField }: Props) {
             onChange={(checked) => updateField('siteFactors.commonWeather.heavyRain', checked)}
           />
         </div>
-        <FormField fieldPath="siteFactors.commonWeather.describe" label="Describe">
+        <FormField required fieldPath="siteFactors.commonWeather.describe" label="Describe">
           <Input
             id="siteFactors.commonWeather.describe"
             value={siteFactors.commonWeather.describe}

@@ -415,18 +415,19 @@ export async function generateReportPDF(
   assessment: Assessment,
   mediaAttachments?: MediaAttachment[]
 ): Promise<Uint8Array> {
-  const { StandardFonts, rgb } = await import('pdf-lib');
-  const pdfDoc = await PDFDocument.create();
-  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  try {
+    const { StandardFonts, rgb } = await import('pdf-lib');
+    const pdfDoc = await PDFDocument.create();
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-  const pageWidth = 612;
-  const pageHeight = 792;
-  const margin = 50;
-  const lineHeight = 14;
-  const colWidth = (pageWidth - margin * 2) / 2;
-  let y = pageHeight - margin;
-  let currentPage = pdfDoc.addPage([pageWidth, pageHeight]);
+    const pageWidth = 612;
+    const pageHeight = 792;
+    const margin = 50;
+    const lineHeight = 14;
+    const colWidth = (pageWidth - margin * 2) / 2;
+    let y = pageHeight - margin;
+    let currentPage = pdfDoc.addPage([pageWidth, pageHeight]);
 
   // Helper to add new page
   function addPage() {
@@ -499,10 +500,10 @@ export async function generateReportPDF(
     y -= lineHeight;
   }
 
-  // Draw checkbox field
+  // Draw checkbox field (using ASCII-safe symbols)
   function drawCheckField(label: string, checked: boolean | undefined, indent = 0) {
     checkPage();
-    const symbol = checked ? '☑' : '☐';
+    const symbol = checked ? '[X]' : '[ ]';
     currentPage.drawText(`${symbol} ${label}`, {
       x: margin + indent,
       y,
@@ -513,14 +514,14 @@ export async function generateReportPDF(
     y -= lineHeight;
   }
 
-  // Draw two-column checkbox list
+  // Draw two-column checkbox list (using ASCII-safe symbols)
   function drawCheckboxGrid(items: Array<{ label: string; checked: boolean | undefined }>) {
     const itemsPerRow = 2;
     for (let i = 0; i < items.length; i += itemsPerRow) {
       checkPage();
       for (let j = 0; j < itemsPerRow && i + j < items.length; j++) {
         const item = items[i + j];
-        const symbol = item.checked ? '☑' : '☐';
+        const symbol = item.checked ? '[X]' : '[ ]';
         currentPage.drawText(`${symbol} ${item.label}`, {
           x: margin + j * colWidth,
           y,
@@ -598,6 +599,78 @@ export async function generateReportPDF(
   drawField('Time Frame', assessment.header.timeFrame);
 
   // ============================================
+  // GPS LOCATION & MAP
+  // ============================================
+  if (assessment.gpsLocation) {
+    drawSectionHeader('GPS Location');
+    drawField('Latitude', assessment.gpsLocation.latitude?.toFixed(6));
+    drawField('Longitude', assessment.gpsLocation.longitude?.toFixed(6));
+    drawField('Address', assessment.gpsLocation.address);
+    if (assessment.gpsLocation.accuracy) {
+      drawField('Accuracy', `+/- ${Math.round(assessment.gpsLocation.accuracy)} meters`);
+    }
+
+    // Fetch and embed static map image from OpenStreetMap
+    try {
+      const lat = assessment.gpsLocation.latitude;
+      const lng = assessment.gpsLocation.longitude;
+      const zoom = 16;
+      const mapWidth = 400;
+      const mapHeight = 300;
+
+      // Use OpenStreetMap static tile service
+      const mapUrl = `https://staticmap.openstreetmap.de/staticmap.php?center=${lat},${lng}&zoom=${zoom}&size=${mapWidth}x${mapHeight}&maptype=mapnik&markers=${lat},${lng},red-pushpin`;
+
+      const mapResponse = await fetch(mapUrl);
+      if (mapResponse.ok) {
+        const mapBlob = await mapResponse.blob();
+        const mapBytes = await mapBlob.arrayBuffer();
+        const mapImage = await pdfDoc.embedPng(new Uint8Array(mapBytes));
+
+        // Calculate dimensions to fit on page
+        const maxMapWidth = pageWidth - margin * 2;
+        const maxMapHeight = 200;
+        const mapAspectRatio = mapImage.width / mapImage.height;
+
+        let displayWidth = maxMapWidth;
+        let displayHeight = displayWidth / mapAspectRatio;
+
+        if (displayHeight > maxMapHeight) {
+          displayHeight = maxMapHeight;
+          displayWidth = displayHeight * mapAspectRatio;
+        }
+
+        // Check if we need a new page
+        if (y - displayHeight - lineHeight < margin) {
+          addPage();
+        }
+
+        y -= displayHeight;
+        currentPage.drawImage(mapImage, {
+          x: margin + (maxMapWidth - displayWidth) / 2,
+          y,
+          width: displayWidth,
+          height: displayHeight,
+        });
+        y -= lineHeight;
+
+        // Map caption
+        currentPage.drawText(`Map: ${lat.toFixed(4)}, ${lng.toFixed(4)} (Zoom ${zoom})`, {
+          x: margin,
+          y,
+          size: 8,
+          font: font,
+          color: rgb(0.5, 0.5, 0.5),
+        });
+        y -= lineHeight;
+      }
+    } catch (mapError) {
+      console.warn('Could not embed map image:', mapError);
+      drawField('Map', 'Could not load map image');
+    }
+  }
+
+  // ============================================
   // TARGET ASSESSMENT
   // ============================================
   if (assessment.targets.length > 0) {
@@ -621,268 +694,306 @@ export async function generateReportPDF(
   // ============================================
   // SITE FACTORS
   // ============================================
-  drawSectionHeader('Site Factors');
-  drawField('History of Failures', assessment.siteFactors.historyOfFailures);
-  drawField('Prevailing Wind Direction', assessment.siteFactors.prevailingWindDirection);
+  if (assessment.siteFactors) {
+    drawSectionHeader('Site Factors');
+    drawField('History of Failures', assessment.siteFactors.historyOfFailures);
+    drawField('Prevailing Wind Direction', assessment.siteFactors.prevailingWindDirection);
 
-  drawSubsection('Topography');
-  drawCheckField('Flat', assessment.siteFactors.topography.flat, 10);
-  if (assessment.siteFactors.topography.slopePercent) {
-    drawField('Slope', `${assessment.siteFactors.topography.slopePercent}%`, 10);
-  }
-  drawField('Aspect', assessment.siteFactors.topography.aspect, 10);
+    if (assessment.siteFactors.topography) {
+      drawSubsection('Topography');
+      drawCheckField('Flat', assessment.siteFactors.topography.flat, 10);
+      if (assessment.siteFactors.topography.slopePercent) {
+        drawField('Slope', `${assessment.siteFactors.topography.slopePercent}%`, 10);
+      }
+      drawField('Aspect', assessment.siteFactors.topography.aspect, 10);
+    }
 
-  drawSubsection('Site Changes');
-  drawCheckboxGrid([
-    { label: 'None', checked: assessment.siteFactors.siteChanges.none },
-    { label: 'Grade change', checked: assessment.siteFactors.siteChanges.gradeChange },
-    { label: 'Site clearing', checked: assessment.siteFactors.siteChanges.siteClearing },
-    { label: 'Changed soil hydrology', checked: assessment.siteFactors.siteChanges.changedSoilHydrology },
-    { label: 'Root cuts', checked: assessment.siteFactors.siteChanges.rootCuts },
-  ]);
-  if (assessment.siteFactors.siteChanges.describe) {
-    drawField('Description', assessment.siteFactors.siteChanges.describe, 10);
-  }
+    if (assessment.siteFactors.siteChanges) {
+      drawSubsection('Site Changes');
+      drawCheckboxGrid([
+        { label: 'None', checked: assessment.siteFactors.siteChanges.none },
+        { label: 'Grade change', checked: assessment.siteFactors.siteChanges.gradeChange },
+        { label: 'Site clearing', checked: assessment.siteFactors.siteChanges.siteClearing },
+        { label: 'Changed soil hydrology', checked: assessment.siteFactors.siteChanges.changedSoilHydrology },
+        { label: 'Root cuts', checked: assessment.siteFactors.siteChanges.rootCuts },
+      ]);
+      if (assessment.siteFactors.siteChanges.describe) {
+        drawField('Description', assessment.siteFactors.siteChanges.describe, 10);
+      }
+    }
 
-  drawSubsection('Soil Conditions');
-  drawCheckboxGrid([
-    { label: 'Limited volume', checked: assessment.siteFactors.soilConditions.limitedVolume },
-    { label: 'Saturated', checked: assessment.siteFactors.soilConditions.saturated },
-    { label: 'Shallow', checked: assessment.siteFactors.soilConditions.shallow },
-    { label: 'Compacted', checked: assessment.siteFactors.soilConditions.compacted },
-  ]);
-  if (assessment.siteFactors.soilConditions.pavementOverRootsPercent) {
-    drawField('Pavement over roots', `${assessment.siteFactors.soilConditions.pavementOverRootsPercent}%`, 10);
-  }
-  if (assessment.siteFactors.soilConditions.describe) {
-    drawField('Description', assessment.siteFactors.soilConditions.describe, 10);
-  }
+    if (assessment.siteFactors.soilConditions) {
+      drawSubsection('Soil Conditions');
+      drawCheckboxGrid([
+        { label: 'Limited volume', checked: assessment.siteFactors.soilConditions.limitedVolume },
+        { label: 'Saturated', checked: assessment.siteFactors.soilConditions.saturated },
+        { label: 'Shallow', checked: assessment.siteFactors.soilConditions.shallow },
+        { label: 'Compacted', checked: assessment.siteFactors.soilConditions.compacted },
+      ]);
+      if (assessment.siteFactors.soilConditions.pavementOverRootsPercent) {
+        drawField('Pavement over roots', `${assessment.siteFactors.soilConditions.pavementOverRootsPercent}%`, 10);
+      }
+      if (assessment.siteFactors.soilConditions.describe) {
+        drawField('Description', assessment.siteFactors.soilConditions.describe, 10);
+      }
+    }
 
-  drawSubsection('Common Weather');
-  drawCheckboxGrid([
-    { label: 'Strong winds', checked: assessment.siteFactors.commonWeather.strongWinds },
-    { label: 'Ice', checked: assessment.siteFactors.commonWeather.ice },
-    { label: 'Snow', checked: assessment.siteFactors.commonWeather.snow },
-    { label: 'Heavy rain', checked: assessment.siteFactors.commonWeather.heavyRain },
-  ]);
-  if (assessment.siteFactors.commonWeather.describe) {
-    drawField('Description', assessment.siteFactors.commonWeather.describe, 10);
+    if (assessment.siteFactors.commonWeather) {
+      drawSubsection('Common Weather');
+      drawCheckboxGrid([
+        { label: 'Strong winds', checked: assessment.siteFactors.commonWeather.strongWinds },
+        { label: 'Ice', checked: assessment.siteFactors.commonWeather.ice },
+        { label: 'Snow', checked: assessment.siteFactors.commonWeather.snow },
+        { label: 'Heavy rain', checked: assessment.siteFactors.commonWeather.heavyRain },
+      ]);
+      if (assessment.siteFactors.commonWeather.describe) {
+        drawField('Description', assessment.siteFactors.commonWeather.describe, 10);
+      }
+    }
   }
 
   // ============================================
   // TREE HEALTH AND SPECIES PROFILE
   // ============================================
-  drawSectionHeader('Tree Health and Species Profile');
-  drawField('Vigor', assessment.treeHealth.vigor?.toUpperCase());
+  if (assessment.treeHealth) {
+    drawSectionHeader('Tree Health and Species Profile');
+    drawField('Vigor', assessment.treeHealth.vigor?.toUpperCase());
 
-  drawSubsection('Foliage');
-  drawCheckboxGrid([
-    { label: 'None (seasonal)', checked: assessment.treeHealth.foliage.noneSeasonal },
-    { label: 'None (dead)', checked: assessment.treeHealth.foliage.noneDead },
-  ]);
-  if (assessment.treeHealth.foliage.normalPercent !== null) {
-    drawField('Normal', `${assessment.treeHealth.foliage.normalPercent}%`, 10);
-  }
-  if (assessment.treeHealth.foliage.chloroticPercent !== null) {
-    drawField('Chlorotic', `${assessment.treeHealth.foliage.chloroticPercent}%`, 10);
-  }
-  if (assessment.treeHealth.foliage.necroticPercent !== null) {
-    drawField('Necrotic', `${assessment.treeHealth.foliage.necroticPercent}%`, 10);
-  }
+    if (assessment.treeHealth.foliage) {
+      drawSubsection('Foliage');
+      drawCheckboxGrid([
+        { label: 'None (seasonal)', checked: assessment.treeHealth.foliage.noneSeasonal },
+        { label: 'None (dead)', checked: assessment.treeHealth.foliage.noneDead },
+      ]);
+      if (assessment.treeHealth.foliage.normalPercent !== null && assessment.treeHealth.foliage.normalPercent !== undefined) {
+        drawField('Normal', `${assessment.treeHealth.foliage.normalPercent}%`, 10);
+      }
+      if (assessment.treeHealth.foliage.chloroticPercent !== null && assessment.treeHealth.foliage.chloroticPercent !== undefined) {
+        drawField('Chlorotic', `${assessment.treeHealth.foliage.chloroticPercent}%`, 10);
+      }
+      if (assessment.treeHealth.foliage.necroticPercent !== null && assessment.treeHealth.foliage.necroticPercent !== undefined) {
+        drawField('Necrotic', `${assessment.treeHealth.foliage.necroticPercent}%`, 10);
+      }
+    }
 
-  drawField('Pests/Biotic', assessment.treeHealth.pestsBiotic);
-  drawField('Abiotic', assessment.treeHealth.abiotic);
+    drawField('Pests/Biotic', assessment.treeHealth.pestsBiotic);
+    drawField('Abiotic', assessment.treeHealth.abiotic);
 
-  drawSubsection('Species Failure Profile');
-  drawCheckboxGrid([
-    { label: 'Branches', checked: assessment.treeHealth.speciesFailureProfile.branches },
-    { label: 'Trunk', checked: assessment.treeHealth.speciesFailureProfile.trunk },
-    { label: 'Roots', checked: assessment.treeHealth.speciesFailureProfile.roots },
-  ]);
-  if (assessment.treeHealth.speciesFailureProfile.describe) {
-    drawField('Description', assessment.treeHealth.speciesFailureProfile.describe, 10);
+    if (assessment.treeHealth.speciesFailureProfile) {
+      drawSubsection('Species Failure Profile');
+      drawCheckboxGrid([
+        { label: 'Branches', checked: assessment.treeHealth.speciesFailureProfile.branches },
+        { label: 'Trunk', checked: assessment.treeHealth.speciesFailureProfile.trunk },
+        { label: 'Roots', checked: assessment.treeHealth.speciesFailureProfile.roots },
+      ]);
+      if (assessment.treeHealth.speciesFailureProfile.describe) {
+        drawField('Description', assessment.treeHealth.speciesFailureProfile.describe, 10);
+      }
+    }
   }
 
   // ============================================
   // LOAD FACTORS
   // ============================================
-  drawSectionHeader('Load Factors');
-  drawField('Wind Exposure', assessment.loadFactors.windExposure?.toUpperCase());
-  drawField('Wind Funneling', assessment.loadFactors.windFunneling);
-  drawField('Relative Crown Size', assessment.loadFactors.relativeCrownSize?.toUpperCase());
-  drawField('Crown Density', assessment.loadFactors.crownDensity?.toUpperCase());
-  drawField('Interior Branches', assessment.loadFactors.interiorBranches?.toUpperCase());
-  drawField('Vines/Mistletoe/Moss', assessment.loadFactors.vinesMistletoeMoss);
-  drawField('Recent/Expected Load Changes', assessment.loadFactors.recentOrExpectedChangeInLoadFactors);
+  if (assessment.loadFactors) {
+    drawSectionHeader('Load Factors');
+    drawField('Wind Exposure', assessment.loadFactors.windExposure?.toUpperCase());
+    drawField('Wind Funneling', assessment.loadFactors.windFunneling);
+    drawField('Relative Crown Size', assessment.loadFactors.relativeCrownSize?.toUpperCase());
+    drawField('Crown Density', assessment.loadFactors.crownDensity?.toUpperCase());
+    drawField('Interior Branches', assessment.loadFactors.interiorBranches?.toUpperCase());
+    drawField('Vines/Mistletoe/Moss', assessment.loadFactors.vinesMistletoeMoss);
+    drawField('Recent/Expected Load Changes', assessment.loadFactors.recentOrExpectedChangeInLoadFactors);
+  }
 
   // ============================================
   // CROWN AND BRANCHES
   // ============================================
-  drawSectionHeader('Crown and Branches');
-  drawCheckField('Unbalanced Crown', assessment.crownAndBranches.unbalancedCrown);
-  drawField('Live Crown Ratio (LCR)', assessment.crownAndBranches.lcrPercent
-    ? `${assessment.crownAndBranches.lcrPercent}%` : null);
+  if (assessment.crownAndBranches) {
+    drawSectionHeader('Crown and Branches');
+    drawCheckField('Unbalanced Crown', assessment.crownAndBranches.unbalancedCrown);
+    drawField('Live Crown Ratio (LCR)', assessment.crownAndBranches.lcrPercent
+      ? `${assessment.crownAndBranches.lcrPercent}%` : null);
 
-  drawSubsection('Dead Twigs/Branches');
-  drawCheckField('Present', assessment.crownAndBranches.deadTwigsBranches.present, 10);
-  drawField('Percent Overall', assessment.crownAndBranches.deadTwigsBranches.percentOverall
-    ? `${assessment.crownAndBranches.deadTwigsBranches.percentOverall}%` : null, 10);
-  drawField('Max Diameter', assessment.crownAndBranches.deadTwigsBranches.maxDia, 10);
+    if (assessment.crownAndBranches.deadTwigsBranches) {
+      drawSubsection('Dead Twigs/Branches');
+      drawCheckField('Present', assessment.crownAndBranches.deadTwigsBranches.present, 10);
+      drawField('Percent Overall', assessment.crownAndBranches.deadTwigsBranches.percentOverall
+        ? `${assessment.crownAndBranches.deadTwigsBranches.percentOverall}%` : null, 10);
+      drawField('Max Diameter', assessment.crownAndBranches.deadTwigsBranches.maxDia, 10);
+    }
 
-  drawSubsection('Broken/Hangers');
-  drawCheckField('Present', assessment.crownAndBranches.brokenHangers.present, 10);
-  drawField('Number', assessment.crownAndBranches.brokenHangers.number, 10);
-  drawField('Max Diameter', assessment.crownAndBranches.brokenHangers.maxDia, 10);
+    if (assessment.crownAndBranches.brokenHangers) {
+      drawSubsection('Broken/Hangers');
+      drawCheckField('Present', assessment.crownAndBranches.brokenHangers.present, 10);
+      drawField('Number', assessment.crownAndBranches.brokenHangers.number, 10);
+      drawField('Max Diameter', assessment.crownAndBranches.brokenHangers.maxDia, 10);
+    }
 
-  drawSubsection('Pruning History');
-  drawCheckboxGrid([
-    { label: 'Crown cleaned', checked: assessment.crownAndBranches.pruningHistory.crownCleaned },
-    { label: 'Thinned', checked: assessment.crownAndBranches.pruningHistory.thinned },
-    { label: 'Raised', checked: assessment.crownAndBranches.pruningHistory.raised },
-    { label: 'Reduced', checked: assessment.crownAndBranches.pruningHistory.reduced },
-    { label: 'Topped', checked: assessment.crownAndBranches.pruningHistory.topped },
-    { label: 'Lion-tailed', checked: assessment.crownAndBranches.pruningHistory.lionTailed },
-    { label: 'Flush cuts', checked: assessment.crownAndBranches.pruningHistory.flushCuts },
-  ]);
-  if (assessment.crownAndBranches.pruningHistory.other) {
-    drawField('Other', assessment.crownAndBranches.pruningHistory.other, 10);
-  }
+    if (assessment.crownAndBranches.pruningHistory) {
+      drawSubsection('Pruning History');
+      drawCheckboxGrid([
+        { label: 'Crown cleaned', checked: assessment.crownAndBranches.pruningHistory.crownCleaned },
+        { label: 'Thinned', checked: assessment.crownAndBranches.pruningHistory.thinned },
+        { label: 'Raised', checked: assessment.crownAndBranches.pruningHistory.raised },
+        { label: 'Reduced', checked: assessment.crownAndBranches.pruningHistory.reduced },
+        { label: 'Topped', checked: assessment.crownAndBranches.pruningHistory.topped },
+        { label: 'Lion-tailed', checked: assessment.crownAndBranches.pruningHistory.lionTailed },
+        { label: 'Flush cuts', checked: assessment.crownAndBranches.pruningHistory.flushCuts },
+      ]);
+      if (assessment.crownAndBranches.pruningHistory.other) {
+        drawField('Other', assessment.crownAndBranches.pruningHistory.other, 10);
+      }
+    }
 
-  drawSubsection('Defects');
-  drawCheckboxGrid([
-    { label: 'Cracks', checked: assessment.crownAndBranches.cracks.present },
-    { label: 'Lightning damage', checked: assessment.crownAndBranches.lightningDamage },
-    { label: 'Codominant', checked: assessment.crownAndBranches.codominant.present },
-    { label: 'Included bark', checked: assessment.crownAndBranches.includedBark },
-    { label: 'Weak attachments', checked: assessment.crownAndBranches.weakAttachments.present },
-    { label: 'Over-extended branches', checked: assessment.crownAndBranches.overExtendedBranches },
-    { label: 'Cavity/Nest hole', checked: assessment.crownAndBranches.cavityNestHole.present },
-    { label: 'Previous branch failures', checked: assessment.crownAndBranches.previousBranchFailures.present },
-    { label: 'Similar branches present', checked: assessment.crownAndBranches.similarBranchesPresent },
-    { label: 'Dead/Missing bark', checked: assessment.crownAndBranches.deadMissingBark },
-    { label: 'Cankers/Galls/Burls', checked: assessment.crownAndBranches.cankersGallsBurls },
-    { label: 'Sapwood damage/decay', checked: assessment.crownAndBranches.sapwoodDamageDecay },
-    { label: 'Conks', checked: assessment.crownAndBranches.conks },
-    { label: 'Heartwood decay', checked: assessment.crownAndBranches.heartwoodDecay.present },
-  ]);
+    drawSubsection('Defects');
+    drawCheckboxGrid([
+      { label: 'Cracks', checked: assessment.crownAndBranches.cracks?.present },
+      { label: 'Lightning damage', checked: assessment.crownAndBranches.lightningDamage },
+      { label: 'Codominant', checked: assessment.crownAndBranches.codominant?.present },
+      { label: 'Included bark', checked: assessment.crownAndBranches.includedBark },
+      { label: 'Weak attachments', checked: assessment.crownAndBranches.weakAttachments?.present },
+      { label: 'Over-extended branches', checked: assessment.crownAndBranches.overExtendedBranches },
+      { label: 'Cavity/Nest hole', checked: assessment.crownAndBranches.cavityNestHole?.present },
+      { label: 'Previous branch failures', checked: assessment.crownAndBranches.previousBranchFailures?.present },
+      { label: 'Similar branches present', checked: assessment.crownAndBranches.similarBranchesPresent },
+      { label: 'Dead/Missing bark', checked: assessment.crownAndBranches.deadMissingBark },
+      { label: 'Cankers/Galls/Burls', checked: assessment.crownAndBranches.cankersGallsBurls },
+      { label: 'Sapwood damage/decay', checked: assessment.crownAndBranches.sapwoodDamageDecay },
+      { label: 'Conks', checked: assessment.crownAndBranches.conks },
+      { label: 'Heartwood decay', checked: assessment.crownAndBranches.heartwoodDecay?.present },
+    ]);
 
-  if (assessment.crownAndBranches.cracks.describe) {
-    drawField('Cracks description', assessment.crownAndBranches.cracks.describe, 10);
-  }
-  if (assessment.crownAndBranches.codominant.describe) {
-    drawField('Codominant description', assessment.crownAndBranches.codominant.describe, 10);
-  }
-  if (assessment.crownAndBranches.weakAttachments.describe) {
-    drawField('Weak attachments description', assessment.crownAndBranches.weakAttachments.describe, 10);
-  }
-  if (assessment.crownAndBranches.previousBranchFailures.describe) {
-    drawField('Previous failures description', assessment.crownAndBranches.previousBranchFailures.describe, 10);
-  }
-  if (assessment.crownAndBranches.heartwoodDecay.describe) {
-    drawField('Heartwood decay description', assessment.crownAndBranches.heartwoodDecay.describe, 10);
-  }
-  if (assessment.crownAndBranches.cavityNestHole.percentCirc) {
-    drawField('Cavity % circumference', `${assessment.crownAndBranches.cavityNestHole.percentCirc}%`, 10);
-  }
+    if (assessment.crownAndBranches.cracks?.describe) {
+      drawField('Cracks description', assessment.crownAndBranches.cracks.describe, 10);
+    }
+    if (assessment.crownAndBranches.codominant?.describe) {
+      drawField('Codominant description', assessment.crownAndBranches.codominant.describe, 10);
+    }
+    if (assessment.crownAndBranches.weakAttachments?.describe) {
+      drawField('Weak attachments description', assessment.crownAndBranches.weakAttachments.describe, 10);
+    }
+    if (assessment.crownAndBranches.previousBranchFailures?.describe) {
+      drawField('Previous failures description', assessment.crownAndBranches.previousBranchFailures.describe, 10);
+    }
+    if (assessment.crownAndBranches.heartwoodDecay?.describe) {
+      drawField('Heartwood decay description', assessment.crownAndBranches.heartwoodDecay.describe, 10);
+    }
+    if (assessment.crownAndBranches.cavityNestHole?.percentCirc) {
+      drawField('Cavity % circumference', `${assessment.crownAndBranches.cavityNestHole.percentCirc}%`, 10);
+    }
 
-  drawField('Response Growth', assessment.crownAndBranches.responseGrowth);
-  drawField('Conditions of Concern', assessment.crownAndBranches.conditionsOfConcern);
+    drawField('Response Growth', assessment.crownAndBranches.responseGrowth);
+    drawField('Conditions of Concern', assessment.crownAndBranches.conditionsOfConcern);
 
-  // Crown failure assessments
-  if (assessment.crownAndBranches.failureAssessments.length > 0) {
-    drawSubsection('Branch Failure Assessment');
-    for (const fa of assessment.crownAndBranches.failureAssessments) {
-      drawField('Part Size', fa.partSize, 10);
-      drawField('Fall Distance', fa.fallDistance, 10);
-      drawField('Load on Defect', fa.loadOnDefect?.toUpperCase(), 10);
-      drawField('Likelihood of Failure', fa.likelihoodOfFailure?.toUpperCase(), 10);
-      y -= lineHeight * 0.5;
+    // Crown failure assessments
+    if (assessment.crownAndBranches.failureAssessments?.length > 0) {
+      drawSubsection('Branch Failure Assessment');
+      for (const fa of assessment.crownAndBranches.failureAssessments) {
+        drawField('Part Size', fa.partSize, 10);
+        drawField('Fall Distance', fa.fallDistance, 10);
+        drawField('Load on Defect', fa.loadOnDefect?.toUpperCase(), 10);
+        drawField('Likelihood of Failure', fa.likelihoodOfFailure?.toUpperCase(), 10);
+        y -= lineHeight * 0.5;
+      }
     }
   }
 
   // ============================================
   // TRUNK
   // ============================================
-  drawSectionHeader('Trunk Defects');
-  drawCheckboxGrid([
-    { label: 'Dead/Missing bark', checked: assessment.trunk.deadMissingBark },
-    { label: 'Abnormal bark texture/color', checked: assessment.trunk.abnormalBarkTextureColor },
-    { label: 'Codominant stems', checked: assessment.trunk.codominantStems },
-    { label: 'Included bark', checked: assessment.trunk.includedBark },
-    { label: 'Cracks', checked: assessment.trunk.cracks },
-    { label: 'Sapwood damage/decay', checked: assessment.trunk.sapwoodDamageDecay },
-    { label: 'Cankers/Galls/Burls', checked: assessment.trunk.cankersGallsBurls },
-    { label: 'Sap ooze', checked: assessment.trunk.sapOoze },
-    { label: 'Lightning damage', checked: assessment.trunk.lightningDamage },
-    { label: 'Heartwood decay', checked: assessment.trunk.heartwoodDecay },
-    { label: 'Conks/Mushrooms', checked: assessment.trunk.conksMushrooms },
-    { label: 'Poor taper', checked: assessment.trunk.poorTaper },
-  ]);
+  if (assessment.trunk) {
+    drawSectionHeader('Trunk Defects');
+    drawCheckboxGrid([
+      { label: 'Dead/Missing bark', checked: assessment.trunk.deadMissingBark },
+      { label: 'Abnormal bark texture/color', checked: assessment.trunk.abnormalBarkTextureColor },
+      { label: 'Codominant stems', checked: assessment.trunk.codominantStems },
+      { label: 'Included bark', checked: assessment.trunk.includedBark },
+      { label: 'Cracks', checked: assessment.trunk.cracks },
+      { label: 'Sapwood damage/decay', checked: assessment.trunk.sapwoodDamageDecay },
+      { label: 'Cankers/Galls/Burls', checked: assessment.trunk.cankersGallsBurls },
+      { label: 'Sap ooze', checked: assessment.trunk.sapOoze },
+      { label: 'Lightning damage', checked: assessment.trunk.lightningDamage },
+      { label: 'Heartwood decay', checked: assessment.trunk.heartwoodDecay },
+      { label: 'Conks/Mushrooms', checked: assessment.trunk.conksMushrooms },
+      { label: 'Poor taper', checked: assessment.trunk.poorTaper },
+    ]);
 
-  drawSubsection('Cavity/Nest Hole');
-  drawCheckField('Present', assessment.trunk.cavityNestHole.present, 10);
-  if (assessment.trunk.cavityNestHole.percentCirc) {
-    drawField('% Circumference', `${assessment.trunk.cavityNestHole.percentCirc}%`, 10);
+    if (assessment.trunk.cavityNestHole) {
+      drawSubsection('Cavity/Nest Hole');
+      drawCheckField('Present', assessment.trunk.cavityNestHole.present, 10);
+      if (assessment.trunk.cavityNestHole.percentCirc) {
+        drawField('% Circumference', `${assessment.trunk.cavityNestHole.percentCirc}%`, 10);
+      }
+      drawField('Depth', assessment.trunk.cavityNestHole.depth, 10);
+    }
+
+    if (assessment.trunk.lean) {
+      drawSubsection('Lean');
+      drawCheckField('Present', assessment.trunk.lean.present, 10);
+      if (assessment.trunk.lean.degrees) {
+        drawField('Degrees', `${assessment.trunk.lean.degrees} deg`, 10);
+      }
+      drawField('Corrected', assessment.trunk.lean.corrected, 10);
+    }
+
+    drawField('Response Growth', assessment.trunk.responseGrowth);
+    drawField('Conditions of Concern', assessment.trunk.conditionsOfConcern);
+
+    drawSubsection('Trunk Failure Assessment');
+    drawField('Part Size', assessment.trunk.partSize, 10);
+    drawField('Fall Distance', assessment.trunk.fallDistance, 10);
+    drawField('Load on Defect', assessment.trunk.loadOnDefect?.toUpperCase(), 10);
+    drawField('Likelihood of Failure', assessment.trunk.likelihoodOfFailure?.toUpperCase(), 10);
   }
-  drawField('Depth', assessment.trunk.cavityNestHole.depth, 10);
-
-  drawSubsection('Lean');
-  drawCheckField('Present', assessment.trunk.lean.present, 10);
-  if (assessment.trunk.lean.degrees) {
-    drawField('Degrees', `${assessment.trunk.lean.degrees}°`, 10);
-  }
-  drawField('Corrected', assessment.trunk.lean.corrected, 10);
-
-  drawField('Response Growth', assessment.trunk.responseGrowth);
-  drawField('Conditions of Concern', assessment.trunk.conditionsOfConcern);
-
-  drawSubsection('Trunk Failure Assessment');
-  drawField('Part Size', assessment.trunk.partSize, 10);
-  drawField('Fall Distance', assessment.trunk.fallDistance, 10);
-  drawField('Load on Defect', assessment.trunk.loadOnDefect?.toUpperCase(), 10);
-  drawField('Likelihood of Failure', assessment.trunk.likelihoodOfFailure?.toUpperCase(), 10);
 
   // ============================================
   // ROOTS AND ROOT COLLAR
   // ============================================
-  drawSectionHeader('Roots and Root Collar');
-  drawCheckboxGrid([
-    { label: 'Collar buried/Not visible', checked: assessment.rootsAndRootCollar.collarBuriedNotVisible },
-    { label: 'Stem girdling', checked: assessment.rootsAndRootCollar.stemGirdling },
-    { label: 'Dead', checked: assessment.rootsAndRootCollar.dead },
-    { label: 'Decay', checked: assessment.rootsAndRootCollar.decay },
-    { label: 'Conks/Mushrooms', checked: assessment.rootsAndRootCollar.conksMushrooms },
-    { label: 'Ooze', checked: assessment.rootsAndRootCollar.ooze },
-    { label: 'Cracks', checked: assessment.rootsAndRootCollar.cracks },
-    { label: 'Root plate lifting', checked: assessment.rootsAndRootCollar.rootPlateLifting },
-    { label: 'Soil weakness', checked: assessment.rootsAndRootCollar.soilWeakness },
-  ]);
+  if (assessment.rootsAndRootCollar) {
+    drawSectionHeader('Roots and Root Collar');
+    drawCheckboxGrid([
+      { label: 'Collar buried/Not visible', checked: assessment.rootsAndRootCollar.collarBuriedNotVisible },
+      { label: 'Stem girdling', checked: assessment.rootsAndRootCollar.stemGirdling },
+      { label: 'Dead', checked: assessment.rootsAndRootCollar.dead },
+      { label: 'Decay', checked: assessment.rootsAndRootCollar.decay },
+      { label: 'Conks/Mushrooms', checked: assessment.rootsAndRootCollar.conksMushrooms },
+      { label: 'Ooze', checked: assessment.rootsAndRootCollar.ooze },
+      { label: 'Cracks', checked: assessment.rootsAndRootCollar.cracks },
+      { label: 'Root plate lifting', checked: assessment.rootsAndRootCollar.rootPlateLifting },
+      { label: 'Soil weakness', checked: assessment.rootsAndRootCollar.soilWeakness },
+    ]);
 
-  drawField('Depth', assessment.rootsAndRootCollar.depth);
+    drawField('Depth', assessment.rootsAndRootCollar.depth);
 
-  drawSubsection('Cavity');
-  drawCheckField('Present', assessment.rootsAndRootCollar.cavity.present, 10);
-  if (assessment.rootsAndRootCollar.cavity.percentCirc) {
-    drawField('% Circumference', `${assessment.rootsAndRootCollar.cavity.percentCirc}%`, 10);
+    if (assessment.rootsAndRootCollar.cavity) {
+      drawSubsection('Cavity');
+      drawCheckField('Present', assessment.rootsAndRootCollar.cavity.present, 10);
+      if (assessment.rootsAndRootCollar.cavity.percentCirc) {
+        drawField('% Circumference', `${assessment.rootsAndRootCollar.cavity.percentCirc}%`, 10);
+      }
+    }
+
+    if (assessment.rootsAndRootCollar.cutDamagedRoots) {
+      drawSubsection('Cut/Damaged Roots');
+      drawCheckField('Present', assessment.rootsAndRootCollar.cutDamagedRoots.present, 10);
+      drawField('Distance from Trunk', assessment.rootsAndRootCollar.cutDamagedRoots.distanceFromTrunk, 10);
+    }
+
+    drawField('Response Growth', assessment.rootsAndRootCollar.responseGrowth);
+    drawField('Conditions of Concern', assessment.rootsAndRootCollar.conditionsOfConcern);
+
+    drawSubsection('Roots Failure Assessment');
+    drawField('Part Size', assessment.rootsAndRootCollar.partSize, 10);
+    drawField('Fall Distance', assessment.rootsAndRootCollar.fallDistance, 10);
+    drawField('Load on Defect', assessment.rootsAndRootCollar.loadOnDefect?.toUpperCase(), 10);
+    drawField('Likelihood of Failure', assessment.rootsAndRootCollar.likelihoodOfFailure?.toUpperCase(), 10);
   }
-
-  drawSubsection('Cut/Damaged Roots');
-  drawCheckField('Present', assessment.rootsAndRootCollar.cutDamagedRoots.present, 10);
-  drawField('Distance from Trunk', assessment.rootsAndRootCollar.cutDamagedRoots.distanceFromTrunk, 10);
-
-  drawField('Response Growth', assessment.rootsAndRootCollar.responseGrowth);
-  drawField('Conditions of Concern', assessment.rootsAndRootCollar.conditionsOfConcern);
-
-  drawSubsection('Roots Failure Assessment');
-  drawField('Part Size', assessment.rootsAndRootCollar.partSize, 10);
-  drawField('Fall Distance', assessment.rootsAndRootCollar.fallDistance, 10);
-  drawField('Load on Defect', assessment.rootsAndRootCollar.loadOnDefect?.toUpperCase(), 10);
-  drawField('Likelihood of Failure', assessment.rootsAndRootCollar.likelihoodOfFailure?.toUpperCase(), 10);
 
   // ============================================
   // RISK CATEGORIZATION
   // ============================================
-  if (assessment.riskRows.length > 0) {
+  if (assessment.riskRows?.length > 0) {
     drawSectionHeader('Risk Categorization');
     for (let i = 0; i < assessment.riskRows.length; i++) {
       const row = assessment.riskRows[i];
@@ -901,7 +1012,7 @@ export async function generateReportPDF(
   // ============================================
   // MITIGATION OPTIONS
   // ============================================
-  if (assessment.mitigationOptions.length > 0) {
+  if (assessment.mitigationOptions?.length > 0) {
     drawSectionHeader('Mitigation Options');
     for (const opt of assessment.mitigationOptions) {
       drawSubsection(`Option ${opt.optionNumber}`);
@@ -950,16 +1061,18 @@ export async function generateReportPDF(
   // ============================================
   // INSPECTION LIMITATIONS
   // ============================================
-  drawSectionHeader('Inspection Limitations');
-  drawCheckboxGrid([
-    { label: 'None', checked: assessment.inspectionLimitations.none },
-    { label: 'Visibility', checked: assessment.inspectionLimitations.visibility },
-    { label: 'Access', checked: assessment.inspectionLimitations.access },
-    { label: 'Vines', checked: assessment.inspectionLimitations.vines },
-    { label: 'Root collar buried', checked: assessment.inspectionLimitations.rootCollarBuried },
-  ]);
-  if (assessment.inspectionLimitations.describe) {
-    drawField('Description', assessment.inspectionLimitations.describe);
+  if (assessment.inspectionLimitations) {
+    drawSectionHeader('Inspection Limitations');
+    drawCheckboxGrid([
+      { label: 'None', checked: assessment.inspectionLimitations.none },
+      { label: 'Visibility', checked: assessment.inspectionLimitations.visibility },
+      { label: 'Access', checked: assessment.inspectionLimitations.access },
+      { label: 'Vines', checked: assessment.inspectionLimitations.vines },
+      { label: 'Root collar buried', checked: assessment.inspectionLimitations.rootCollarBuried },
+    ]);
+    if (assessment.inspectionLimitations.describe) {
+      drawField('Description', assessment.inspectionLimitations.describe);
+    }
   }
 
   // ============================================
@@ -1071,52 +1184,249 @@ export async function generateReportPDF(
       }
     }
 
-    // List documents
+    // Render documents as images
     if (documents.length > 0) {
       checkPage(lineHeight * 3);
       drawSubsection(`Documents (${documents.length})`);
 
       for (const doc of documents) {
-        checkPage(lineHeight * 4);
+        try {
+          // Check if it's a PDF
+          if (doc.mimeType === 'application/pdf') {
+            // Use pdf.js to render PDF pages as images
+            const pdfjsLib = await import('pdfjs-dist');
 
-        // Draw document info box
-        currentPage.drawRectangle({
-          x: margin,
-          y: y - lineHeight * 2,
-          width: pageWidth - margin * 2,
-          height: lineHeight * 3,
-          borderColor: rgb(0.3, 0.3, 0.3),
-          borderWidth: 1,
-          color: rgb(0.95, 0.95, 0.95),
-        });
+            // Use local worker file
+            pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
-        currentPage.drawText(`📄 ${doc.filename}`, {
-          x: margin + 10,
-          y: y - lineHeight * 0.5,
-          size: 10,
-          font: boldFont,
-          color: rgb(0, 0, 0),
-        });
+            const pdfData = await doc.blob.arrayBuffer();
+            const loadingTask = pdfjsLib.getDocument({
+              data: pdfData,
+            });
+            const pdfDocument = await loadingTask.promise;
 
-        currentPage.drawText(`Type: ${doc.mimeType} | Created: ${new Date(doc.createdAt).toLocaleString()}`, {
-          x: margin + 10,
-          y: y - lineHeight * 1.5,
-          size: 8,
-          font: font,
-          color: rgb(0.4, 0.4, 0.4),
-        });
+            // Render each page
+            const numPages = Math.min(pdfDocument.numPages, 5); // Limit to first 5 pages
 
-        if (doc.caption) {
-          currentPage.drawText(`Caption: ${doc.caption}`, {
+            for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+              const pdfPage = await pdfDocument.getPage(pageNum);
+              const viewport = pdfPage.getViewport({ scale: 1.5 });
+
+              // Create canvas to render PDF page
+              const canvas = document.createElement('canvas');
+              const context = canvas.getContext('2d');
+              canvas.width = viewport.width;
+              canvas.height = viewport.height;
+
+              if (context) {
+                await pdfPage.render({
+                  canvasContext: context,
+                  viewport: viewport,
+                  canvas: canvas,
+                } as Parameters<typeof pdfPage.render>[0]).promise;
+
+                // Convert canvas to PNG
+                const pngDataUrl = canvas.toDataURL('image/png');
+                const pngData = pngDataUrl.split(',')[1];
+                const pngBytes = Uint8Array.from(atob(pngData), c => c.charCodeAt(0));
+
+                const docImage = await pdfDoc.embedPng(pngBytes);
+
+                // Calculate dimensions
+                const maxWidth = pageWidth - margin * 2;
+                const maxHeight = 400;
+                const aspectRatio = docImage.width / docImage.height;
+
+                let imgWidth = maxWidth;
+                let imgHeight = imgWidth / aspectRatio;
+
+                if (imgHeight > maxHeight) {
+                  imgHeight = maxHeight;
+                  imgWidth = imgHeight * aspectRatio;
+                }
+
+                // Check if we need a new page
+                if (y - imgHeight - lineHeight * 3 < margin) {
+                  addPage();
+                }
+
+                // Draw page header
+                if (pageNum === 1) {
+                  currentPage.drawText(`Document: ${doc.filename}`, {
+                    x: margin,
+                    y,
+                    size: 10,
+                    font: boldFont,
+                    color: rgb(0, 0, 0),
+                  });
+                  y -= lineHeight;
+                }
+
+                // Draw the PDF page image
+                y -= imgHeight;
+                currentPage.drawImage(docImage, {
+                  x: margin + (maxWidth - imgWidth) / 2,
+                  y,
+                  width: imgWidth,
+                  height: imgHeight,
+                });
+                y -= lineHeight;
+
+                // Page number
+                currentPage.drawText(`Page ${pageNum} of ${pdfDocument.numPages}`, {
+                  x: margin,
+                  y,
+                  size: 8,
+                  font: font,
+                  color: rgb(0.5, 0.5, 0.5),
+                });
+                y -= lineHeight * 2;
+              }
+            }
+
+            // Note if more pages
+            if (pdfDocument.numPages > 5) {
+              currentPage.drawText(`... and ${pdfDocument.numPages - 5} more pages (not shown)`, {
+                x: margin,
+                y,
+                size: 8,
+                font: font,
+                color: rgb(0.5, 0.5, 0.5),
+              });
+              y -= lineHeight * 2;
+            }
+
+            // Caption
+            if (doc.caption) {
+              drawField('Caption', doc.caption, 10);
+            }
+
+          } else if (doc.mimeType.startsWith('image/')) {
+            // Document is actually an image - embed directly
+            const imageBytes = await doc.blob.arrayBuffer();
+            const uint8Array = new Uint8Array(imageBytes);
+
+            let docImage;
+            if (doc.mimeType === 'image/png') {
+              docImage = await pdfDoc.embedPng(uint8Array);
+            } else {
+              docImage = await pdfDoc.embedJpg(uint8Array);
+            }
+
+            const maxWidth = pageWidth - margin * 2;
+            const maxHeight = 300;
+            const aspectRatio = docImage.width / docImage.height;
+
+            let imgWidth = maxWidth;
+            let imgHeight = imgWidth / aspectRatio;
+
+            if (imgHeight > maxHeight) {
+              imgHeight = maxHeight;
+              imgWidth = imgHeight * aspectRatio;
+            }
+
+            if (y - imgHeight - lineHeight * 3 < margin) {
+              addPage();
+            }
+
+            currentPage.drawText(`Document: ${doc.filename}`, {
+              x: margin,
+              y,
+              size: 10,
+              font: boldFont,
+              color: rgb(0, 0, 0),
+            });
+            y -= lineHeight;
+
+            y -= imgHeight;
+            currentPage.drawImage(docImage, {
+              x: margin + (maxWidth - imgWidth) / 2,
+              y,
+              width: imgWidth,
+              height: imgHeight,
+            });
+            y -= lineHeight;
+
+            if (doc.caption) {
+              drawField('Caption', doc.caption);
+            }
+            y -= lineHeight;
+
+          } else {
+            // Other document types - show info box
+            checkPage(lineHeight * 4);
+
+            currentPage.drawRectangle({
+              x: margin,
+              y: y - lineHeight * 2,
+              width: pageWidth - margin * 2,
+              height: lineHeight * 3,
+              borderColor: rgb(0.3, 0.3, 0.3),
+              borderWidth: 1,
+              color: rgb(0.95, 0.95, 0.95),
+            });
+
+            currentPage.drawText(`[DOC] ${doc.filename}`, {
+              x: margin + 10,
+              y: y - lineHeight * 0.5,
+              size: 10,
+              font: boldFont,
+              color: rgb(0, 0, 0),
+            });
+
+            currentPage.drawText(`Type: ${doc.mimeType} | Preview not available for this file type`, {
+              x: margin + 10,
+              y: y - lineHeight * 1.5,
+              size: 8,
+              font: font,
+              color: rgb(0.4, 0.4, 0.4),
+            });
+
+            if (doc.caption) {
+              currentPage.drawText(`Caption: ${doc.caption}`, {
+                x: margin + 10,
+                y: y - lineHeight * 2.3,
+                size: 8,
+                font: font,
+                color: rgb(0.3, 0.3, 0.3),
+              });
+            }
+
+            y -= lineHeight * 4;
+          }
+        } catch (docError) {
+          console.warn(`Could not render document ${doc.filename}:`, docError);
+          // Fallback to info box
+          checkPage(lineHeight * 4);
+
+          currentPage.drawRectangle({
+            x: margin,
+            y: y - lineHeight * 2,
+            width: pageWidth - margin * 2,
+            height: lineHeight * 3,
+            borderColor: rgb(0.6, 0.3, 0.3),
+            borderWidth: 1,
+            color: rgb(1, 0.95, 0.95),
+          });
+
+          currentPage.drawText(`[DOC] ${doc.filename}`, {
             x: margin + 10,
-            y: y - lineHeight * 2.3,
+            y: y - lineHeight * 0.5,
+            size: 10,
+            font: boldFont,
+            color: rgb(0, 0, 0),
+          });
+
+          currentPage.drawText(`Error: Could not render document preview`, {
+            x: margin + 10,
+            y: y - lineHeight * 1.5,
             size: 8,
             font: font,
-            color: rgb(0.3, 0.3, 0.3),
+            color: rgb(0.6, 0.3, 0.3),
           });
-        }
 
-        y -= lineHeight * 4;
+          y -= lineHeight * 4;
+        }
       }
     }
 
@@ -1139,7 +1449,7 @@ export async function generateReportPDF(
           color: rgb(0.95, 0.95, 1),
         });
 
-        currentPage.drawText(`🎬 ${video.filename}`, {
+        currentPage.drawText(`[VIDEO] ${video.filename}`, {
           x: margin + 10,
           y: y - lineHeight * 0.5,
           size: 10,
@@ -1192,7 +1502,11 @@ export async function generateReportPDF(
     });
   }
 
-  return pdfDoc.save();
+    return pdfDoc.save();
+  } catch (error) {
+    console.error('Error generating report PDF:', error);
+    throw error;
+  }
 }
 
 /**

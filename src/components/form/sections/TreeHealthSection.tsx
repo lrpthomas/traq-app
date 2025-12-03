@@ -27,7 +27,7 @@ export function TreeHealthSection({ assessment, updateField }: Props) {
   return (
     <div className="space-y-6">
       {/* Vigor */}
-      <FormField fieldPath="treeHealth.vigor" label="Vigor">
+      <FormField required fieldPath="treeHealth.vigor" label="Vigor">
         <Select
           value={treeHealth.vigor || ''}
           onValueChange={(value) =>
@@ -63,7 +63,7 @@ export function TreeHealthSection({ assessment, updateField }: Props) {
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <FormField fieldPath="treeHealth.foliage.normalPercent" label="Normal %">
+          <FormField required fieldPath="treeHealth.foliage.normalPercent" label="Normal %">
             <Input
               id="treeHealth.foliage.normalPercent"
               type="number"
@@ -79,7 +79,7 @@ export function TreeHealthSection({ assessment, updateField }: Props) {
               placeholder="%"
             />
           </FormField>
-          <FormField fieldPath="treeHealth.foliage.chloroticPercent" label="Chlorotic %">
+          <FormField required fieldPath="treeHealth.foliage.chloroticPercent" label="Chlorotic %">
             <Input
               id="treeHealth.foliage.chloroticPercent"
               type="number"
@@ -95,7 +95,7 @@ export function TreeHealthSection({ assessment, updateField }: Props) {
               placeholder="%"
             />
           </FormField>
-          <FormField fieldPath="treeHealth.foliage.necroticPercent" label="Necrotic %">
+          <FormField required fieldPath="treeHealth.foliage.necroticPercent" label="Necrotic %">
             <Input
               id="treeHealth.foliage.necroticPercent"
               type="number"
@@ -115,7 +115,7 @@ export function TreeHealthSection({ assessment, updateField }: Props) {
       </div>
 
       {/* Pests/Biotic */}
-      <FormField fieldPath="treeHealth.pestsBiotic" label="Pests/Biotic">
+      <FormField required fieldPath="treeHealth.pestsBiotic" label="Pests/Biotic">
         <Textarea
           id="treeHealth.pestsBiotic"
           value={treeHealth.pestsBiotic}
@@ -126,7 +126,7 @@ export function TreeHealthSection({ assessment, updateField }: Props) {
       </FormField>
 
       {/* Abiotic */}
-      <FormField fieldPath="treeHealth.abiotic" label="Abiotic">
+      <FormField required fieldPath="treeHealth.abiotic" label="Abiotic">
         <Textarea
           id="treeHealth.abiotic"
           value={treeHealth.abiotic}

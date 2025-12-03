@@ -63,6 +63,7 @@ export function TargetSection({ assessment, updateField, addTarget, removeTarget
             <FormField
               fieldPath={`targets.${index}.targetDescription`}
               label="Target Description"
+              required
             >
               <Input
                 id={`targets.${index}.targetDescription`}
@@ -77,6 +78,7 @@ export function TargetSection({ assessment, updateField, addTarget, removeTarget
             <FormField
               fieldPath={`targets.${index}.targetProtection`}
               label="Target Protection"
+              required
             >
               <Input
                 id={`targets.${index}.targetProtection`}
@@ -88,34 +90,54 @@ export function TargetSection({ assessment, updateField, addTarget, removeTarget
               />
             </FormField>
 
-            {/* Target Zone */}
+            {/* Target Zone - Single Select (Radio behavior) */}
             <div className="space-y-2">
-              <p className="text-sm font-medium">Target Zone</p>
+              <p className="text-sm font-medium">
+                Target Zone <span className="text-red-500">*</span>
+              </p>
               <div className="flex flex-wrap gap-4">
-                <CheckboxField
-                  fieldPath={`targets.${index}.targetZone.withinDripLine`}
-                  label="Within Drip Line"
-                  checked={target.targetZone.withinDripLine}
-                  onChange={(checked) =>
-                    updateField(`targets.${index}.targetZone.withinDripLine`, checked)
-                  }
-                />
-                <CheckboxField
-                  fieldPath={`targets.${index}.targetZone.within1xHt`}
-                  label="Within 1× Height"
-                  checked={target.targetZone.within1xHt}
-                  onChange={(checked) =>
-                    updateField(`targets.${index}.targetZone.within1xHt`, checked)
-                  }
-                />
-                <CheckboxField
-                  fieldPath={`targets.${index}.targetZone.within1_5xHt`}
-                  label="Within 1.5× Height"
-                  checked={target.targetZone.within1_5xHt}
-                  onChange={(checked) =>
-                    updateField(`targets.${index}.targetZone.within1_5xHt`, checked)
-                  }
-                />
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name={`targetZone-${target.id}`}
+                    checked={target.targetZone.withinDripLine}
+                    onChange={() => {
+                      updateField(`targets.${index}.targetZone.withinDripLine`, true);
+                      updateField(`targets.${index}.targetZone.within1xHt`, false);
+                      updateField(`targets.${index}.targetZone.within1_5xHt`, false);
+                    }}
+                    className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
+                  />
+                  <span className="text-sm">Within Drip Line</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name={`targetZone-${target.id}`}
+                    checked={target.targetZone.within1xHt}
+                    onChange={() => {
+                      updateField(`targets.${index}.targetZone.withinDripLine`, false);
+                      updateField(`targets.${index}.targetZone.within1xHt`, true);
+                      updateField(`targets.${index}.targetZone.within1_5xHt`, false);
+                    }}
+                    className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
+                  />
+                  <span className="text-sm">Within 1× Height</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name={`targetZone-${target.id}`}
+                    checked={target.targetZone.within1_5xHt}
+                    onChange={() => {
+                      updateField(`targets.${index}.targetZone.withinDripLine`, false);
+                      updateField(`targets.${index}.targetZone.within1xHt`, false);
+                      updateField(`targets.${index}.targetZone.within1_5xHt`, true);
+                    }}
+                    className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
+                  />
+                  <span className="text-sm">Within 1.5× Height</span>
+                </label>
               </div>
             </div>
 
@@ -123,6 +145,7 @@ export function TargetSection({ assessment, updateField, addTarget, removeTarget
             <FormField
               fieldPath={`targets.${index}.occupancyRate`}
               label="Occupancy Rate"
+              required
             >
               <Select
                 value={target.occupancyRate?.toString() || ''}
@@ -148,6 +171,7 @@ export function TargetSection({ assessment, updateField, addTarget, removeTarget
               <FormField
                 fieldPath={`targets.${index}.practicalToMoveTarget`}
                 label="Practical to Move Target?"
+                required
               >
                 <Select
                   value={target.practicalToMoveTarget === null ? '' : target.practicalToMoveTarget ? 'yes' : 'no'}
@@ -168,6 +192,7 @@ export function TargetSection({ assessment, updateField, addTarget, removeTarget
               <FormField
                 fieldPath={`targets.${index}.restrictionPractical`}
                 label="Restriction Practical?"
+                required
               >
                 <Select
                   value={target.restrictionPractical === null ? '' : target.restrictionPractical ? 'yes' : 'no'}

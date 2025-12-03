@@ -48,7 +48,7 @@ export function MitigationSection({
   return (
     <div className="space-y-6">
       {/* Notes */}
-      <FormField fieldPath="notes" label="Notes">
+      <FormField required fieldPath="notes" label="Notes">
         <Textarea
           id="notes"
           value={assessment.notes}
@@ -158,7 +158,7 @@ export function MitigationSection({
       </div>
 
       {/* Overall Residual Risk */}
-      <FormField fieldPath="overallResidualRisk" label="Overall Residual Risk">
+      <FormField required fieldPath="overallResidualRisk" label="Overall Residual Risk">
         <Select
           value={assessment.overallResidualRisk || ''}
           onValueChange={(value) => updateField('overallResidualRisk', value || null)}
@@ -193,7 +193,7 @@ export function MitigationSection({
 
       {/* Data Status */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField fieldPath="dataStatus" label="Data Status">
+        <FormField required fieldPath="dataStatus" label="Data Status">
           <Select
             value={assessment.dataStatus}
             onValueChange={(value) => updateField('dataStatus', value)}
@@ -271,7 +271,7 @@ export function MitigationSection({
           />
         </div>
         {!inspectionLimitations.none && (
-          <FormField fieldPath="inspectionLimitations.describe" label="Describe">
+          <FormField required fieldPath="inspectionLimitations.describe" label="Describe">
             <Input
               id="inspectionLimitations.describe"
               value={inspectionLimitations.describe}

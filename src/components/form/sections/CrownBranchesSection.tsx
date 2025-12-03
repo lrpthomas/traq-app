@@ -48,7 +48,7 @@ export function CrownBranchesSection({
             checked={crownAndBranches.unbalancedCrown}
             onChange={(checked) => updateField('crownAndBranches.unbalancedCrown', checked)}
           />
-          <FormField fieldPath="crownAndBranches.lcrPercent" label="Live Crown Ratio %">
+          <FormField required fieldPath="crownAndBranches.lcrPercent" label="Live Crown Ratio %">
             <Input
               id="crownAndBranches.lcrPercent"
               type="number"
@@ -129,7 +129,7 @@ export function CrownBranchesSection({
         />
         {crownAndBranches.brokenHangers.present && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField fieldPath="crownAndBranches.brokenHangers.number" label="Number">
+            <FormField required fieldPath="crownAndBranches.brokenHangers.number" label="Number">
               <Input
                 id="crownAndBranches.brokenHangers.number"
                 type="number"
@@ -143,7 +143,7 @@ export function CrownBranchesSection({
                 }
               />
             </FormField>
-            <FormField fieldPath="crownAndBranches.brokenHangers.maxDia" label="Max Diameter">
+            <FormField required fieldPath="crownAndBranches.brokenHangers.maxDia" label="Max Diameter">
               <Input
                 id="crownAndBranches.brokenHangers.maxDia"
                 value={crownAndBranches.brokenHangers.maxDia}
@@ -281,7 +281,7 @@ export function CrownBranchesSection({
             }
           />
         </div>
-        <FormField fieldPath="crownAndBranches.pruningHistory.other" label="Other">
+        <FormField required fieldPath="crownAndBranches.pruningHistory.other" label="Other">
           <Input
             id="crownAndBranches.pruningHistory.other"
             value={crownAndBranches.pruningHistory.other}
@@ -302,7 +302,7 @@ export function CrownBranchesSection({
           onChange={(checked) => updateField('crownAndBranches.cracks.present', checked)}
         />
         {crownAndBranches.cracks.present && (
-          <FormField fieldPath="crownAndBranches.cracks.describe" label="Describe">
+          <FormField required fieldPath="crownAndBranches.cracks.describe" label="Describe">
             <Input
               id="crownAndBranches.cracks.describe"
               value={crownAndBranches.cracks.describe}
@@ -324,7 +324,7 @@ export function CrownBranchesSection({
           onChange={(checked) => updateField('crownAndBranches.codominant.present', checked)}
         />
         {crownAndBranches.codominant.present && (
-          <FormField fieldPath="crownAndBranches.codominant.describe" label="Describe">
+          <FormField required fieldPath="crownAndBranches.codominant.describe" label="Describe">
             <Input
               id="crownAndBranches.codominant.describe"
               value={crownAndBranches.codominant.describe}
@@ -452,7 +452,7 @@ export function CrownBranchesSection({
       </div>
 
       {/* Response Growth & Conditions of Concern */}
-      <FormField fieldPath="crownAndBranches.responseGrowth" label="Response Growth">
+      <FormField required fieldPath="crownAndBranches.responseGrowth" label="Response Growth">
         <Textarea
           id="crownAndBranches.responseGrowth"
           value={crownAndBranches.responseGrowth}

@@ -38,7 +38,7 @@ export function RootsSection({ assessment, updateField }: Props) {
               updateField('rootsAndRootCollar.collarBuriedNotVisible', checked)
             }
           />
-          <FormField fieldPath="rootsAndRootCollar.depth" label="Depth Buried">
+          <FormField required fieldPath="rootsAndRootCollar.depth" label="Depth Buried">
             <Input
               id="rootsAndRootCollar.depth"
               value={rootsAndRootCollar.depth}
@@ -166,7 +166,7 @@ export function RootsSection({ assessment, updateField }: Props) {
       </div>
 
       {/* Response Growth & Conditions of Concern */}
-      <FormField fieldPath="rootsAndRootCollar.responseGrowth" label="Response Growth">
+      <FormField required fieldPath="rootsAndRootCollar.responseGrowth" label="Response Growth">
         <Textarea
           id="rootsAndRootCollar.responseGrowth"
           value={rootsAndRootCollar.responseGrowth}
@@ -195,7 +195,7 @@ export function RootsSection({ assessment, updateField }: Props) {
       <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
         <h3 className="text-sm font-medium">Roots Failure Assessment</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField fieldPath="rootsAndRootCollar.partSize" label="Part Size">
+          <FormField required fieldPath="rootsAndRootCollar.partSize" label="Part Size">
             <Input
               id="rootsAndRootCollar.partSize"
               value={rootsAndRootCollar.partSize}
@@ -203,7 +203,7 @@ export function RootsSection({ assessment, updateField }: Props) {
               placeholder="e.g., Whole tree"
             />
           </FormField>
-          <FormField fieldPath="rootsAndRootCollar.fallDistance" label="Fall Distance">
+          <FormField required fieldPath="rootsAndRootCollar.fallDistance" label="Fall Distance">
             <Input
               id="rootsAndRootCollar.fallDistance"
               value={rootsAndRootCollar.fallDistance}
@@ -215,7 +215,7 @@ export function RootsSection({ assessment, updateField }: Props) {
           </FormField>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField fieldPath="rootsAndRootCollar.loadOnDefect" label="Load on Defect">
+          <FormField required fieldPath="rootsAndRootCollar.loadOnDefect" label="Load on Defect">
             <Select
               value={rootsAndRootCollar.loadOnDefect || ''}
               onValueChange={(value) =>

@@ -154,7 +154,7 @@ function RiskRow({ row, index, updateField, onRemove, canRemove }: RiskRowProps)
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField fieldPath={`riskRows.${index}.target`} label="Target">
+          <FormField required fieldPath={`riskRows.${index}.target`} label="Target">
             <Input
               id={`riskRows.${index}.target`}
               value={row.target}
@@ -163,7 +163,7 @@ function RiskRow({ row, index, updateField, onRemove, canRemove }: RiskRowProps)
             />
           </FormField>
 
-          <FormField fieldPath={`riskRows.${index}.treePart`} label="Tree Part">
+          <FormField required fieldPath={`riskRows.${index}.treePart`} label="Tree Part">
             <Select
               value={row.treePart || ''}
               onValueChange={(value) =>
@@ -266,7 +266,7 @@ function RiskRow({ row, index, updateField, onRemove, canRemove }: RiskRowProps)
 
         {/* Matrix 2 Inputs */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-green-50 rounded-lg">
-          <FormField fieldPath={`riskRows.${index}.consequences`} label="Consequences">
+          <FormField required fieldPath={`riskRows.${index}.consequences`} label="Consequences">
             <Select
               value={row.consequences || ''}
               onValueChange={(value) =>

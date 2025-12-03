@@ -134,7 +134,7 @@ export function TrunkSection({ assessment, updateField }: Props) {
                 placeholder="%"
               />
             </FormField>
-            <FormField fieldPath="trunk.cavityNestHole.depth" label="Depth">
+            <FormField required fieldPath="trunk.cavityNestHole.depth" label="Depth">
               <Input
                 id="trunk.cavityNestHole.depth"
                 value={trunk.cavityNestHole.depth}
@@ -156,7 +156,7 @@ export function TrunkSection({ assessment, updateField }: Props) {
         />
         {trunk.lean.present && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField fieldPath="trunk.lean.degrees" label="Degrees">
+            <FormField required fieldPath="trunk.lean.degrees" label="Degrees">
               <Input
                 id="trunk.lean.degrees"
                 type="number"
@@ -172,7 +172,7 @@ export function TrunkSection({ assessment, updateField }: Props) {
                 placeholder="degrees"
               />
             </FormField>
-            <FormField fieldPath="trunk.lean.corrected" label="Corrected/Natural">
+            <FormField required fieldPath="trunk.lean.corrected" label="Corrected/Natural">
               <Input
                 id="trunk.lean.corrected"
                 value={trunk.lean.corrected}
@@ -185,7 +185,7 @@ export function TrunkSection({ assessment, updateField }: Props) {
       </div>
 
       {/* Response Growth & Conditions of Concern */}
-      <FormField fieldPath="trunk.responseGrowth" label="Response Growth">
+      <FormField required fieldPath="trunk.responseGrowth" label="Response Growth">
         <Textarea
           id="trunk.responseGrowth"
           value={trunk.responseGrowth}
@@ -195,7 +195,7 @@ export function TrunkSection({ assessment, updateField }: Props) {
         />
       </FormField>
 
-      <FormField fieldPath="trunk.conditionsOfConcern" label="Conditions of Concern">
+      <FormField required fieldPath="trunk.conditionsOfConcern" label="Conditions of Concern">
         <Textarea
           id="trunk.conditionsOfConcern"
           value={trunk.conditionsOfConcern}
@@ -209,7 +209,7 @@ export function TrunkSection({ assessment, updateField }: Props) {
       <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
         <h3 className="text-sm font-medium">Trunk Failure Assessment</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField fieldPath="trunk.partSize" label="Part Size">
+          <FormField required fieldPath="trunk.partSize" label="Part Size">
             <Input
               id="trunk.partSize"
               value={trunk.partSize}
@@ -217,7 +217,7 @@ export function TrunkSection({ assessment, updateField }: Props) {
               placeholder="e.g., 24 in DBH"
             />
           </FormField>
-          <FormField fieldPath="trunk.fallDistance" label="Fall Distance">
+          <FormField required fieldPath="trunk.fallDistance" label="Fall Distance">
             <Input
               id="trunk.fallDistance"
               value={trunk.fallDistance}
@@ -227,7 +227,7 @@ export function TrunkSection({ assessment, updateField }: Props) {
           </FormField>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField fieldPath="trunk.loadOnDefect" label="Load on Defect">
+          <FormField required fieldPath="trunk.loadOnDefect" label="Load on Defect">
             <Select
               value={trunk.loadOnDefect || ''}
               onValueChange={(value) =>
@@ -248,7 +248,7 @@ export function TrunkSection({ assessment, updateField }: Props) {
               </SelectContent>
             </Select>
           </FormField>
-          <FormField fieldPath="trunk.likelihoodOfFailure" label="Likelihood of Failure">
+          <FormField required fieldPath="trunk.likelihoodOfFailure" label="Likelihood of Failure">
             <Select
               value={trunk.likelihoodOfFailure || ''}
               onValueChange={(value) =>

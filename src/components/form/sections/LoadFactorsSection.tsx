@@ -27,7 +27,7 @@ export function LoadFactorsSection({ assessment, updateField }: Props) {
   return (
     <div className="space-y-6">
       {/* Wind Exposure */}
-      <FormField fieldPath="loadFactors.windExposure" label="Wind Exposure">
+      <FormField required fieldPath="loadFactors.windExposure" label="Wind Exposure">
         <Select
           value={loadFactors.windExposure || ''}
           onValueChange={(value) =>
@@ -46,7 +46,7 @@ export function LoadFactorsSection({ assessment, updateField }: Props) {
       </FormField>
 
       {/* Wind Funneling */}
-      <FormField fieldPath="loadFactors.windFunneling" label="Wind Funneling">
+      <FormField required fieldPath="loadFactors.windFunneling" label="Wind Funneling">
         <Input
           id="loadFactors.windFunneling"
           value={loadFactors.windFunneling}
@@ -56,7 +56,7 @@ export function LoadFactorsSection({ assessment, updateField }: Props) {
       </FormField>
 
       {/* Relative Crown Size */}
-      <FormField fieldPath="loadFactors.relativeCrownSize" label="Relative Crown Size">
+      <FormField required fieldPath="loadFactors.relativeCrownSize" label="Relative Crown Size">
         <Select
           value={loadFactors.relativeCrownSize || ''}
           onValueChange={(value) =>
@@ -75,7 +75,7 @@ export function LoadFactorsSection({ assessment, updateField }: Props) {
       </FormField>
 
       {/* Crown Density */}
-      <FormField fieldPath="loadFactors.crownDensity" label="Crown Density">
+      <FormField required fieldPath="loadFactors.crownDensity" label="Crown Density">
         <Select
           value={loadFactors.crownDensity || ''}
           onValueChange={(value) =>
@@ -94,7 +94,7 @@ export function LoadFactorsSection({ assessment, updateField }: Props) {
       </FormField>
 
       {/* Interior Branches */}
-      <FormField fieldPath="loadFactors.interiorBranches" label="Interior Branches">
+      <FormField required fieldPath="loadFactors.interiorBranches" label="Interior Branches">
         <Select
           value={loadFactors.interiorBranches || ''}
           onValueChange={(value) =>
