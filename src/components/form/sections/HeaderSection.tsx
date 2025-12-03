@@ -55,7 +55,7 @@ export function HeaderSection({ assessment, updateField }: Props) {
           />
         </FormField>
 
-        <FormField fieldPath="header.time" label="Time">
+        <FormField fieldPath="header.time" label="Time" required>
           <Input
             id="header.time"
             type="time"
@@ -78,7 +78,7 @@ export function HeaderSection({ assessment, updateField }: Props) {
           </FormField>
         </div>
 
-        <FormField fieldPath="header.treeNo" label="Tree No.">
+        <FormField fieldPath="header.treeNo" label="Tree No." required>
           <Input
             id="header.treeNo"
             value={header.treeNo}
@@ -97,7 +97,7 @@ export function HeaderSection({ assessment, updateField }: Props) {
 
       {/* Sheet Numbers */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <FormField fieldPath="header.sheetNumber" label="Sheet #">
+        <FormField fieldPath="header.sheetNumber" label="Sheet #" required>
           <Input
             id="header.sheetNumber"
             type="number"
@@ -107,7 +107,7 @@ export function HeaderSection({ assessment, updateField }: Props) {
           />
         </FormField>
 
-        <FormField fieldPath="header.sheetTotal" label="of Total">
+        <FormField fieldPath="header.sheetTotal" label="of Total" required>
           <Input
             id="header.sheetTotal"
             type="number"
@@ -130,7 +130,7 @@ export function HeaderSection({ assessment, updateField }: Props) {
 
       {/* Tree Measurements */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <FormField fieldPath="header.dbh" label="DBH (Diameter at Breast Height)">
+        <FormField fieldPath="header.dbh" label="DBH (Diameter at Breast Height)" required>
           <Input
             id="header.dbh"
             value={header.dbh}
@@ -139,7 +139,7 @@ export function HeaderSection({ assessment, updateField }: Props) {
           />
         </FormField>
 
-        <FormField fieldPath="header.height" label="Height">
+        <FormField fieldPath="header.height" label="Height" required>
           <Input
             id="header.height"
             value={header.height}
@@ -148,7 +148,7 @@ export function HeaderSection({ assessment, updateField }: Props) {
           />
         </FormField>
 
-        <FormField fieldPath="header.crownSpreadDia" label="Crown Spread Dia.">
+        <FormField fieldPath="header.crownSpreadDia" label="Crown Spread Dia." required>
           <Input
             id="header.crownSpreadDia"
             value={header.crownSpreadDia}
@@ -169,7 +169,7 @@ export function HeaderSection({ assessment, updateField }: Props) {
           />
         </FormField>
 
-        <FormField fieldPath="header.toolsUsed" label="Tools Used">
+        <FormField fieldPath="header.toolsUsed" label="Tools Used" required>
           <ToolsPicker
             value={header.toolsUsed}
             onChange={(value) => updateField('header.toolsUsed', value)}
@@ -178,7 +178,7 @@ export function HeaderSection({ assessment, updateField }: Props) {
       </div>
 
       {/* Time Frame */}
-      <FormField fieldPath="header.timeFrame" label="Time Frame for Assessment">
+      <FormField fieldPath="header.timeFrame" label="Time Frame for Assessment" required>
         <Input
           id="header.timeFrame"
           value={header.timeFrame}
