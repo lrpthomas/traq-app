@@ -21,7 +21,8 @@
     "native:android": "npm run build:native && npx cap sync android && npx cap open android",
     "validate:data": "node scripts/validate-species.js",
     "generate:types": "node scripts/generate-species-types.js",
-    "prebuild": "npm run generate:types"
+    "sync:species": "cp src/data/tree-species.csv public/data/tree-species.csv",
+    "prebuild": "npm run generate:types && npm run sync:species"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.4",

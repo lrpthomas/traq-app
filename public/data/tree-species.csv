@@ -48,3 +48,220 @@ Populus deltoides,Eastern Cottonwood,Salicaceae,Weak wood; massive size; surface
 Populus tremuloides,Quaking Aspen,Salicaceae,Borers; cankers; short-lived
 Robinia pseudoacacia,Black Locust,Fabaceae,Locust borer; brittle wood
 Ailanthus altissima,Tree of Heaven,Simaroubaceae,Invasive; weak wood; spotted lanternfly host
+Quercus macrocarpa,Bur Oak,Fagaceae,Generally sturdy; drought tolerant
+Quercus coccinea,Scarlet Oak,Fagaceae,Oak wilt susceptible; good fall color
+Quercus velutina,Black Oak,Fagaceae,Oak wilt susceptible; brittle branches
+Quercus phellos,Willow Oak,Fagaceae,Fast growing; iron chlorosis possible
+Quercus virginiana,Live Oak,Fagaceae,Massive spread; generally very sturdy
+Quercus agrifolia,Coast Live Oak,Fagaceae,Sudden oak death in CA; generally sturdy
+Quercus lobata,Valley Oak,Fagaceae,Drought stress; oak pit scale
+Acer negundo,Boxelder,Sapindaceae,Weak wood; boxelder bugs; short-lived
+Acer palmatum,Japanese Maple,Sapindaceae,Verticillium wilt; sun scald
+Acer griseum,Paperbark Maple,Sapindaceae,Few problems; ornamental bark
+Ulmus parvifolia,Chinese Elm,Ulmaceae,DED resistant; elm leaf beetle
+Ulmus pumila,Siberian Elm,Ulmaceae,Weak wood; aggressive roots; short-lived
+Fraxinus excelsior,European Ash,Oleaceae,Ash dieback; emerald ash borer
+Fraxinus velutina,Arizona Ash,Oleaceae,Emerald ash borer; mistletoe host
+Tilia cordata,Littleleaf Linden,Malvaceae,Japanese beetles; aphids; included bark
+Tilia tomentosa,Silver Linden,Malvaceae,Toxic to bees; generally sturdy
+Betula pendula,European White Birch,Betulaceae,Bronze birch borer; short-lived in heat
+Betula alleghaniensis,Yellow Birch,Betulaceae,Bronze birch borer; prefers cool sites
+Pinus ponderosa,Ponderosa Pine,Pinaceae,Bark beetles; drought tolerant
+Pinus sylvestris,Scots Pine,Pinaceae,Pine wilt; diplodia; poor form
+Pinus taeda,Loblolly Pine,Pinaceae,Southern pine beetle; ice damage
+Pinus echinata,Shortleaf Pine,Pinaceae,Southern pine beetle; littleleaf disease
+Pinus palustris,Longleaf Pine,Pinaceae,Generally sturdy; fire adapted
+Picea glauca,White Spruce,Pinaceae,Spider mites; spruce budworm
+Abies concolor,White Fir,Pinaceae,Generally sturdy; balsam woolly adelgid
+Abies balsamea,Balsam Fir,Pinaceae,Balsam woolly adelgid; short-lived
+Pseudotsuga menziesii,Douglas Fir,Pinaceae,Swiss needle cast; root rot
+Larix decidua,European Larch,Pinaceae,Larch casebearer; deciduous conifer
+Cedrus deodara,Deodar Cedar,Pinaceae,Root rot; generally sturdy
+Cedrus atlantica,Atlas Cedar,Pinaceae,Generally sturdy; drought tolerant once established
+Sequoia sempervirens,Coast Redwood,Cupressaceae,Generally very sturdy; massive size
+Sequoiadendron giganteum,Giant Sequoia,Cupressaceae,Generally very sturdy; massive size
+Cryptomeria japonica,Japanese Cedar,Cupressaceae,Generally sturdy; winter bronzing
+Chamaecyparis lawsoniana,Port Orford Cedar,Cupressaceae,Root rot (Phytophthora)
+Chamaecyparis obtusa,Hinoki Cypress,Cupressaceae,Generally sturdy; spider mites
+Cupressus sempervirens,Italian Cypress,Cupressaceae,Cypress canker; spider mites
+Magnolia stellata,Star Magnolia,Magnoliaceae,Scale insects; frost damage to flowers
+Magnolia × soulangeana,Saucer Magnolia,Magnoliaceae,Scale insects; frost damage to flowers
+Magnolia virginiana,Sweetbay Magnolia,Magnoliaceae,Few problems; generally sturdy
+Cornus kousa,Kousa Dogwood,Cornaceae,More disease resistant than florida
+Cornus mas,Cornelian Cherry,Cornaceae,Few problems; very sturdy
+Prunus avium,Sweet Cherry,Rosaceae,Bacterial canker; borers
+Prunus cerasifera,Cherry Plum,Rosaceae,Black knot; borers
+Prunus × yedoensis,Yoshino Cherry,Rosaceae,Bacterial canker; borers; short-lived
+Prunus subhirtella,Higan Cherry,Rosaceae,Borers; generally moderate lifespan
+Crataegus species,Hawthorn,Rosaceae,Fire blight; cedar hawthorn rust; thorns
+Sorbus aucuparia,European Mountain Ash,Rosaceae,Fire blight; borers; sun scald
+Amelanchier species,Serviceberry,Rosaceae,Fire blight; rust; generally sturdy
+Koelreuteria paniculata,Golden Rain Tree,Sapindaceae,Generally sturdy; boxelder bugs
+Aesculus hippocastanum,Horse Chestnut,Sapindaceae,Leaf blotch; bleeding canker
+Aesculus × carnea,Red Horse Chestnut,Sapindaceae,Leaf blotch; generally moderate
+Aesculus glabra,Ohio Buckeye,Sapindaceae,Leaf scorch; leaf blotch
+Aesculus pavia,Red Buckeye,Sapindaceae,Generally sturdy; summer dormancy
+Castanea dentata,American Chestnut,Fagaceae,Chestnut blight (nearly extinct)
+Castanea mollissima,Chinese Chestnut,Fagaceae,Blight resistant; generally sturdy
+Morus alba,White Mulberry,Moraceae,Bacterial leaf scorch; weak wood
+Morus rubra,Red Mulberry,Moraceae,Bacterial leaf scorch; generally sturdier
+Maclura pomifera,Osage Orange,Moraceae,Thorns; generally very sturdy; large fruit
+Catalpa speciosa,Northern Catalpa,Bignoniaceae,Catalpa sphinx; verticillium wilt
+Catalpa bignonioides,Southern Catalpa,Bignoniaceae,Catalpa sphinx; verticillium wilt
+Paulownia tomentosa,Empress Tree,Paulowniaceae,Invasive; weak wood; fast growing
+Diospyros virginiana,American Persimmon,Ebenaceae,Few problems; generally sturdy
+Oxydendrum arboreum,Sourwood,Ericaceae,Few problems; excellent fall color
+Halesia tetraptera,Carolina Silverbell,Styracaceae,Few problems; ornamental flowers
+Chionanthus virginicus,White Fringetree,Oleaceae,Emerald ash borer (Oleaceae family)
+Syringa reticulata,Japanese Tree Lilac,Oleaceae,Bacterial blight; borers
+Lagerstroemia indica,Crape Myrtle,Lythraceae,Powdery mildew; aphids; generally sturdy
+Albizia julibrissin,Mimosa Tree,Fabaceae,Mimosa wilt; weak wood; invasive
+Gymnocladus dioicus,Kentucky Coffeetree,Fabaceae,Few problems; generally very sturdy
+Cladrastis kentukea,Yellowwood,Fabaceae,Weak branch attachments; generally sturdy
+Sophora japonica,Japanese Pagodatree,Fabaceae,Generally sturdy; twig blight
+Cercidiphyllum japonicum,Katsura Tree,Cercidiphyllaceae,Few problems; drought sensitive
+Parrotia persica,Persian Ironwood,Hamamelidaceae,Few problems; excellent fall color
+Styrax japonicus,Japanese Snowbell,Styracaceae,Few problems; ornamental
+Stewartia pseudocamellia,Japanese Stewartia,Theaceae,Few problems; ornamental bark
+Franklinia alatamaha,Franklin Tree,Theaceae,Root rot (Phytophthora); rare
+Eucommia ulmoides,Hardy Rubber Tree,Eucommiaceae,Few problems; very sturdy
+Phellodendron amurense,Amur Cork Tree,Rutaceae,Invasive in some areas; generally sturdy
+Tetradium daniellii,Bee Bee Tree,Rutaceae,Few problems; bee attractant
+Hovenia dulcis,Japanese Raisin Tree,Rhamnaceae,Few problems; potentially invasive
+Idesia polycarpa,Igiri Tree,Salicaceae,Few problems; ornamental fruit
+Davidia involucrata,Dove Tree,Nyssaceae,Few problems; slow to flower
+Araucaria araucana,Monkey Puzzle Tree,Araucariaceae,Generally sturdy; unique form
+Sciadopitys verticillata,Japanese Umbrella Pine,Sciadopityaceae,Few problems; slow growing
+Podocarpus macrophyllus,Yew Pine,Podocarpaceae,Generally sturdy; scale insects
+Taxus baccata,English Yew,Taxaceae,Generally sturdy; toxic; phytophthora
+Taxus cuspidata,Japanese Yew,Taxaceae,Generally sturdy; toxic; winter damage
+Cephalotaxus harringtonia,Japanese Plum Yew,Taxaceae,Generally sturdy; deer resistant
+Ilex opaca,American Holly,Aquifoliaceae,Leaf miners; scale; holly leaf spot
+Ilex × attenuata,Foster Holly,Aquifoliaceae,Scale; leaf miners; generally sturdy
+Ilex aquifolium,English Holly,Aquifoliaceae,Leaf miners; scale
+Eucalyptus species,Eucalyptus,Myrtaceae,Branch drop; lerp psyllid; fire hazard
+Acacia species,Acacia,Fabaceae,Short-lived; weak wood; thorns on some
+Phoenix canariensis,Canary Island Date Palm,Arecaceae,Fusarium wilt; giant palm borer
+Washingtonia robusta,Mexican Fan Palm,Arecaceae,Pink rot; giant palm borer
+Sabal palmetto,Cabbage Palm,Arecaceae,Ganoderma butt rot; generally sturdy
+Quercus suber,Cork Oak,Fagaceae,Generally sturdy; fire resistant bark
+Platanus racemosa,California Sycamore,Platanaceae,Anthracnose; powdery mildew
+Umbellularia californica,California Bay Laurel,Lauraceae,Sudden oak death vector; aromatic
+Arbutus menziesii,Pacific Madrone,Ericaceae,Leaf blight; root rot; peeling bark
+Lithocarpus densiflorus,Tanoak,Fagaceae,Sudden oak death susceptible
+Quercus douglasii,Blue Oak,Fagaceae,Drought tolerant; endemic to CA foothills
+Quercus kelloggii,California Black Oak,Fagaceae,Oak wilt susceptible; fire adapted
+Quercus wislizeni,Interior Live Oak,Fagaceae,Sudden oak death susceptible; drought tolerant
+Quercus chrysolepis,Canyon Live Oak,Fagaceae,Generally sturdy; massive spread possible
+Quercus garryana,Oregon White Oak,Fagaceae,Generally sturdy; gall wasps
+Quercus engelmannii,Engelmann Oak,Fagaceae,Endangered; drought tolerant; endemic to SoCal
+Quercus tomentella,Island Oak,Fagaceae,Rare; endemic to Channel Islands
+Aesculus californica,California Buckeye,Sapindaceae,Summer deciduous; toxic seeds; drought adapted
+Acer macrophyllum,Bigleaf Maple,Sapindaceae,Massive leaves; tarspot; generally sturdy
+Alnus rhombifolia,White Alder,Betulaceae,Riparian; tent caterpillars; nitrogen fixing
+Alnus rubra,Red Alder,Betulaceae,Short-lived; nitrogen fixing; rapid growth
+Populus fremontii,Fremont Cottonwood,Salicaceae,Weak wood; massive size; riparian
+Populus trichocarpa,Black Cottonwood,Salicaceae,Weak wood; very fast growing; riparian
+Salix laevigata,Red Willow,Salicaceae,Riparian; weak wood; fast growing
+Salix lasiolepis,Arroyo Willow,Salicaceae,Multi-stemmed; riparian; weak wood
+Salix gooddingii,Goodding's Willow,Salicaceae,Riparian; weak wood; desert Southwest
+Fraxinus latifolia,Oregon Ash,Oleaceae,Anthracnose; emerald ash borer threat
+Fraxinus dipetala,California Ash,Oleaceae,Small tree; drought deciduous; foothill species
+Cercis occidentalis,Western Redbud,Fabaceae,Verticillium wilt; generally sturdy; drought tolerant
+Cornus nuttallii,Pacific Dogwood,Cornaceae,Dogwood anthracnose; understory tree
+Prunus ilicifolia,Hollyleaf Cherry,Rosaceae,Generally sturdy; drought tolerant; native
+Prunus virginiana var. demissa,Western Chokecherry,Rosaceae,Tent caterpillars; suckering habit
+Heteromeles arbutifolia,Toyon,Rosaceae,Fire adapted; generally sturdy; CA native
+Lyonothamnus floribundus,Catalina Ironwood,Rosaceae,Endemic to Channel Islands; rare
+Juglans californica,Southern California Black Walnut,Juglandaceae,Thousand cankers disease; endangered
+Juglans hindsii,Northern California Black Walnut,Juglandaceae,Thousand cankers disease; limited range
+Washingtonia filifera,California Fan Palm,Arecaceae,Giant palm borer; only native CA palm
+Pinus coulteri,Coulter Pine,Pinaceae,Massive heavy cones; bark beetles; fire adapted
+Pinus sabiniana,Gray Pine,Pinaceae,Sparse crown; bark beetles; foothill native
+Pinus jeffreyi,Jeffrey Pine,Pinaceae,Bark beetles; similar to ponderosa; montane
+Pinus lambertiana,Sugar Pine,Pinaceae,White pine blister rust; massive cones; largest pine
+Pinus contorta,Lodgepole Pine,Pinaceae,Mountain pine beetle; fire adapted; thin bark
+Pinus radiata,Monterey Pine,Pinaceae,Pitch canker; limited native range; widely planted
+Pinus torreyana,Torrey Pine,Pinaceae,Rarest US pine; bark beetles; coastal San Diego
+Pinus monticola,Western White Pine,Pinaceae,White pine blister rust; high elevation
+Pinus attenuata,Knobcone Pine,Pinaceae,Fire adapted; serotinous cones; short-lived
+Pinus muricata,Bishop Pine,Pinaceae,Pitch canker; limited coastal range
+Abies magnifica,Red Fir,Pinaceae,Fir engraver beetle; high elevation CA/OR
+Abies bracteata,Santa Lucia Fir,Pinaceae,Rarest US fir; endemic to Santa Lucia Mtns
+Picea breweriana,Brewer Spruce,Pinaceae,Rare; weeping habit; Klamath Mountains
+Calocedrus decurrens,Incense Cedar,Cupressaceae,Generally sturdy; incense cedar rust
+Cupressus macrocarpa,Monterey Cypress,Cupressaceae,Coryneum canker; limited native range; iconic
+Cupressus goveniana,Gowen Cypress,Cupressaceae,Rare; endemic to Monterey area
+Cupressus sargentii,Sargent Cypress,Cupressaceae,Serpentine endemic; generally sturdy
+Cupressus bakeri,Baker Cypress,Cupressaceae,Fire adapted; rare; northern CA
+Juniperus californica,California Juniper,Cupressaceae,Drought tolerant; generally sturdy; desert edges
+Juniperus occidentalis,Western Juniper,Cupressaceae,Very long-lived; drought tolerant; high desert
+Torreya californica,California Nutmeg,Taxaceae,Rare; Torreya canker; shade tolerant
+Pseudotsuga macrocarpa,Bigcone Douglas Fir,Pinaceae,Fire adapted; endemic to SoCal mountains
+Notholithocarpus densiflorus,Tanoak,Fagaceae,Sudden oak death; acorn producer
+Chrysolepis chrysophylla,Giant Chinquapin,Fagaceae,Generally sturdy; fire adapted; understory
+Quercus durata,Leather Oak,Fagaceae,Serpentine endemic; shrubby to small tree
+Quercus sadleriana,Deer Oak,Fagaceae,Rare; Klamath Mtns endemic; understory shrub-tree
+Pinus balfouriana,Foxtail Pine,Pinaceae,Ancient trees; high elevation; generally sturdy
+Pinus longaeva,Bristlecone Pine,Pinaceae,Oldest known trees; high elevation; very slow growing
+Pinus flexilis,Limber Pine,Pinaceae,White pine blister rust; high elevation
+Pinus albicaulis,Whitebark Pine,Pinaceae,Endangered; blister rust; mountain pine beetle
+Prunus persica,Peach,Rosaceae,Peach leaf curl; borers; brown rot; short-lived
+Prunus persica var. nucipersica,Nectarine,Rosaceae,Peach leaf curl; borers; brown rot; short-lived
+Prunus armeniaca,Apricot,Rosaceae,Bacterial canker; brown rot; Eutypa dieback
+Prunus domestica,European Plum,Rosaceae,Black knot; brown rot; plum curculio
+Prunus salicina,Japanese Plum,Rosaceae,Bacterial canker; brown rot; less hardy
+Prunus dulcis,Almond,Rosaceae,Shot hole; brown rot; hull rot; navel orangeworm
+Prunus cerasus,Sour Cherry,Rosaceae,Bacterial canker; cherry leaf spot; borers
+Malus domestica,Apple,Rosaceae,Fire blight; apple scab; codling moth; cedar apple rust
+Pyrus communis,European Pear,Rosaceae,Fire blight; pear psylla; pear decline
+Pyrus pyrifolia,Asian Pear,Rosaceae,Fire blight resistant; pear psylla; less cold hardy
+Cydonia oblonga,Quince,Rosaceae,Fire blight; quince rust; generally sturdy
+Eriobotrya japonica,Loquat,Rosaceae,Fire blight; generally sturdy; frost sensitive fruit
+Citrus × sinensis,Sweet Orange,Rutaceae,Citrus greening (HLB); citrus canker; frost sensitive
+Citrus × limon,Lemon,Rutaceae,Citrus greening (HLB); very frost sensitive; thorny
+Citrus × paradisi,Grapefruit,Rutaceae,Citrus greening (HLB); frost sensitive; large tree
+Citrus reticulata,Mandarin,Rutaceae,Citrus greening (HLB); alternaria rot; generally smaller
+Citrus × latifolia,Persian Lime,Rutaceae,Citrus greening (HLB); very frost sensitive; thornless
+Citrus maxima,Pomelo,Rutaceae,Citrus greening (HLB); frost sensitive; very large fruit
+Citrus × aurantium,Sour Orange,Rutaceae,Citrus tristeza virus; used as rootstock; thorny
+Citrus × limon 'Meyer',Meyer Lemon,Rutaceae,Citrus greening (HLB); more cold hardy; dwarf habit
+Citrus × tangelo,Tangelo,Rutaceae,Citrus greening (HLB); hybrid vigor; frost sensitive
+Fortunella species,Kumquat,Rutaceae,Generally hardier citrus; few problems; small tree
+Persea americana,Avocado,Lauraceae,Phytophthora root rot; laurel wilt; frost sensitive
+Olea europaea,Olive,Oleaceae,Olive knot; verticillium wilt; peacock spot
+Ficus carica,Common Fig,Moraceae,Fig rust; root knot nematode; mosaic virus
+Punica granatum,Pomegranate,Lythraceae,Few problems; drought tolerant; fruit splitting
+Morus nigra,Black Mulberry,Moraceae,Bacterial leaf scorch; popcorn disease; staining fruit
+Ziziphus jujuba,Jujube,Rhamnaceae,Few problems; very drought tolerant; thorny
+Diospyros kaki,Japanese Persimmon,Ebenaceae,Anthracnose; few problems; astringent varieties
+Feijoa sellowiana,Pineapple Guava,Myrtaceae,Few problems; frost tolerant; edible flowers
+Psidium guajava,Common Guava,Myrtaceae,Guava rust; fruit flies; frost sensitive
+Mangifera indica,Mango,Anacardiaceae,Anthracnose; powdery mildew; very frost sensitive
+Litchi chinensis,Lychee,Sapindaceae,Few problems; very frost sensitive; slow growing
+Annona cherimola,Cherimoya,Annonaceae,Few problems; frost sensitive; hand pollination needed
+Asimina triloba,Pawpaw,Annonaceae,Few problems; native to E. US; shade tolerant
+Musa × paradisiaca,Banana,Musaceae,Panama disease; black sigatoka; frost kills leaves
+Corylus avellana,European Hazelnut,Betulaceae,Eastern filbert blight; big bud mite
+Corylus americana,American Hazelnut,Betulaceae,Eastern filbert blight resistant; shrubby
+Corylus colurna,Turkish Hazelnut,Betulaceae,Few problems; excellent street tree; blight resistant
+Pistacia vera,Pistachio,Anacardiaceae,Verticillium wilt; alternaria; Botryosphaeria
+Carya illinoinensis,Pecan,Juglandaceae,Pecan scab; hickory shuckworm; zinc deficiency
+Macadamia integrifolia,Macadamia,Proteaceae,Phytophthora; macadamia felted coccid; frost sensitive
+Bertholletia excelsa,Brazil Nut,Lecythidaceae,Requires rainforest; not cultivated; wild harvest only
+Anacardium occidentale,Cashew,Anacardiaceae,Anthracnose; dieback; tropical only; caustic shell
+Juglans regia,English Walnut,Juglandaceae,Walnut blight; thousand cankers disease; codling moth
+Prunus armeniaca × Prunus,Pluot/Aprium,Rosaceae,Brown rot; bacterial canker; hybrid vigor
+Actinidia deliciosa,Kiwifruit,Actinidiaceae,Bacterial canker; Phytophthora; dioecious
+Actinidia arguta,Hardy Kiwi,Actinidiaceae,Few problems; very cold hardy; smaller fruit
+Vaccinium corymbosum,Highbush Blueberry,Ericaceae,Mummy berry; stem canker; acidic soil required
+Rubus species,Blackberry/Raspberry,Rosaceae,Orange rust; anthracnose; cane borers
+Vitis vinifera,Wine Grape,Vitaceae,Powdery mildew; phylloxera; Pierce's disease
+Vitis labrusca,Concord Grape,Vitaceae,Downy mildew; black rot; more cold hardy
+Sambucus nigra,European Elderberry,Adoxaceae,Few problems; suckering; toxic when raw
+Ribes species,Currant/Gooseberry,Grossulariaceae,White pine blister rust host; powdery mildew
+Hippophae rhamnoides,Sea Buckthorn,Elaeagnaceae,Few problems; nitrogen fixing; thorny
+Elaeagnus umbellata,Autumn Olive,Elaeagnaceae,Invasive in E. US; nitrogen fixing; edible fruit
+Aronia melanocarpa,Black Chokeberry,Rosaceae,Few problems; very cold hardy; antioxidant fruit
+Amelanchier alnifolia,Saskatoon Serviceberry,Rosaceae,Fire blight; rust; edible fruit; native
+Crataegus pinnatifida,Chinese Hawthorn,Rosaceae,Fire blight; cedar hawthorn rust; edible fruit
