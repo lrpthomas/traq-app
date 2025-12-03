@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { FormField } from '@/components/form/FormField';
 import { TreeSpeciesInput } from '@/components/form/TreeSpeciesInput';
 import { LocationPicker } from '@/components/form/LocationPicker';
+import { ToolsPicker } from '@/components/form/ToolsPicker';
 import type { Assessment, GpsLocation } from '@/types/traq';
 
 interface Props {
@@ -169,11 +170,9 @@ export function HeaderSection({ assessment, updateField }: Props) {
         </FormField>
 
         <FormField fieldPath="header.toolsUsed" label="Tools Used">
-          <Input
-            id="header.toolsUsed"
+          <ToolsPicker
             value={header.toolsUsed}
-            onChange={(e) => updateField('header.toolsUsed', e.target.value)}
-            placeholder="e.g., Mallet, binoculars"
+            onChange={(value) => updateField('header.toolsUsed', value)}
           />
         </FormField>
       </div>
