@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Camera, Upload, Trash2, X, Image as ImageIcon } from 'lucide-react';
+import { Camera, Upload, Trash2, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -108,7 +108,6 @@ export function MediaSection({ assessmentId }: Props) {
               getMediaUrl={getMediaUrl}
               onView={() => setSelectedMedia(item)}
               onDelete={() => handleDelete(item.id)}
-              onEditCaption={() => setEditingCaption(item.id)}
             />
           ))}
         </div>
@@ -188,7 +187,6 @@ interface MediaThumbnailProps {
   getMediaUrl: (item: MediaAttachment) => string;
   onView: () => void;
   onDelete: () => void;
-  onEditCaption: () => void;
 }
 
 function MediaThumbnail({
@@ -196,7 +194,6 @@ function MediaThumbnail({
   getMediaUrl,
   onView,
   onDelete,
-  onEditCaption,
 }: MediaThumbnailProps) {
   return (
     <div className="relative group">

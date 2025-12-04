@@ -13,13 +13,6 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { useAssessment } from '@/hooks/useAssessment';
 import { cn } from '@/lib/utils';
 import { downloadFilledPDF, downloadReportPDF } from '@/lib/pdfGenerator';

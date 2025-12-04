@@ -4,7 +4,7 @@ import { Plus, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FormField, CheckboxField } from '@/components/form/FormField';
+import { FormField } from '@/components/form/FormField';
 import {
   Select,
   SelectContent,

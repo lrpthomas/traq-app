@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { FormField, CheckboxField } from '@/components/form/FormField';
 import {
   Select,
@@ -15,7 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { MediaSection } from './MediaSection';
-import type { Assessment, ResidualRiskRating, RiskRating } from '@/types/traq';
+import type { Assessment, ResidualRiskRating } from '@/types/traq';
 import { LABELS, RISK_COLORS } from '@/lib/riskMatrix';
 import { cn } from '@/lib/utils';
 
