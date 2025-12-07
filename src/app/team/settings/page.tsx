@@ -102,10 +102,12 @@ export default function TeamSettingsPage() {
     setIsLoadingMembers(false)
   }, [currentTeam])
 
-  // Load team data
+  // Load team data - sync form state with currentTeam prop
   useEffect(() => {
     if (currentTeam) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync form state from prop
       setTeamName(currentTeam.name)
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync form state from prop
       setTeamDescription(currentTeam.description || '')
       loadMembers()
     }

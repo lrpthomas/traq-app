@@ -25,6 +25,7 @@ function EditAssessmentContent() {
       router.push('/');
       return;
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- init from URL param
     setAssessmentId(id);
   }, [searchParams, router]);
 
