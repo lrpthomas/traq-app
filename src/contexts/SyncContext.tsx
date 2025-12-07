@@ -213,6 +213,7 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
         clearInterval(syncIntervalRef.current)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- interval reads current state, shouldn't restart on state changes
   }, [isAuthenticated, state.isOnline])
 
   // Real-time subscriptions
