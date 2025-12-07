@@ -6,7 +6,7 @@
  * Manage team details, members, and permissions
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTeam } from '@/hooks/useTeam'
 import { useAuth } from '@/hooks/useAuth'
@@ -91,16 +91,7 @@ export default function TeamSettingsPage() {
   const [deleteConfirmation, setDeleteConfirmation] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
 
-  // Load team data
-  useEffect(() => {
-    if (currentTeam) {
-      setTeamName(currentTeam.name)
-      setTeamDescription(currentTeam.description || '')
-      loadMembers()
-    }
-  }, [currentTeam])
-
-  const loadMembers = async () => {
+  const loadMembers = useCallback(async () => {
     if (!currentTeam) return
 
     setIsLoadingMembers(true)
@@ -109,7 +100,16 @@ export default function TeamSettingsPage() {
       setMembers(data)
     }
     setIsLoadingMembers(false)
-  }
+  }, [currentTeam])
+
+  // Load team data
+  useEffect(() => {
+    if (currentTeam) {
+      setTeamName(currentTeam.name)
+      setTeamDescription(currentTeam.description || '')
+      loadMembers()
+    }
+  }, [currentTeam, loadMembers])
 
   // Handle save team details
   const handleSaveDetails = async () => {
