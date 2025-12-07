@@ -6,6 +6,9 @@ import { useLiveQuery } from 'dexie-react-hooks';
 
 type Theme = 'light' | 'dark' | 'system';
 
+// localStorage key for instant theme loading
+const THEME_STORAGE_KEY = 'traq-theme';
+
 interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
@@ -37,6 +40,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   );
 
   const theme = (settings?.theme as Theme) || 'system';
+
+  // Sync theme to localStorage for instant loading on next visit
+  useEffect(() => {
+    if (settings?.theme) {
+      localStorage.setItem(THEME_STORAGE_KEY, settings.theme);
+    }
+  }, [settings?.theme]);
 
   // Detect system theme and track mount state
   useEffect(() => {
@@ -85,8 +95,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
             __html: `
               (function() {
                 try {
+                  var savedTheme = localStorage.getItem('traq-theme');
                   var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  if (systemDark) document.documentElement.classList.add('dark');
+
+                  // Apply dark class based on saved preference or system
+                  if (savedTheme === 'dark' || (savedTheme === 'system' && systemDark) || (!savedTheme && systemDark)) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
                 } catch (e) {}
               })();
             `,

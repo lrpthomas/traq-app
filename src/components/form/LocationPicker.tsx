@@ -301,22 +301,22 @@ export function LocationPicker({
   }, [location?.address]);
 
   return (
-    <div className="rounded-lg bg-slate-100 border border-slate-300 p-4 space-y-4">
+    <div className="rounded-lg bg-muted border border-border p-4 space-y-4">
       {/* Header with info tooltip */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <MapPin className="h-5 w-5 text-slate-600" />
-          <h3 className="font-medium text-slate-800">GPS Location</h3>
+          <MapPin className="h-5 w-5 text-muted-foreground" />
+          <h3 className="font-medium text-foreground">GPS Location</h3>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 type="button"
-                className="text-slate-500 hover:text-slate-700 focus:outline-none"
+                className="text-muted-foreground hover:text-foreground focus:outline-none"
               >
                 <Info className="h-4 w-4" />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="right" className="max-w-xs bg-slate-800 text-white p-2">
+            <TooltipContent side="right" className="max-w-xs">
               <p className="text-sm">
                 GPS coordinates are for the report only and will not appear on the official TRAQ PDF form.
                 Use the toggle below to copy this location to the form address field.
@@ -331,7 +331,6 @@ export function LocationPicker({
           size="sm"
           onClick={handleFindMyLocation}
           disabled={isLocating}
-          className="bg-white hover:bg-slate-50"
         >
           {isLocating ? (
             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -344,7 +343,7 @@ export function LocationPicker({
 
       {/* Error message */}
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
+        <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded px-3 py-2">
           {error}
         </div>
       )}
@@ -352,12 +351,12 @@ export function LocationPicker({
       {/* Map */}
       <div
         ref={mapRef}
-        className="h-48 rounded-md border border-slate-300 bg-white z-0"
+        className="h-48 rounded-md border border-border bg-card z-0"
         style={{ minHeight: '192px' }}
       />
       {!mapLoaded && (
-        <div className="h-48 rounded-md border border-slate-300 bg-slate-50 flex items-center justify-center -mt-52 relative z-10">
-          <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
+        <div className="h-48 rounded-md border border-border bg-muted flex items-center justify-center -mt-52 relative z-10">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
       )}
 
@@ -366,12 +365,12 @@ export function LocationPicker({
         <div className="space-y-3">
           {/* Address */}
           <div>
-            <Label className="text-xs text-slate-600 mb-1 block">Address</Label>
+            <Label className="text-xs text-muted-foreground mb-1 block">Address</Label>
             <div className="flex gap-2">
               <Input
                 value={location.address}
                 readOnly
-                className="bg-white text-sm"
+                className="text-sm"
               />
               <Button
                 type="button"
@@ -393,43 +392,43 @@ export function LocationPicker({
           {/* Coordinates */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label className="text-xs text-slate-600 mb-1 block">Latitude</Label>
+              <Label className="text-xs text-muted-foreground mb-1 block">Latitude</Label>
               <Input
                 value={location.latitude.toFixed(6)}
                 readOnly
-                className="bg-white text-sm font-mono"
+                className="text-sm font-mono"
               />
             </div>
             <div>
-              <Label className="text-xs text-slate-600 mb-1 block">Longitude</Label>
+              <Label className="text-xs text-muted-foreground mb-1 block">Longitude</Label>
               <Input
                 value={location.longitude.toFixed(6)}
                 readOnly
-                className="bg-white text-sm font-mono"
+                className="text-sm font-mono"
               />
             </div>
           </div>
 
           {/* Accuracy if available */}
           {location.accuracy && (
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-muted-foreground">
               Accuracy: ±{Math.round(location.accuracy)} meters
             </p>
           )}
 
           {/* Toggle for auto-copy to form */}
-          <div className="flex items-center justify-between pt-2 border-t border-slate-200">
+          <div className="flex items-center justify-between pt-2 border-t border-border">
             <div className="flex items-center gap-2">
-              <Label htmlFor="copy-toggle" className="text-sm text-slate-700 cursor-pointer">
+              <Label htmlFor="copy-toggle" className="text-sm text-foreground cursor-pointer">
                 Auto-copy to form address
               </Label>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button type="button" className="text-slate-500 hover:text-slate-700">
+                  <button type="button" className="text-muted-foreground hover:text-foreground">
                     <Info className="h-3.5 w-3.5" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent className="bg-slate-800 text-white p-2">
+                <TooltipContent>
                   <p className="text-xs">
                     When enabled, the GPS address will automatically update the form&apos;s Address/Tree Location field.
                   </p>
@@ -447,7 +446,7 @@ export function LocationPicker({
 
       {/* Loading state for geocoding */}
       {isGeocoding && (
-        <div className="flex items-center gap-2 text-sm text-slate-600">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" />
           <span>Getting address...</span>
         </div>
@@ -455,7 +454,7 @@ export function LocationPicker({
 
       {/* Instructions when no location */}
       {!location && !isLocating && (
-        <p className="text-sm text-slate-500 text-center py-2">
+        <p className="text-sm text-muted-foreground text-center py-2">
           Click &quot;Find My Location&quot; or tap the map to set the tree location.
         </p>
       )}
