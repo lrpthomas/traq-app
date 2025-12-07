@@ -14,6 +14,7 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Node.js scripts (use CommonJS)
     "scripts/**",
+    ".project/**",
     // Minified library files
     "public/**/*.min.mjs",
     "public/**/*.min.js",

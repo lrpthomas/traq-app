@@ -107,7 +107,6 @@ export default function TeamSettingsPage() {
     if (currentTeam) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- sync form state from prop
       setTeamName(currentTeam.name)
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync form state from prop
       setTeamDescription(currentTeam.description || '')
       loadMembers()
     }
