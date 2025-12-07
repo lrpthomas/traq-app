@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { db, initializeSettings } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
+import type { AppSettings } from '@/types/traq';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -17,14 +18,26 @@ const ThemeContext = createContext<ThemeContextType | null>(null);
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
   const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>('light');
+  const [initialized, setInitialized] = useState(false);
 
-  // Load theme from settings
-  const settings = useLiveQuery(async () => {
-    const s = await initializeSettings();
-    return s;
-  });
+  // Initialize settings once (write operation)
+  useEffect(() => {
+    initializeSettings().then(() => {
+      setInitialized(true);
+    });
+  }, []);
 
-  const theme = settings?.theme || 'system';
+  // Load theme from settings (read-only query)
+  const settings = useLiveQuery(
+    async () => {
+      if (!initialized) return null;
+      // Read-only query - just get the settings
+      return await db.settings.get('default');
+    },
+    [initialized]
+  );
+
+  const theme = (settings?.theme as Theme) || 'system';
 
   // Detect system theme
   useEffect(() => {
@@ -66,20 +79,21 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // Prevent flash during hydration
   if (!mounted) {
     return (
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            (function() {
-              try {
-                var theme = localStorage.getItem('traq-theme') || 'system';
-                var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                var dark = theme === 'dark' || (theme === 'system' && systemDark);
-                if (dark) document.documentElement.classList.add('dark');
-              } catch (e) {}
-            })();
-          `,
-        }}
-      />
+      <>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  if (systemDark) document.documentElement.classList.add('dark');
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+        {children}
+      </>
     );
   }
 
@@ -90,10 +104,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useTheme() {
+// Default values for SSR/SSG when ThemeProvider is not available
+const defaultThemeContext: ThemeContextType = {
+  theme: 'system',
+  setTheme: async () => {},
+  resolvedTheme: 'light',
+};
+
+export function useTheme(): ThemeContextType {
   const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
+  // Return defaults during SSG/SSR, actual values after hydration
+  return context || defaultThemeContext;
 }
