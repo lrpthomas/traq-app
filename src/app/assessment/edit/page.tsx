@@ -31,7 +31,7 @@ function EditAssessmentContent() {
   if (!assessmentId) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-accent" />
       </div>
     );
   }
@@ -42,7 +42,7 @@ function EditAssessmentContent() {
 function LoadingFallback() {
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+      <Loader2 className="h-8 w-8 animate-spin text-accent" />
     </div>
   );
 }

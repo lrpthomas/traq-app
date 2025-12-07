@@ -35,7 +35,7 @@ export function Header() {
       <div className="container flex h-14 items-center">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 mr-6">
-          <TreeDeciduous className="h-6 w-6 text-green-600" />
+          <TreeDeciduous className="h-6 w-6 text-gold" />
           <span className="font-bold text-lg hidden sm:inline">TRAQ</span>
         </Link>
 
@@ -98,7 +98,7 @@ export function Header() {
                       className={cn(
                         'flex items-center gap-3 text-sm font-medium py-2 px-3 rounded-md transition-colors',
                         isActive
-                          ? 'bg-green-100 text-green-800'
+                          ? 'bg-accent/20 text-accent-foreground'
                           : 'hover:bg-muted'
                       )}
                     >
@@ -143,8 +143,8 @@ function UserMenu({ displayName, onSignOut }: UserMenuProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-2">
-          <div className="w-7 h-7 rounded-full bg-green-100 flex items-center justify-center">
-            <User className="h-4 w-4 text-green-600" />
+          <div className="w-7 h-7 rounded-full bg-accent/20 flex items-center justify-center">
+            <User className="h-4 w-4 text-gold" />
           </div>
           <span className="max-w-[100px] truncate hidden lg:inline">
             {displayName}

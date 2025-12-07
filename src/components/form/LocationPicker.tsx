@@ -382,7 +382,7 @@ export function LocationPicker({
                 title="Copy to form address"
               >
                 {copied ? (
-                  <Check className="h-4 w-4 text-green-600" />
+                  <Check className="h-4 w-4 text-accent" />
                 ) : (
                   <Copy className="h-4 w-4" />
                 )}

@@ -37,79 +37,105 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-gold: var(--gold);
+  --color-steel: var(--steel);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* ============================================
+   VGK VEGAS GOLDEN KNIGHTS THEME
+   Light Mode = Away Colors (White/Gold)
+   Dark Mode = Home Colors (Black/Gold)
+   ============================================ */
+
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+
+  /* VGK Brand Colors */
+  --gold: oklch(0.70 0.11 85);           /* #B4975A - VGK Gold */
+  --gold-light: oklch(0.80 0.09 85);     /* Lighter gold for hover */
+  --gold-dark: oklch(0.55 0.12 85);      /* Darker gold for active */
+  --steel: oklch(0.32 0.02 240);         /* #333F48 - Steel Gray */
+  --steel-light: oklch(0.45 0.02 240);   /* Lighter steel */
+
+  /* Light Mode (Away) - White & Gold */
+  --background: oklch(0.99 0 0);         /* Near-white */
+  --foreground: oklch(0.18 0.02 240);    /* Steel-tinted black */
+  --card: oklch(1 0 0);                  /* Pure white */
+  --card-foreground: oklch(0.18 0.02 240);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.18 0.02 240);
+  --primary: var(--steel);               /* Steel Gray primary */
+  --primary-foreground: oklch(0.99 0 0); /* White text on primary */
+  --secondary: oklch(0.96 0.01 85);      /* Subtle gold tint */
+  --secondary-foreground: var(--steel);
+  --muted: oklch(0.96 0.005 240);        /* Light steel gray */
+  --muted-foreground: oklch(0.50 0.02 240);
+  --accent: var(--gold);                 /* Gold accent */
+  --accent-foreground: oklch(0.15 0 0);  /* Dark text on gold */
+  --destructive: oklch(0.55 0.22 25);    /* Red for errors */
+  --border: oklch(0.90 0.01 240);        /* Light steel border */
+  --input: oklch(0.90 0.01 240);
+  --ring: var(--gold);                   /* Gold focus ring */
+
+  /* Charts - VGK color palette */
+  --chart-1: var(--gold);                /* Gold */
+  --chart-2: var(--steel);               /* Steel */
+  --chart-3: oklch(0.45 0.02 240);       /* Light steel */
+  --chart-4: oklch(0.60 0.10 85);        /* Muted gold */
+  --chart-5: oklch(0.75 0.08 85);        /* Light gold */
+
+  /* Sidebar */
+  --sidebar: oklch(0.98 0.005 85);       /* Subtle gold tint */
+  --sidebar-foreground: var(--steel);
+  --sidebar-primary: var(--gold);
+  --sidebar-primary-foreground: oklch(0.15 0 0);
+  --sidebar-accent: oklch(0.94 0.02 85);
+  --sidebar-accent-foreground: var(--steel);
+  --sidebar-border: oklch(0.90 0.01 85);
+  --sidebar-ring: var(--gold);
 }
 
+/* Dark Mode (Home) - Black & Gold */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: oklch(0.12 0.01 240);    /* Near-black with steel tint */
+  --foreground: oklch(0.95 0.01 85);     /* Off-white with gold tint */
+  --card: oklch(0.16 0.01 240);          /* Dark steel card */
+  --card-foreground: oklch(0.95 0.01 85);
+  --popover: oklch(0.16 0.01 240);
+  --popover-foreground: oklch(0.95 0.01 85);
+  --primary: var(--gold);                /* Gold primary in dark mode */
+  --primary-foreground: oklch(0.10 0 0); /* Black text on gold */
+  --secondary: oklch(0.22 0.01 240);     /* Dark steel secondary */
+  --secondary-foreground: oklch(0.90 0.01 85);
+  --muted: oklch(0.22 0.01 240);
+  --muted-foreground: oklch(0.65 0.02 85);
+  --accent: var(--gold);                 /* Gold accent */
+  --accent-foreground: oklch(0.10 0 0);
+  --destructive: oklch(0.60 0.20 25);    /* Brighter red in dark mode */
+  --border: oklch(0.25 0.02 240);        /* Dark steel border */
+  --input: oklch(0.22 0.02 240);
+  --ring: var(--gold);
+
+  /* Charts - Dark mode variants */
+  --chart-1: var(--gold);
+  --chart-2: oklch(0.55 0.02 240);       /* Lighter steel */
+  --chart-3: oklch(0.80 0.08 85);        /* Light gold */
+  --chart-4: oklch(0.45 0.02 240);
+  --chart-5: oklch(0.65 0.10 85);
+
+  /* Sidebar - Dark */
+  --sidebar: oklch(0.14 0.01 240);
+  --sidebar-foreground: oklch(0.90 0.01 85);
+  --sidebar-primary: var(--gold);
+  --sidebar-primary-foreground: oklch(0.10 0 0);
+  --sidebar-accent: oklch(0.20 0.02 240);
+  --sidebar-accent-foreground: oklch(0.90 0.01 85);
+  --sidebar-border: oklch(0.25 0.02 240);
+  --sidebar-ring: var(--gold);
 }
 
 @layer base {
@@ -118,5 +144,43 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* VGK-specific utility classes */
+@layer utilities {
+  .text-gold {
+    color: var(--gold);
+  }
+  .bg-gold {
+    background-color: var(--gold);
+  }
+  .border-gold {
+    border-color: var(--gold);
+  }
+  .text-steel {
+    color: var(--steel);
+  }
+  .bg-steel {
+    background-color: var(--steel);
+  }
+
+  /* Gold gradient for headers */
+  .bg-gold-gradient {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+  }
+
+  /* Steel gradient */
+  .bg-steel-gradient {
+    background: linear-gradient(135deg, var(--steel) 0%, oklch(0.22 0.02 240) 100%);
+  }
+
+  /* VGK button variants */
+  .btn-vgk {
+    @apply bg-gold text-black font-semibold hover:opacity-90 transition-opacity;
+  }
+
+  .btn-vgk-outline {
+    @apply border-2 border-gold text-gold hover:bg-gold hover:text-black transition-colors;
   }
 }

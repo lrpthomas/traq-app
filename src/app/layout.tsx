@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/Header';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { TeamProvider } from '@/contexts/TeamContext';
 import { SyncProvider } from '@/contexts/SyncContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import { SyncFloatingIndicator } from '@/components/sync/SyncStatus';
 
 const inter = Inter({
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#16a34a',
+  themeColor: '#B4975A', // VGK Gold
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -36,17 +37,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased bg-gray-50`}>
-        <AuthProvider>
-          <TeamProvider>
-            <SyncProvider>
-              <Header />
-              <main className="min-h-[calc(100vh-3.5rem)]">{children}</main>
-              <SyncFloatingIndicator />
-            </SyncProvider>
-          </TeamProvider>
-        </AuthProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans antialiased bg-background text-foreground`}>
+        <ThemeProvider>
+          <AuthProvider>
+            <TeamProvider>
+              <SyncProvider>
+                <Header />
+                <main className="min-h-[calc(100vh-3.5rem)]">{children}</main>
+                <SyncFloatingIndicator />
+              </SyncProvider>
+            </TeamProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

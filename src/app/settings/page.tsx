@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Save, RotateCcw } from 'lucide-react';
+import { Save, RotateCcw, Sun, Moon, Monitor, Building2, User, Ruler, Clock, Brain, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -15,12 +16,16 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { db, DEFAULT_SETTINGS, initializeSettings } from '@/lib/db';
+import { useTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 import type { AppSettings } from '@/types/traq';
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<AppSettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState<string | null>(null);
+  const { theme, setTheme, resolvedTheme } = useTheme();
 
   useEffect(() => {
     async function loadSettings() {
@@ -56,6 +61,8 @@ export default function SettingsPage() {
     setIsSaving(true);
     try {
       await db.settings.put(settings);
+      setSaveMessage('Settings saved successfully!');
+      setTimeout(() => setSaveMessage(null), 3000);
     } finally {
       setIsSaving(false);
     }
@@ -74,11 +81,20 @@ export default function SettingsPage() {
     }
   };
 
+  const handleThemeChange = async (newTheme: 'light' | 'dark' | 'system') => {
+    if (settings) {
+      const updated = { ...settings, theme: newTheme };
+      setSettings(updated);
+      await setTheme(newTheme);
+      await db.settings.put(updated);
+    }
+  };
+
   if (isLoading || !settings) {
     return (
       <div className="container py-8">
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600" />
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent" />
         </div>
       </div>
     );
@@ -87,7 +103,7 @@ export default function SettingsPage() {
   return (
     <div className="container py-6 max-w-2xl">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
+        <h1 className="text-2xl font-bold text-foreground">Settings</h1>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleReset}>
             <RotateCcw className="h-4 w-4 mr-2" />
@@ -96,7 +112,7 @@ export default function SettingsPage() {
           <Button
             onClick={handleSave}
             disabled={isSaving}
-            className="bg-green-600 hover:bg-green-700"
+            className="bg-primary hover:bg-primary/90"
           >
             <Save className="h-4 w-4 mr-2" />
             {isSaving ? 'Saving...' : 'Save'}
@@ -104,11 +120,148 @@ export default function SettingsPage() {
         </div>
       </div>
 
+      {saveMessage && (
+        <div className="mb-4 p-3 bg-accent/20 text-accent-foreground rounded-md text-sm">
+          {saveMessage}
+        </div>
+      )}
+
       <div className="space-y-6">
+        {/* Theme Selection */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Palette className="h-5 w-5 text-accent" />
+              Appearance
+            </CardTitle>
+            <CardDescription>
+              Choose your preferred theme. VGK Home colors for dark, Away colors for light.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-3">
+              <button
+                onClick={() => handleThemeChange('light')}
+                className={cn(
+                  'flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all',
+                  theme === 'light'
+                    ? 'border-accent bg-accent/10'
+                    : 'border-border hover:border-accent/50'
+                )}
+              >
+                <div className="w-12 h-12 rounded-full bg-white border-2 border-border flex items-center justify-center">
+                  <Sun className="h-6 w-6 text-amber-500" />
+                </div>
+                <span className="text-sm font-medium">Light</span>
+                <span className="text-xs text-muted-foreground">Away</span>
+              </button>
+
+              <button
+                onClick={() => handleThemeChange('dark')}
+                className={cn(
+                  'flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all',
+                  theme === 'dark'
+                    ? 'border-accent bg-accent/10'
+                    : 'border-border hover:border-accent/50'
+                )}
+              >
+                <div className="w-12 h-12 rounded-full bg-[#1a1d21] border-2 border-accent flex items-center justify-center">
+                  <Moon className="h-6 w-6 text-accent" />
+                </div>
+                <span className="text-sm font-medium">Dark</span>
+                <span className="text-xs text-muted-foreground">Home</span>
+              </button>
+
+              <button
+                onClick={() => handleThemeChange('system')}
+                className={cn(
+                  'flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all',
+                  theme === 'system'
+                    ? 'border-accent bg-accent/10'
+                    : 'border-border hover:border-accent/50'
+                )}
+              >
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-white to-[#1a1d21] border-2 border-border flex items-center justify-center">
+                  <Monitor className="h-6 w-6 text-accent" />
+                </div>
+                <span className="text-sm font-medium">System</span>
+                <span className="text-xs text-muted-foreground">Auto</span>
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Company Info for Reports */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Building2 className="h-5 w-5 text-accent" />
+              Company Information
+            </CardTitle>
+            <CardDescription>
+              This information will appear on exported PDF reports
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="companyName">Company Name</Label>
+              <Input
+                id="companyName"
+                value={settings.companyName || ''}
+                onChange={(e) => updateSetting('companyName', e.target.value)}
+                placeholder="Your Company Name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="companyAddress">Company Address</Label>
+              <Textarea
+                id="companyAddress"
+                value={settings.companyAddress || ''}
+                onChange={(e) => updateSetting('companyAddress', e.target.value)}
+                placeholder="123 Main St, City, State 12345"
+                rows={2}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="companyPhone">Phone</Label>
+                <Input
+                  id="companyPhone"
+                  value={settings.companyPhone || ''}
+                  onChange={(e) => updateSetting('companyPhone', e.target.value)}
+                  placeholder="(555) 123-4567"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="companyEmail">Email</Label>
+                <Input
+                  id="companyEmail"
+                  type="email"
+                  value={settings.companyEmail || ''}
+                  onChange={(e) => updateSetting('companyEmail', e.target.value)}
+                  placeholder="info@company.com"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="companyLicense">License/Certification #</Label>
+              <Input
+                id="companyLicense"
+                value={settings.companyLicense || ''}
+                onChange={(e) => updateSetting('companyLicense', e.target.value)}
+                placeholder="ISA Certified Arborist #XX-1234A"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Assessor Info */}
         <Card>
           <CardHeader>
-            <CardTitle>Assessor Information</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <User className="h-5 w-5 text-accent" />
+              Assessor Information
+            </CardTitle>
             <CardDescription>
               Pre-fill your name on new assessments
             </CardDescription>
@@ -129,7 +282,10 @@ export default function SettingsPage() {
         {/* Default Units */}
         <Card>
           <CardHeader>
-            <CardTitle>Default Units</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Ruler className="h-5 w-5 text-accent" />
+              Default Units
+            </CardTitle>
             <CardDescription>
               Set your preferred measurement units
             </CardDescription>
@@ -196,7 +352,10 @@ export default function SettingsPage() {
         {/* Default Time Frame */}
         <Card>
           <CardHeader>
-            <CardTitle>Assessment Defaults</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="h-5 w-5 text-accent" />
+              Assessment Defaults
+            </CardTitle>
             <CardDescription>
               Default values for new assessments
             </CardDescription>
@@ -217,7 +376,10 @@ export default function SettingsPage() {
         {/* Field Memory */}
         <Card>
           <CardHeader>
-            <CardTitle>Field Memory</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Brain className="h-5 w-5 text-accent" />
+              Field Memory
+            </CardTitle>
             <CardDescription>
               Remember field values for future assessments
             </CardDescription>
@@ -226,7 +388,7 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label>Enable Field Memory</Label>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted-foreground">
                   Show memory toggle buttons on form fields
                 </p>
               </div>
@@ -245,7 +407,10 @@ export default function SettingsPage() {
         {/* Auto Save */}
         <Card>
           <CardHeader>
-            <CardTitle>Auto Save</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Save className="h-5 w-5 text-accent" />
+              Auto Save
+            </CardTitle>
             <CardDescription>
               Automatically save assessments while editing
             </CardDescription>
@@ -263,36 +428,6 @@ export default function SettingsPage() {
                   updateSetting('autoSaveInterval', parseInt(e.target.value) * 1000 || 30000)
                 }
               />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Theme */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Appearance</CardTitle>
-            <CardDescription>
-              Customize the app appearance
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="theme">Theme</Label>
-              <Select
-                value={settings.theme}
-                onValueChange={(value) =>
-                  updateSetting('theme', value as 'light' | 'dark' | 'system')
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="system">System</SelectItem>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
           </CardContent>
         </Card>

@@ -68,7 +68,7 @@ function LoginForm() {
       <CardHeader className="text-center">
         <div className="flex justify-center mb-4">
           <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full">
-            <TreeDeciduous className="h-8 w-8 text-green-600 dark:text-green-400" />
+            <TreeDeciduous className="h-8 w-8 text-accent dark:text-green-400" />
           </div>
         </div>
         <CardTitle className="text-2xl font-bold">Welcome to TRAQ</CardTitle>
@@ -107,7 +107,7 @@ function LoginForm() {
               <Label htmlFor="password">Password</Label>
               <Link
                 href="/reset-password"
-                className="text-sm text-green-600 hover:text-green-700 dark:text-green-400"
+                className="text-sm text-accent hover:text-green-700 dark:text-green-400"
               >
                 Forgot password?
               </Link>
@@ -144,7 +144,7 @@ function LoginForm() {
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white dark:bg-gray-950 px-2 text-gray-500">
+            <span className="bg-white dark:bg-gray-950 px-2 text-muted-foreground">
               Or continue with
             </span>
           </div>
@@ -190,9 +190,9 @@ function LoginForm() {
       </CardContent>
 
       <CardFooter className="flex justify-center">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-sm text-muted-foreground dark:text-gray-400">
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-green-600 hover:text-green-700 dark:text-green-400 font-medium">
+          <Link href="/signup" className="text-accent hover:text-green-700 dark:text-green-400 font-medium">
             Sign up
           </Link>
         </p>
@@ -207,7 +207,7 @@ function LoginFallback() {
       <CardHeader className="text-center">
         <div className="flex justify-center mb-4">
           <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full">
-            <TreeDeciduous className="h-8 w-8 text-green-600 dark:text-green-400" />
+            <TreeDeciduous className="h-8 w-8 text-accent dark:text-green-400" />
           </div>
         </div>
         <CardTitle className="text-2xl font-bold">Welcome to TRAQ</CardTitle>
@@ -216,7 +216,7 @@ function LoginFallback() {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex justify-center py-8">
-        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-accent" />
       </CardContent>
     </Card>
   )

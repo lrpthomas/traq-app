@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { MediaSection } from './MediaSection';
+import { TreeSketch } from '@/components/form/TreeSketch';
 import type { Assessment, ResidualRiskRating } from '@/types/traq';
 import { LABELS, RISK_COLORS } from '@/lib/riskMatrix';
 import { cn } from '@/lib/utils';
@@ -32,7 +33,7 @@ export function MitigationSection({
   removeMitigationOption,
 }: Props) {
   if (!assessment) {
-    return <div className="animate-pulse h-32 bg-gray-100 rounded" />;
+    return <div className="animate-pulse h-32 bg-muted rounded" />;
   }
   const mitigationOptions = Array.isArray(assessment.mitigationOptions) ? assessment.mitigationOptions : [];
   const inspectionLimitations = assessment.inspectionLimitations || {
@@ -58,7 +59,7 @@ export function MitigationSection({
       </FormField>
 
       {/* Overall Tree Risk Rating */}
-      <div className="p-4 bg-gray-50 rounded-lg">
+      <div className="p-4 bg-muted/50 rounded-lg">
         <h3 className="text-sm font-medium mb-2">Overall Tree Risk Rating</h3>
         <div
           className={cn(
@@ -70,14 +71,14 @@ export function MitigationSection({
                   RISK_COLORS[assessment.overallTreeRiskRating].border,
                   'border'
                 )
-              : 'bg-gray-100 text-gray-500'
+              : 'bg-muted text-muted-foreground'
           )}
         >
           {assessment.overallTreeRiskRating
             ? `${LABELS.riskRating[assessment.overallTreeRiskRating]} Risk`
             : 'Not Calculated'}
         </div>
-        <p className="text-xs text-gray-500 mt-2 text-center">
+        <p className="text-xs text-muted-foreground mt-2 text-center">
           Automatically calculated as the highest risk rating from all risk rows.
         </p>
       </div>
@@ -281,6 +282,15 @@ export function MitigationSection({
             />
           </FormField>
         )}
+      </div>
+
+      {/* Tree Sketch */}
+      <div className="border-t pt-6 mt-6">
+        <TreeSketch
+          initialData={assessment.treeSketch}
+          onSave={(imageData) => updateField('treeSketch', imageData)}
+          height={350}
+        />
       </div>
 
       {/* Media Attachments */}

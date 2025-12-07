@@ -46,7 +46,7 @@ export default function ResetPasswordPage() {
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
               <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full">
-                <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
+                <CheckCircle className="h-8 w-8 text-accent dark:text-green-400" />
               </div>
             </div>
             <CardTitle className="text-2xl font-bold">Check your email</CardTitle>
@@ -74,7 +74,7 @@ export default function ResetPasswordPage() {
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full">
-              <TreeDeciduous className="h-8 w-8 text-green-600 dark:text-green-400" />
+              <TreeDeciduous className="h-8 w-8 text-accent dark:text-green-400" />
             </div>
           </div>
           <CardTitle className="text-2xl font-bold">Reset your password</CardTitle>
@@ -122,7 +122,7 @@ export default function ResetPasswordPage() {
         </CardContent>
 
         <CardFooter className="flex justify-center">
-          <Link href="/login" className="text-sm text-gray-600 dark:text-gray-400 hover:text-green-600">
+          <Link href="/login" className="text-sm text-muted-foreground dark:text-gray-400 hover:text-accent">
             <ArrowLeft className="inline mr-1 h-4 w-4" />
             Back to Login
           </Link>

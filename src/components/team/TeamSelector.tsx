@@ -117,7 +117,7 @@ export function TeamSelector() {
           {/* Create new team */}
           <DropdownMenuItem
             onClick={() => setShowCreateDialog(true)}
-            className="gap-2 text-green-600"
+            className="gap-2 text-accent"
           >
             <Plus className="h-4 w-4" />
             <span>Create Team</span>

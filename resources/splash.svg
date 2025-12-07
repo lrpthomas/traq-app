@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2732 2732">
+  <defs>
+    <!-- VGK Gold Gradient -->
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#C9A862;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#B4975A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B7642;stop-opacity:1" />
+    </linearGradient>
+    <!-- Steel background -->
+    <linearGradient id="steelGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2A343D;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A1D21;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="2732" height="2732" fill="url(#steelGradient)"/>
+
+  <!-- Centered Tree Icon -->
+  <g transform="translate(1116, 1066)">
+    <!-- Tree Crown -->
+    <ellipse cx="250" cy="150" rx="150" ry="120" fill="url(#goldGradient)" opacity="0.9"/>
+    <ellipse cx="180" cy="180" rx="90" ry="75" fill="url(#goldGradient)"/>
+    <ellipse cx="320" cy="180" rx="90" ry="75" fill="url(#goldGradient)"/>
+    <ellipse cx="250" cy="230" rx="110" ry="85" fill="url(#goldGradient)"/>
+
+    <!-- Tree Trunk -->
+    <rect x="215" y="300" width="70" height="150" rx="10" fill="url(#goldGradient)"/>
+
+    <!-- Root flare -->
+    <path d="M200 440 Q170 470 130 455" stroke="url(#goldGradient)" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M300 440 Q330 470 370 455" stroke="url(#goldGradient)" stroke-width="12" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- TRAQ Text -->
+  <text x="1366" y="1750" font-family="Arial Black, sans-serif" font-size="180" font-weight="bold" fill="url(#goldGradient)" text-anchor="middle">TRAQ</text>
+  <text x="1366" y="1880" font-family="Arial, sans-serif" font-size="60" fill="#B4975A" text-anchor="middle" opacity="0.8">Tree Risk Assessment</text>
+</svg>

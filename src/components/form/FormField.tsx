@@ -100,7 +100,7 @@ export function FormField({
                   size="sm"
                   className={cn(
                     'h-6 w-6 p-0',
-                    memoryEnabled && 'text-green-600 hover:text-green-700'
+                    memoryEnabled && 'text-accent hover:text-green-700'
                   )}
                   onClick={toggleMemory}
                   aria-label={memoryEnabled ? 'Disable memory' : 'Enable memory'}
@@ -162,7 +162,7 @@ export function CheckboxField({
         id={fieldPath}
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+        className="h-4 w-4 rounded border-gray-300 text-accent focus:ring-green-500"
       />
       <Label htmlFor={fieldPath} className="text-sm font-normal cursor-pointer">
         {label}
@@ -199,7 +199,7 @@ export function CheckboxField({
           size="sm"
           className={cn(
             'h-5 w-5 p-0',
-            memoryEnabled && 'text-green-600 hover:text-green-700'
+            memoryEnabled && 'text-accent hover:text-green-700'
           )}
           onClick={toggleMemory}
           aria-label={memoryEnabled ? 'Disable memory' : 'Enable memory'}

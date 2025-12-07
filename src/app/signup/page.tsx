@@ -84,7 +84,7 @@ export default function SignupPage() {
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
               <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full">
-                <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
+                <CheckCircle className="h-8 w-8 text-accent dark:text-green-400" />
               </div>
             </div>
             <CardTitle className="text-2xl font-bold">Check your email</CardTitle>
@@ -109,7 +109,7 @@ export default function SignupPage() {
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full">
-              <TreeDeciduous className="h-8 w-8 text-green-600 dark:text-green-400" />
+              <TreeDeciduous className="h-8 w-8 text-accent dark:text-green-400" />
             </div>
           </div>
           <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
@@ -174,7 +174,7 @@ export default function SignupPage() {
                   disabled={isLoading}
                 />
               </div>
-              <p className="text-xs text-gray-500">Must be at least 8 characters</p>
+              <p className="text-xs text-muted-foreground">Must be at least 8 characters</p>
             </div>
 
             <div className="space-y-2">
@@ -211,7 +211,7 @@ export default function SignupPage() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white dark:bg-gray-950 px-2 text-gray-500">
+              <span className="bg-white dark:bg-gray-950 px-2 text-muted-foreground">
                 Or continue with
               </span>
             </div>
@@ -255,22 +255,22 @@ export default function SignupPage() {
             </Button>
           </div>
 
-          <p className="text-xs text-center text-gray-500">
+          <p className="text-xs text-center text-muted-foreground">
             By signing up, you agree to our{' '}
-            <Link href="/terms" className="text-green-600 hover:underline">
+            <Link href="/terms" className="text-accent hover:underline">
               Terms of Service
             </Link>{' '}
             and{' '}
-            <Link href="/privacy" className="text-green-600 hover:underline">
+            <Link href="/privacy" className="text-accent hover:underline">
               Privacy Policy
             </Link>
           </p>
         </CardContent>
 
         <CardFooter className="flex justify-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-muted-foreground dark:text-gray-400">
             Already have an account?{' '}
-            <Link href="/login" className="text-green-600 hover:text-green-700 dark:text-green-400 font-medium">
+            <Link href="/login" className="text-accent hover:text-green-700 dark:text-green-400 font-medium">
               Sign in
             </Link>
           </p>

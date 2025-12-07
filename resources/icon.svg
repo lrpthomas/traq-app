@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <!-- VGK Gold Gradient -->
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#C9A862;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#B4975A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B7642;stop-opacity:1" />
+    </linearGradient>
+    <!-- Steel gradient for background -->
+    <linearGradient id="steelGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2A343D;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A1D21;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="240" fill="url(#steelGradient)" stroke="url(#goldGradient)" stroke-width="16"/>
+
+  <!-- Tree Crown (stylized deciduous tree) -->
+  <ellipse cx="256" cy="180" rx="120" ry="100" fill="url(#goldGradient)" opacity="0.9"/>
+  <ellipse cx="200" cy="200" rx="70" ry="60" fill="url(#goldGradient)"/>
+  <ellipse cx="312" cy="200" rx="70" ry="60" fill="url(#goldGradient)"/>
+  <ellipse cx="256" cy="240" rx="90" ry="70" fill="url(#goldGradient)"/>
+
+  <!-- Tree Trunk -->
+  <rect x="230" y="280" width="52" height="120" rx="8" fill="url(#goldGradient)"/>
+
+  <!-- Root flare lines -->
+  <path d="M220 390 Q200 410 180 400" stroke="url(#goldGradient)" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M292 390 Q312 410 332 400" stroke="url(#goldGradient)" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M256 400 Q256 420 256 430" stroke="url(#goldGradient)" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+  <!-- Risk assessment crosshair/target indicator -->
+  <circle cx="256" cy="200" r="30" fill="none" stroke="#1A1D21" stroke-width="4" opacity="0.6"/>
+  <line x1="256" y1="160" x2="256" y2="180" stroke="#1A1D21" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+  <line x1="256" y1="220" x2="256" y2="240" stroke="#1A1D21" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+  <line x1="216" y1="200" x2="236" y2="200" stroke="#1A1D21" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+  <line x1="276" y1="200" x2="296" y2="200" stroke="#1A1D21" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+</svg>

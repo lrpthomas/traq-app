@@ -15,7 +15,7 @@ export default function HomePage() {
     return (
       <div className="container py-8">
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600" />
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent" />
         </div>
       </div>
     );
@@ -26,13 +26,13 @@ export default function HomePage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Assessments</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-foreground">Assessments</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             {assessments.length} assessment{assessments.length !== 1 ? 's' : ''}
           </p>
         </div>
         <Link href="/assessment/new">
-          <Button className="bg-green-600 hover:bg-green-700">
+          <Button className="bg-primary hover:bg-primary/90">
             <Plus className="h-4 w-4 mr-2" />
             New Assessment
           </Button>
@@ -43,13 +43,13 @@ export default function HomePage() {
       {assessments.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <FileText className="h-12 w-12 text-gray-300 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-1">No assessments yet</h3>
-            <p className="text-sm text-gray-500 mb-4">
+            <FileText className="h-12 w-12 text-muted-foreground/50 mb-4" />
+            <h3 className="text-lg font-medium text-foreground mb-1">No assessments yet</h3>
+            <p className="text-sm text-muted-foreground mb-4">
               Create your first tree risk assessment to get started.
             </p>
             <Link href="/assessment/new">
-              <Button className="bg-green-600 hover:bg-green-700">
+              <Button className="bg-primary hover:bg-primary/90">
                 <Plus className="h-4 w-4 mr-2" />
                 New Assessment
               </Button>
@@ -60,7 +60,7 @@ export default function HomePage() {
         <div className="grid gap-4">
           {assessments.map((assessment) => (
             <Link key={assessment.id} href={`/assessment/edit?id=${assessment.id}`}>
-              <Card className="hover:border-green-300 hover:shadow-md transition-all cursor-pointer">
+              <Card className="hover:border-accent/50 hover:shadow-md transition-all cursor-pointer">
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -79,8 +79,8 @@ export default function HomePage() {
                     <Badge
                       className={cn(
                         assessment.status === 'complete'
-                          ? 'bg-green-100 text-green-800 border-green-300'
-                          : 'bg-amber-100 text-amber-800 border-amber-300'
+                          ? 'bg-accent/20 text-accent-foreground border-accent/30'
+                          : 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-900/30 dark:text-amber-200'
                       )}
                     >
                       {assessment.status === 'complete' ? (

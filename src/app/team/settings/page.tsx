@@ -275,7 +275,7 @@ export default function TeamSettingsPage() {
               </div>
             )}
             {saveSuccess && (
-              <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-green-50 border border-green-200 text-accent px-4 py-3 rounded-lg text-sm">
                 Team details saved successfully!
               </div>
             )}
@@ -342,7 +342,7 @@ export default function TeamSettingsPage() {
                 <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
               </div>
             ) : members.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">No members found</p>
+              <p className="text-center text-muted-foreground py-8">No members found</p>
             ) : (
               <div className="space-y-3">
                 {members.map((member) => {
@@ -357,7 +357,7 @@ export default function TeamSettingsPage() {
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
-                          <span className="text-green-600 dark:text-green-400 font-medium">
+                          <span className="text-accent dark:text-green-400 font-medium">
                             {member.user?.display_name?.[0] || member.user?.email?.[0] || '?'}
                           </span>
                         </div>
@@ -365,7 +365,7 @@ export default function TeamSettingsPage() {
                           <p className="font-medium">
                             {member.user?.display_name || member.user?.email || 'Unknown User'}
                           </p>
-                          <p className="text-sm text-gray-500">{member.user?.email}</p>
+                          <p className="text-sm text-muted-foreground">{member.user?.email}</p>
                         </div>
                       </div>
 
@@ -388,7 +388,7 @@ export default function TeamSettingsPage() {
                             </SelectContent>
                           </Select>
                         ) : (
-                          <div className="flex items-center gap-1 text-sm text-gray-600 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded">
+                          <div className="flex items-center gap-1 text-sm text-gray-600 px-3 py-1 bg-muted dark:bg-gray-700 rounded">
                             <RoleIcon className="h-4 w-4" />
                             {getRoleDisplayName(member.role)}
                           </div>
@@ -488,7 +488,7 @@ export default function TeamSettingsPage() {
                     <SelectItem key={role} value={role}>
                       <div>
                         <span className="font-medium">{getRoleDisplayName(role)}</span>
-                        <span className="text-gray-500 ml-2">- {getRoleDescription(role)}</span>
+                        <span className="text-muted-foreground ml-2">- {getRoleDescription(role)}</span>
                       </div>
                     </SelectItem>
                   ))}

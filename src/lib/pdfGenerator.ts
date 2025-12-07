@@ -1,6 +1,11 @@
 import { PDFDocument } from 'pdf-lib';
-import type { Assessment, MediaAttachment } from '@/types/traq';
-import { db } from '@/lib/db';
+import type { Assessment, MediaAttachment, AppSettings } from '@/types/traq';
+import { db, initializeSettings } from '@/lib/db';
+
+// VGK Colors (converted to RGB 0-1 range)
+const VGK_GOLD = { r: 180/255, g: 151/255, b: 90/255 };      // #B4975A
+const VGK_STEEL = { r: 51/255, g: 63/255, b: 72/255 };       // #333F48
+const VGK_DARK = { r: 26/255, g: 29/255, b: 33/255 };        // #1A1D21
 
 /**
  * PDF Form Field Mapping
@@ -413,7 +418,8 @@ export async function downloadFilledPDF(assessment: Assessment) {
  */
 export async function generateReportPDF(
   assessment: Assessment,
-  mediaAttachments?: MediaAttachment[]
+  mediaAttachments?: MediaAttachment[],
+  settings?: AppSettings | null
 ): Promise<Uint8Array> {
   try {
     const { StandardFonts, rgb } = await import('pdf-lib');
@@ -443,7 +449,7 @@ export async function generateReportPDF(
     }
   }
 
-  // Draw section header
+  // Draw section header - VGK Gold styling
   function drawSectionHeader(title: string) {
     checkPage(lineHeight * 3);
     y -= lineHeight;
@@ -452,14 +458,14 @@ export async function generateReportPDF(
       y: y - 3,
       width: pageWidth - margin * 2 + 10,
       height: lineHeight + 6,
-      color: rgb(0.1, 0.4, 0.1),
+      color: rgb(VGK_STEEL.r, VGK_STEEL.g, VGK_STEEL.b),
     });
     currentPage.drawText(title.toUpperCase(), {
       x: margin,
       y,
       size: 11,
       font: boldFont,
-      color: rgb(1, 1, 1),
+      color: rgb(VGK_GOLD.r, VGK_GOLD.g, VGK_GOLD.b),
     });
     y -= lineHeight * 1.5;
   }
@@ -473,7 +479,7 @@ export async function generateReportPDF(
       y,
       size: 10,
       font: boldFont,
-      color: rgb(0.2, 0.5, 0.2),
+      color: rgb(VGK_GOLD.r, VGK_GOLD.g, VGK_GOLD.b),
     });
     y -= lineHeight;
   }
@@ -500,7 +506,7 @@ export async function generateReportPDF(
     y -= lineHeight;
   }
 
-  // Draw checkbox field (using ASCII-safe symbols)
+  // Draw checkbox field (using ASCII-safe symbols) - VGK styling
   function drawCheckField(label: string, checked: boolean | undefined, indent = 0) {
     checkPage();
     const symbol = checked ? '[X]' : '[ ]';
@@ -509,7 +515,7 @@ export async function generateReportPDF(
       y,
       size: 9,
       font: font,
-      color: checked ? rgb(0, 0.4, 0) : rgb(0.5, 0.5, 0.5),
+      color: checked ? rgb(VGK_GOLD.r, VGK_GOLD.g, VGK_GOLD.b) : rgb(0.5, 0.5, 0.5),
     });
     y -= lineHeight;
   }
@@ -527,7 +533,7 @@ export async function generateReportPDF(
           y,
           size: 9,
           font: font,
-          color: item.checked ? rgb(0, 0.4, 0) : rgb(0.5, 0.5, 0.5),
+          color: item.checked ? rgb(VGK_GOLD.r, VGK_GOLD.g, VGK_GOLD.b) : rgb(0.5, 0.5, 0.5),
         });
       }
       y -= lineHeight;
@@ -560,14 +566,75 @@ export async function generateReportPDF(
   }
 
   // ============================================
-  // TITLE PAGE
+  // TITLE PAGE WITH COMPANY INFO
   // ============================================
+
+  // Company Header (if settings provided)
+  if (settings?.companyName) {
+    currentPage.drawText(settings.companyName, {
+      x: margin,
+      y,
+      size: 14,
+      font: boldFont,
+      color: rgb(VGK_STEEL.r, VGK_STEEL.g, VGK_STEEL.b),
+    });
+    y -= lineHeight * 1.2;
+
+    if (settings.companyAddress) {
+      const addressLines = settings.companyAddress.split('\n');
+      for (const line of addressLines) {
+        currentPage.drawText(line, {
+          x: margin,
+          y,
+          size: 9,
+          font: font,
+          color: rgb(0.4, 0.4, 0.4),
+        });
+        y -= lineHeight * 0.9;
+      }
+    }
+
+    if (settings.companyPhone || settings.companyEmail) {
+      const contactInfo = [settings.companyPhone, settings.companyEmail].filter(Boolean).join(' | ');
+      currentPage.drawText(contactInfo, {
+        x: margin,
+        y,
+        size: 9,
+        font: font,
+        color: rgb(0.4, 0.4, 0.4),
+      });
+      y -= lineHeight;
+    }
+
+    if (settings.companyLicense) {
+      currentPage.drawText(settings.companyLicense, {
+        x: margin,
+        y,
+        size: 9,
+        font: font,
+        color: rgb(VGK_GOLD.r, VGK_GOLD.g, VGK_GOLD.b),
+      });
+      y -= lineHeight;
+    }
+
+    // Separator line
+    y -= lineHeight;
+    currentPage.drawLine({
+      start: { x: margin, y: y + lineHeight / 2 },
+      end: { x: pageWidth - margin, y: y + lineHeight / 2 },
+      thickness: 2,
+      color: rgb(VGK_GOLD.r, VGK_GOLD.g, VGK_GOLD.b),
+    });
+    y -= lineHeight * 1.5;
+  }
+
+  // Title with VGK styling
   currentPage.drawText('TREE RISK ASSESSMENT', {
     x: margin,
     y,
     size: 24,
     font: boldFont,
-    color: rgb(0.1, 0.4, 0.1),
+    color: rgb(VGK_STEEL.r, VGK_STEEL.g, VGK_STEEL.b),
   });
   y -= lineHeight * 2;
   currentPage.drawText('Comprehensive Report', {
@@ -575,7 +642,7 @@ export async function generateReportPDF(
     y,
     size: 16,
     font: font,
-    color: rgb(0.3, 0.3, 0.3),
+    color: rgb(VGK_GOLD.r, VGK_GOLD.g, VGK_GOLD.b),
   });
   y -= lineHeight * 3;
 
@@ -1084,6 +1151,66 @@ export async function generateReportPDF(
   }
 
   // ============================================
+  // TREE SKETCH
+  // ============================================
+  if (assessment.treeSketch) {
+    drawSectionHeader('Tree Sketch');
+    y -= lineHeight * 0.5;
+
+    try {
+      // Tree sketch is base64 PNG data
+      const sketchData = assessment.treeSketch.split(',')[1]; // Remove data:image/png;base64, prefix
+      const sketchBytes = Uint8Array.from(atob(sketchData), c => c.charCodeAt(0));
+      const sketchImage = await pdfDoc.embedPng(sketchBytes);
+
+      const maxWidth = pageWidth - margin * 2;
+      const maxHeight = 300;
+      const aspectRatio = sketchImage.width / sketchImage.height;
+
+      let sketchWidth = maxWidth;
+      let sketchHeight = sketchWidth / aspectRatio;
+
+      if (sketchHeight > maxHeight) {
+        sketchHeight = maxHeight;
+        sketchWidth = sketchHeight * aspectRatio;
+      }
+
+      // Check if we need a new page
+      if (y - sketchHeight - lineHeight < margin) {
+        addPage();
+      }
+
+      y -= sketchHeight;
+      currentPage.drawImage(sketchImage, {
+        x: margin + (maxWidth - sketchWidth) / 2,
+        y,
+        width: sketchWidth,
+        height: sketchHeight,
+      });
+      y -= lineHeight;
+
+      currentPage.drawText('Annotated tree diagram showing areas of concern', {
+        x: margin,
+        y,
+        size: 8,
+        font: font,
+        color: rgb(0.5, 0.5, 0.5),
+      });
+      y -= lineHeight * 2;
+    } catch (sketchError) {
+      console.warn('Could not embed tree sketch:', sketchError);
+      currentPage.drawText('[Tree sketch could not be rendered]', {
+        x: margin,
+        y,
+        size: 9,
+        font: font,
+        color: rgb(0.5, 0.5, 0.5),
+      });
+      y -= lineHeight * 2;
+    }
+  }
+
+  // ============================================
   // MEDIA ATTACHMENTS
   // ============================================
   if (mediaAttachments && mediaAttachments.length > 0) {
@@ -1511,7 +1638,7 @@ export async function generateReportPDF(
 
 /**
  * Download a comprehensive report PDF with all assessment data and media
- * Fetches media attachments from IndexedDB automatically
+ * Fetches media attachments and settings from IndexedDB automatically
  */
 export async function downloadReportPDF(assessment: Assessment) {
   // Fetch media attachments from IndexedDB
@@ -1525,7 +1652,15 @@ export async function downloadReportPDF(assessment: Assessment) {
     console.warn('Could not fetch media attachments:', error);
   }
 
-  const pdfBytes = await generateReportPDF(assessment, mediaAttachments);
+  // Fetch settings for company info
+  let settings = null;
+  try {
+    settings = await initializeSettings();
+  } catch (error) {
+    console.warn('Could not fetch settings:', error);
+  }
+
+  const pdfBytes = await generateReportPDF(assessment, mediaAttachments, settings);
   const blob = new Blob([new Uint8Array(pdfBytes)], { type: 'application/pdf' });
   const url = URL.createObjectURL(blob);
 

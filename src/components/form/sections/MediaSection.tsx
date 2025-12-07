@@ -55,7 +55,7 @@ export function MediaSection({ assessmentId }: Props) {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600" />
+        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-accent" />
       </div>
     );
   }
@@ -65,7 +65,7 @@ export function MediaSection({ assessmentId }: Props) {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium">Media Attachments</h3>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             Add photos, videos, or documents to your assessment
           </p>
         </div>
@@ -199,7 +199,7 @@ function MediaThumbnail({
     <div className="relative group">
       <button
         onClick={onView}
-        className="w-full aspect-square rounded-lg overflow-hidden bg-gray-100 hover:ring-2 hover:ring-green-500 transition-all"
+        className="w-full aspect-square rounded-lg overflow-hidden bg-muted hover:ring-2 hover:ring-green-500 transition-all"
       >
         {item.type === 'photo' ? (
           <img
@@ -216,7 +216,7 @@ function MediaThumbnail({
           <div className="w-full h-full flex items-center justify-center">
             <div className="text-center">
               <ImageIcon className="h-8 w-8 mx-auto text-gray-400" />
-              <p className="text-xs text-gray-500 mt-1 px-2 truncate">
+              <p className="text-xs text-muted-foreground mt-1 px-2 truncate">
                 {item.filename}
               </p>
             </div>
@@ -262,7 +262,7 @@ function EditCaptionForm({ initialCaption, onSave, onCancel }: EditCaptionFormPr
         <Button variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button onClick={() => onSave(caption)} className="bg-green-600 hover:bg-green-700">
+        <Button onClick={() => onSave(caption)} className="bg-primary hover:bg-primary/90">
           Save
         </Button>
       </div>

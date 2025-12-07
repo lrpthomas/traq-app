@@ -94,12 +94,12 @@ function AuthCallbackHandler() {
           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-6 py-4 rounded-lg mb-4">
             {error}
           </div>
-          <p className="text-gray-500">Redirecting to login...</p>
+          <p className="text-muted-foreground">Redirecting to login...</p>
         </div>
       ) : (
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-green-600 mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-400">Completing sign in...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-accent mx-auto mb-4" />
+          <p className="text-muted-foreground dark:text-gray-400">Completing sign in...</p>
         </div>
       )}
     </div>
@@ -109,8 +109,8 @@ function AuthCallbackHandler() {
 function LoadingFallback() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900">
-      <Loader2 className="h-8 w-8 animate-spin text-green-600 mx-auto mb-4" />
-      <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+      <Loader2 className="h-8 w-8 animate-spin text-accent mx-auto mb-4" />
+      <p className="text-muted-foreground dark:text-gray-400">Loading...</p>
     </div>
   )
 }

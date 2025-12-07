@@ -147,7 +147,7 @@ export function AssessmentForm({ assessmentId }: AssessmentFormProps) {
     return (
       <div className="container py-8">
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600" />
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent" />
         </div>
       </div>
     );
@@ -159,8 +159,8 @@ export function AssessmentForm({ assessmentId }: AssessmentFormProps) {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-1">Error</h3>
-            <p className="text-sm text-gray-500">{error}</p>
+            <h3 className="text-lg font-medium text-foreground mb-1">Error</h3>
+            <p className="text-sm text-muted-foreground">{error}</p>
             <Button
               className="mt-4"
               variant="outline"
@@ -190,10 +190,10 @@ export function AssessmentForm({ assessmentId }: AssessmentFormProps) {
               className={cn(
                 'px-3 py-2 text-xs font-medium rounded-md transition-colors whitespace-nowrap',
                 index === currentSection
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-primary text-primary-foreground'
                   : index < currentSection
-                  ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-accent/20 text-accent-foreground hover:bg-accent/30'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
               )}
             >
               <span className="mr-1">{index + 1}.</span>
@@ -205,15 +205,15 @@ export function AssessmentForm({ assessmentId }: AssessmentFormProps) {
 
       {/* Progress Bar */}
       <div className="mb-6">
-        <div className="flex items-center justify-between text-sm text-gray-500 mb-1">
+        <div className="flex items-center justify-between text-sm text-muted-foreground mb-1">
           <span>
             Section {currentSection + 1} of {SECTIONS.length}
           </span>
           <span>{Math.round(((currentSection + 1) / SECTIONS.length) * 100)}% Complete</span>
         </div>
-        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div className="h-2 bg-muted rounded-full overflow-hidden">
           <div
-            className="h-full bg-green-600 transition-all duration-300"
+            className="h-full bg-accent transition-all duration-300"
             style={{ width: `${((currentSection + 1) / SECTIONS.length) * 100}%` }}
           />
         </div>
@@ -221,12 +221,12 @@ export function AssessmentForm({ assessmentId }: AssessmentFormProps) {
 
       {/* Section Title */}
       <div className="mb-4">
-        <h2 className="text-xl font-bold text-gray-900">{SECTIONS[currentSection].title}</h2>
+        <h2 className="text-xl font-bold text-foreground">{SECTIONS[currentSection].title}</h2>
         {currentSection < 8 && (
-          <p className="text-sm text-gray-500">Page 1 - Field Assessment</p>
+          <p className="text-sm text-muted-foreground">Page 1 - Field Assessment</p>
         )}
         {currentSection >= 8 && (
-          <p className="text-sm text-gray-500">Page 2 - Risk Analysis & Mitigation</p>
+          <p className="text-sm text-muted-foreground">Page 2 - Risk Analysis & Mitigation</p>
         )}
       </div>
 
@@ -248,7 +248,7 @@ export function AssessmentForm({ assessmentId }: AssessmentFormProps) {
       </Card>
 
       {/* Navigation Buttons - Fixed at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-40">
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t shadow-lg z-40">
         <div className="container py-3 flex items-center justify-between gap-2">
           <Button
             variant="outline"
@@ -264,7 +264,7 @@ export function AssessmentForm({ assessmentId }: AssessmentFormProps) {
               variant="outline"
               onClick={handleSave}
               disabled={isSaving}
-              className="text-green-600 border-green-600 hover:bg-green-50"
+              className="text-accent border-accent hover:bg-accent/10"
             >
               <Save className="h-4 w-4 mr-1" />
               {isSaving ? 'Saving...' : 'Save'}
@@ -280,11 +280,11 @@ export function AssessmentForm({ assessmentId }: AssessmentFormProps) {
                 <FileDown className="h-4 w-4 mr-1" />
                 {isExporting ? 'Exporting...' : 'Export'}
               </Button>
-              <div className="absolute bottom-full mb-1 right-0 hidden group-hover:block bg-white border rounded-md shadow-lg min-w-[160px] z-50">
+              <div className="absolute bottom-full mb-1 right-0 hidden group-hover:block bg-popover border rounded-md shadow-lg min-w-[160px] z-50">
                 <button
                   onClick={handleExportPDF}
                   disabled={isExporting}
-                  className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+                  className="w-full px-4 py-2 text-left text-sm hover:bg-muted flex items-center gap-2"
                 >
                   <FileDown className="h-4 w-4" />
                   Fill TRAQ Form
@@ -292,7 +292,7 @@ export function AssessmentForm({ assessmentId }: AssessmentFormProps) {
                 <button
                   onClick={handleExportReport}
                   disabled={isExporting}
-                  className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+                  className="w-full px-4 py-2 text-left text-sm hover:bg-muted flex items-center gap-2"
                 >
                   <FileText className="h-4 w-4" />
                   Generate Report
@@ -303,7 +303,7 @@ export function AssessmentForm({ assessmentId }: AssessmentFormProps) {
             {currentSection === SECTIONS.length - 1 && (
               <Button
                 onClick={handleComplete}
-                className="bg-green-600 hover:bg-green-700"
+                className="bg-primary hover:bg-primary/90"
               >
                 <Check className="h-4 w-4 mr-1" />
                 Complete
@@ -314,7 +314,7 @@ export function AssessmentForm({ assessmentId }: AssessmentFormProps) {
           <Button
             onClick={nextSection}
             disabled={currentSection === SECTIONS.length - 1}
-            className="bg-green-600 hover:bg-green-700"
+            className="bg-primary hover:bg-primary/90"
           >
             Next
             <ChevronRight className="h-4 w-4 ml-1" />

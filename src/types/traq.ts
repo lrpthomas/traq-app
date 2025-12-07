@@ -59,6 +59,9 @@ export interface Assessment {
 
   // Media Attachments (for report)
   mediaIds: string[];
+
+  // Tree Sketch (base64 image data)
+  treeSketch?: string;
 }
 
 // ============ GPS Location (App/Report only) ============
@@ -394,6 +397,13 @@ export interface AppSettings {
   enableMemory: boolean;
   theme: 'light' | 'dark' | 'system';
   assessorName: string; // Pre-fill assessor field
+
+  // Company info for PDF reports
+  companyName?: string;
+  companyAddress?: string;
+  companyPhone?: string;
+  companyEmail?: string;
+  companyLicense?: string;
 }
 
 // ============ Tooltip/Help Content ============

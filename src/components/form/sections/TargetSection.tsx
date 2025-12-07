@@ -24,14 +24,14 @@ interface Props {
 
 export function TargetSection({ assessment, updateField, addTarget, removeTarget }: Props) {
   if (!assessment) {
-    return <div className="animate-pulse h-32 bg-gray-100 rounded" />;
+    return <div className="animate-pulse h-32 bg-muted rounded" />;
   }
   const targets = Array.isArray(assessment.targets) ? assessment.targets : [];
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           Identify up to 4 targets that could be affected by tree failure.
         </p>
         {targets.length < 4 && (
@@ -106,7 +106,7 @@ export function TargetSection({ assessment, updateField, addTarget, removeTarget
                       updateField(`targets.${index}.targetZone.within1xHt`, false);
                       updateField(`targets.${index}.targetZone.within1_5xHt`, false);
                     }}
-                    className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
+                    className="h-4 w-4 text-accent border-gray-300 focus:ring-green-500"
                   />
                   <span className="text-sm">Within Drip Line</span>
                 </label>
@@ -120,7 +120,7 @@ export function TargetSection({ assessment, updateField, addTarget, removeTarget
                       updateField(`targets.${index}.targetZone.within1xHt`, true);
                       updateField(`targets.${index}.targetZone.within1_5xHt`, false);
                     }}
-                    className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
+                    className="h-4 w-4 text-accent border-gray-300 focus:ring-green-500"
                   />
                   <span className="text-sm">Within 1× Height</span>
                 </label>
@@ -134,7 +134,7 @@ export function TargetSection({ assessment, updateField, addTarget, removeTarget
                       updateField(`targets.${index}.targetZone.within1xHt`, false);
                       updateField(`targets.${index}.targetZone.within1_5xHt`, true);
                     }}
-                    className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
+                    className="h-4 w-4 text-accent border-gray-300 focus:ring-green-500"
                   />
                   <span className="text-sm">Within 1.5× Height</span>
                 </label>
