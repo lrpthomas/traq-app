@@ -1,17 +1,20 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '@/lib/db';
 import type { FieldMemory } from '@/types/traq';
+
+const EMPTY_MEMORIES: FieldMemory[] = [];
 
 /**
  * Hook for managing field memory (remembered answers)
  */
 export function useMemory() {
   // Get all memory entries
-  const memories = useLiveQuery(() => db.memory.toArray()) || [];
+  const memoriesQuery = useLiveQuery(() => db.memory.toArray());
+  const memories = useMemo(() => memoriesQuery ?? EMPTY_MEMORIES, [memoriesQuery]);
 
   // Get memory for a specific field
   const getMemory = useCallback(

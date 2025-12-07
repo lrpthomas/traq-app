@@ -66,7 +66,7 @@ const ROLE_ICONS: Record<TeamRole, typeof Crown> = {
 export default function TeamSettingsPage() {
   const router = useRouter()
   const { isAuthenticated } = useAuth()
-  const { currentTeam, currentRole, updateTeam, deleteTeam, canManageTeam, isOwner } = useTeam()
+  const { currentTeam, updateTeam, deleteTeam, canManageTeam, isOwner } = useTeam()
 
   // Team details state
   const [teamName, setTeamName] = useState('')

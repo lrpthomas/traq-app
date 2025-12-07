@@ -47,9 +47,6 @@ const SyncContext = createContext<SyncContextType | undefined>(undefined)
 // Sync interval in milliseconds (5 minutes)
 const SYNC_INTERVAL = 5 * 60 * 1000
 
-// Retry delay for failed syncs (30 seconds)
-const RETRY_DELAY = 30 * 1000
-
 export function SyncProvider({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, user } = useAuth()
   const { currentTeam } = useTeam()
@@ -104,6 +101,7 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
       window.removeEventListener('online', handleOnline)
       window.removeEventListener('offline', handleOffline)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- triggerSync is stable, avoid re-subscribing
   }, [isAuthenticated, user])
 
   // Trigger sync (push only)
@@ -235,8 +233,10 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
-          console.log('Realtime update:', payload)
-          // Could trigger a pull here for the specific assessment
+          // Realtime update received - refresh state to reflect changes
+          if (process.env.NODE_ENV === 'development') {
+            console.log('Realtime update:', payload.eventType)
+          }
           refreshState()
         }
       )

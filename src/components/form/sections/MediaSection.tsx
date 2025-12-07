@@ -122,6 +122,7 @@ export function MediaSection({ assessmentId }: Props) {
           {selectedMedia && (
             <div className="space-y-4">
               {selectedMedia.type === 'photo' && (
+                /* eslint-disable-next-line @next/next/no-img-element -- blob URL from IndexedDB, not suitable for next/image optimization */
                 <img
                   src={getMediaUrl(selectedMedia)}
                   alt={selectedMedia.caption || selectedMedia.filename}
@@ -202,6 +203,7 @@ function MediaThumbnail({
         className="w-full aspect-square rounded-lg overflow-hidden bg-muted hover:ring-2 hover:ring-green-500 transition-all"
       >
         {item.type === 'photo' ? (
+          /* eslint-disable-next-line @next/next/no-img-element -- blob URL from IndexedDB, not suitable for next/image optimization */
           <img
             src={getMediaUrl(item)}
             alt={item.caption || item.filename}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   ChevronLeft,
@@ -49,7 +49,7 @@ interface AssessmentFormProps {
 export function AssessmentForm({ assessmentId }: AssessmentFormProps) {
   const router = useRouter();
   const [currentSection, setCurrentSection] = useState(0);
-  const [autoSaveTimer, setAutoSaveTimer] = useState<NodeJS.Timeout | null>(null);
+  const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [isExporting, setIsExporting] = useState(false);
 
   const {
@@ -69,24 +69,24 @@ export function AssessmentForm({ assessmentId }: AssessmentFormProps) {
     addBranchFailureAssessment,
   } = useAssessment(assessmentId);
 
-  // Auto-save on changes
+  // Auto-save on changes (30 seconds of inactivity)
   useEffect(() => {
     if (!assessment) return;
 
-    if (autoSaveTimer) {
-      clearTimeout(autoSaveTimer);
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
     }
 
-    const timer = setTimeout(() => {
+    autoSaveTimerRef.current = setTimeout(() => {
       save();
-    }, 30000); // Auto-save every 30 seconds of inactivity
-
-    setAutoSaveTimer(timer);
+    }, 30000);
 
     return () => {
-      if (timer) clearTimeout(timer);
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
     };
-  }, [assessment]);
+  }, [assessment, save]);
 
   const handleSave = useCallback(async () => {
     await save();
@@ -276,6 +276,8 @@ export function AssessmentForm({ assessmentId }: AssessmentFormProps) {
                 variant="outline"
                 disabled={isExporting}
                 className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                aria-label="Export assessment options"
+                aria-haspopup="true"
               >
                 <FileDown className="h-4 w-4 mr-1" />
                 {isExporting ? 'Exporting...' : 'Export'}

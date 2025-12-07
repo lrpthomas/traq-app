@@ -4,6 +4,14 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
   Pencil,
   Eraser,
   RotateCcw,
@@ -56,6 +64,7 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
   const [currentPath, setCurrentPath] = useState<Point[]>([]);
   const [startPoint, setStartPoint] = useState<Point | null>(null);
   const [showTemplateMenu, setShowTemplateMenu] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   // Initialize canvas
   useEffect(() => {
@@ -285,9 +294,12 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
   };
 
   const handleClear = () => {
-    if (confirm('Clear the entire sketch?')) {
-      setActions([]);
-    }
+    setShowClearConfirm(true);
+  };
+
+  const confirmClear = () => {
+    setActions([]);
+    setShowClearConfirm(false);
   };
 
   const handleSave = () => {
@@ -393,12 +405,14 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 pb-2 border-b">
           {/* Tools */}
-          <div className="flex gap-1">
+          <div className="flex gap-1" role="toolbar" aria-label="Drawing tools">
             <Button
               variant={tool === 'pen' ? 'default' : 'outline'}
               size="sm"
               onClick={() => setTool('pen')}
               className={tool === 'pen' ? 'bg-primary' : ''}
+              aria-label="Pen tool"
+              aria-pressed={tool === 'pen'}
             >
               <Pencil className="h-4 w-4" />
             </Button>
@@ -407,6 +421,8 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
               size="sm"
               onClick={() => setTool('eraser')}
               className={tool === 'eraser' ? 'bg-primary' : ''}
+              aria-label="Eraser tool"
+              aria-pressed={tool === 'eraser'}
             >
               <Eraser className="h-4 w-4" />
             </Button>
@@ -415,6 +431,8 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
               size="sm"
               onClick={() => setTool('line')}
               className={tool === 'line' ? 'bg-primary' : ''}
+              aria-label="Line tool"
+              aria-pressed={tool === 'line'}
             >
               <Minus className="h-4 w-4" />
             </Button>
@@ -423,6 +441,8 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
               size="sm"
               onClick={() => setTool('circle')}
               className={tool === 'circle' ? 'bg-primary' : ''}
+              aria-label="Circle tool"
+              aria-pressed={tool === 'circle'}
             >
               <Circle className="h-4 w-4" />
             </Button>
@@ -431,6 +451,8 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
               size="sm"
               onClick={() => setTool('rectangle')}
               className={tool === 'rectangle' ? 'bg-primary' : ''}
+              aria-label="Rectangle tool"
+              aria-pressed={tool === 'rectangle'}
             >
               <Square className="h-4 w-4" />
             </Button>
@@ -440,7 +462,7 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
           <div className="w-px h-6 bg-border" />
 
           {/* Colors */}
-          <div className="flex gap-1">
+          <div className="flex gap-1" role="radiogroup" aria-label="Color selection">
             {COLORS.map((c) => (
               <button
                 key={c.value}
@@ -451,6 +473,9 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
                 )}
                 style={{ backgroundColor: c.value }}
                 title={c.name}
+                aria-label={`${c.name} color`}
+                aria-checked={color === c.value}
+                role="radio"
               />
             ))}
           </div>
@@ -459,7 +484,7 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
           <div className="w-px h-6 bg-border" />
 
           {/* Brush Size */}
-          <div className="flex gap-1 items-center">
+          <div className="flex gap-1 items-center" role="radiogroup" aria-label="Brush size">
             {BRUSH_SIZES.map((size) => (
               <button
                 key={size}
@@ -469,6 +494,9 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
                   brushSize === size ? 'border-accent bg-accent/10' : 'border-border'
                 )}
                 title={`${size}px`}
+                aria-label={`${size} pixel brush`}
+                aria-checked={brushSize === size}
+                role="radio"
               >
                 <div
                   className="rounded-full bg-foreground"
@@ -482,16 +510,22 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
           <div className="w-px h-6 bg-border" />
 
           {/* Actions */}
-          <div className="flex gap-1">
+          <div className="flex gap-1" role="toolbar" aria-label="Canvas actions">
             <Button
               variant="outline"
               size="sm"
               onClick={handleUndo}
               disabled={actions.length === 0}
+              aria-label="Undo last action"
             >
               <Undo2 className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="sm" onClick={handleClear}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleClear}
+              aria-label="Clear canvas"
+            >
               <RotateCcw className="h-4 w-4" />
             </Button>
           </div>
@@ -569,6 +603,26 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
           Draw tree defects, crown shape, or annotate areas of concern. Use templates for quick outlines.
         </p>
       </CardContent>
+
+      {/* Clear Confirmation Dialog */}
+      <Dialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle>Clear Sketch</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to clear the entire sketch? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowClearConfirm(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmClear}>
+              Clear
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

@@ -52,6 +52,7 @@ jobs:
             -sdk iphonesimulator \
             -configuration Release \
             -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/DerivedData \
             build \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
@@ -61,8 +62,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ios-build
-          path: ios/App/build/
+          path: ios/App/build/DerivedData/Build/Products/Release-iphonesimulator/
           retention-days: 7
+          if-no-files-found: warn
 
   # Uncomment this job when you have Apple certificates set up
   # build-ios-release:

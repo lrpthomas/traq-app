@@ -18,6 +18,9 @@ const eslintConfig = defineConfig([
     // Minified library files
     "public/**/*.min.mjs",
     "public/**/*.min.js",
+    // Mobile build artifacts
+    "android/**",
+    "ios/**",
   ]),
 ]);
 
