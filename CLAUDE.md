@@ -3,6 +3,38 @@
 ## Overview
 Progressive Web App for Tree Risk Assessment Qualified (TRAQ) form completion based on the ISA Basic Tree Risk Assessment Form (2017). Supports PDF form filling, custom report generation, and offline-first operation.
 
+## Project Management System
+
+This project uses a centralized management system in `.project/`:
+
+```
+.project/
+├── PROJECT_STATUS.yaml    # Single source of truth - update this!
+├── categories.yaml        # Feature categories and modules
+├── schemas/
+│   ├── supabase-schema.sql   # Database schema
+│   └── rls-policies.sql      # Row Level Security policies
+├── templates/
+│   ├── ROADMAP.template.md   # Roadmap generator template
+│   └── env.template          # Environment variables template
+└── scripts/
+    ├── generate-roadmap.js   # Generate ROADMAP.md from status
+    ├── validate-status.js    # Validate PROJECT_STATUS.yaml
+    └── sync-supabase-types.js # Generate TypeScript types from Supabase
+```
+
+### Project Commands
+```bash
+npm run project:status    # Validate PROJECT_STATUS.yaml
+npm run project:roadmap   # Generate ROADMAP.md
+npm run sync:types        # Generate Supabase TypeScript types
+```
+
+### Updating Project Status
+1. Edit `.project/PROJECT_STATUS.yaml` to update features, phases, or blockers
+2. Run `npm run project:status` to validate changes
+3. Run `npm run project:roadmap` to regenerate ROADMAP.md
+
 ## Tech Stack
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript (strict mode)

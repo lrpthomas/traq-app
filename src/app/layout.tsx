@@ -2,6 +2,10 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { TeamProvider } from '@/contexts/TeamContext';
+import { SyncProvider } from '@/contexts/SyncContext';
+import { SyncFloatingIndicator } from '@/components/sync/SyncStatus';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -34,8 +38,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased bg-gray-50`}>
-        <Header />
-        <main className="min-h-[calc(100vh-3.5rem)]">{children}</main>
+        <AuthProvider>
+          <TeamProvider>
+            <SyncProvider>
+              <Header />
+              <main className="min-h-[calc(100vh-3.5rem)]">{children}</main>
+              <SyncFloatingIndicator />
+            </SyncProvider>
+          </TeamProvider>
+        </AuthProvider>
       </body>
     </html>
   );

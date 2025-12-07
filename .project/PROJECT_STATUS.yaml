@@ -1,0 +1,389 @@
+# =============================================================================
+# TRAQ PROJECT STATUS - Single Source of Truth
+# =============================================================================
+# This file drives all project documentation, tracking, and automation.
+# Update this file as the project progresses - docs auto-generate from it.
+# =============================================================================
+
+project:
+  name: TRAQ
+  full_name: Tree Risk Assessment Qualified
+  version: 0.2.0
+  status: in_development
+  started: 2024-01-01
+  target_release: 2025-01-15
+  repository: https://github.com/your-org/traq-app
+
+# =============================================================================
+# TEAM & STAKEHOLDERS
+# =============================================================================
+team:
+  project_manager: Claude Code AI
+  client: Cody Thomas
+  developers: []
+
+# =============================================================================
+# TECH STACK
+# =============================================================================
+stack:
+  frontend:
+    framework: Next.js 16
+    language: TypeScript 5
+    styling: Tailwind CSS 4
+    ui_library: shadcn/ui + Radix UI
+    state: React 19 hooks
+
+  backend:
+    platform: Supabase
+    database: PostgreSQL
+    auth: Supabase Auth
+    storage: Supabase Storage
+    realtime: Supabase Realtime
+
+  mobile:
+    wrapper: Capacitor 7
+    platforms:
+      - ios
+      - android
+    pwa: Serwist 9
+
+  data:
+    offline_db: Dexie.js (IndexedDB)
+    validation: Zod 4
+    pdf: pdf-lib + pdfjs-dist
+
+  testing:
+    unit: Vitest
+    component: React Testing Library
+    e2e: Playwright (planned)
+
+# =============================================================================
+# FEATURES & MODULES
+# =============================================================================
+features:
+  - id: core-assessment
+    name: Core Assessment Form
+    status: complete
+    progress: 100
+    description: ISA 2017 compliant tree risk assessment form with 10 sections
+
+  - id: risk-calculation
+    name: Risk Matrix Calculations
+    status: complete
+    progress: 100
+    description: Two-stage risk calculation engine with full test coverage
+
+  - id: pdf-export
+    name: PDF Export
+    status: complete
+    progress: 100
+    description: Fill official ISA TRAQ PDF form and generate custom reports
+
+  - id: offline-storage
+    name: Offline Data Storage
+    status: complete
+    progress: 100
+    description: IndexedDB persistence via Dexie.js
+
+  - id: field-memory
+    name: Field Memory System
+    status: complete
+    progress: 100
+    description: Remember frequently used field values
+
+  - id: tree-species
+    name: Tree Species Database
+    status: complete
+    progress: 100
+    description: 266 tree species with searchable dropdown
+
+  - id: authentication
+    name: User Authentication
+    status: not_started
+    progress: 0
+    description: Supabase Auth with Email + OAuth (Google, Apple)
+    blockers: []
+
+  - id: cloud-sync
+    name: Cloud Sync
+    status: not_started
+    progress: 0
+    description: Offline-first sync with conflict resolution
+    blockers:
+      - authentication
+
+  - id: team-management
+    name: Team Management
+    status: not_started
+    progress: 0
+    description: Teams, members, roles, and permissions
+    blockers:
+      - authentication
+
+  - id: service-worker
+    name: PWA Service Worker
+    status: not_started
+    progress: 0
+    description: Serwist-based service worker for offline caching
+    blockers: []
+
+  - id: mobile-apps
+    name: Mobile App Deployment
+    status: blocked
+    progress: 20
+    description: iOS and Android apps via Capacitor
+    blockers:
+      - static-export-fix
+      - service-worker
+
+# =============================================================================
+# KNOWN ISSUES & BLOCKERS
+# =============================================================================
+blockers:
+  - id: static-export-fix
+    title: Static Export Missing generateStaticParams
+    severity: critical
+    file: src/app/assessment/[id]/page.tsx
+    description: Dynamic route needs generateStaticParams() for Capacitor builds
+    status: open
+
+  - id: no-auth
+    title: No Authentication System
+    severity: critical
+    description: Application has zero authentication - cannot deploy to production
+    status: open
+
+  - id: alert-ux
+    title: Using browser alert() for errors
+    severity: medium
+    files:
+      - src/components/form/AssessmentForm.tsx
+    description: Should use toast notifications instead of alert()
+    status: open
+
+# =============================================================================
+# TESTING STATUS
+# =============================================================================
+testing:
+  unit_tests:
+    total: 86
+    passing: 86
+    failing: 0
+    coverage_percent: 25
+
+  component_tests:
+    total: 0
+    target: 50
+
+  integration_tests:
+    total: 0
+    target: 15
+
+  e2e_tests:
+    total: 0
+    target: 10
+
+# =============================================================================
+# DEPLOYMENT TARGETS
+# =============================================================================
+deployments:
+  - platform: web
+    name: Web PWA
+    status: ready
+    url: null
+
+  - platform: ios
+    name: iOS App Store
+    status: blocked
+    bundle_id: com.traq.app
+
+  - platform: android
+    name: Google Play Store
+    status: blocked
+    package: com.traq.app
+
+# =============================================================================
+# SPRINT PHASES
+# =============================================================================
+phases:
+  - id: phase-1
+    name: Infrastructure & Architecture
+    status: in_progress
+    week: 1-2
+    tasks:
+      - id: supabase-setup
+        name: Create Supabase project
+        status: not_started
+
+      - id: db-schema
+        name: Create PostgreSQL schema
+        status: not_started
+
+      - id: rls-policies
+        name: Configure Row Level Security
+        status: not_started
+
+      - id: env-setup
+        name: Environment configuration
+        status: not_started
+
+  - id: phase-2
+    name: Authentication System
+    status: not_started
+    week: 2-3
+    tasks:
+      - id: auth-provider
+        name: Create auth context/provider
+        status: not_started
+
+      - id: auth-pages
+        name: Create login/signup pages
+        status: not_started
+
+      - id: auth-middleware
+        name: Implement auth middleware
+        status: not_started
+
+      - id: oauth-setup
+        name: Configure OAuth providers
+        status: not_started
+
+  - id: phase-3
+    name: Team System
+    status: not_started
+    week: 3-4
+    tasks:
+      - id: team-crud
+        name: Team CRUD operations
+        status: not_started
+
+      - id: member-system
+        name: Member invitation system
+        status: not_started
+
+      - id: role-permissions
+        name: Role-based permissions
+        status: not_started
+
+  - id: phase-4
+    name: Cloud Sync
+    status: not_started
+    week: 4-5
+    tasks:
+      - id: sync-queue
+        name: Create sync queue
+        status: not_started
+
+      - id: sync-logic
+        name: Implement sync logic
+        status: not_started
+
+      - id: conflict-resolution
+        name: Conflict resolution UI
+        status: not_started
+
+      - id: media-sync
+        name: Media upload/sync
+        status: not_started
+
+  - id: phase-5
+    name: Mobile Deployment
+    status: not_started
+    week: 5-6
+    tasks:
+      - id: fix-static-export
+        name: Fix static export bug
+        status: not_started
+
+      - id: service-worker
+        name: Implement service worker
+        status: not_started
+
+      - id: native-projects
+        name: Initialize iOS/Android
+        status: not_started
+
+      - id: app-store-submit
+        name: Submit to app stores
+        status: not_started
+
+  - id: phase-6
+    name: Testing & Polish
+    status: not_started
+    week: 6
+    tasks:
+      - id: component-tests
+        name: Add component tests
+        status: not_started
+
+      - id: integration-tests
+        name: Add integration tests
+        status: not_started
+
+      - id: error-handling
+        name: Improve error handling
+        status: not_started
+
+      - id: production-deploy
+        name: Production deployment
+        status: not_started
+
+# =============================================================================
+# SUPABASE CONFIGURATION
+# =============================================================================
+supabase:
+  project_id: pactyosvovffbhhhugox
+  region: us-east-1
+  url: https://pactyosvovffbhhhugox.supabase.co
+
+  tables:
+    - name: users
+      description: User profiles (extends auth.users)
+
+    - name: teams
+      description: Team/organization records
+
+    - name: team_members
+      description: User-Team relationships with roles
+
+    - name: assessments
+      description: Tree risk assessment data
+
+    - name: assessment_targets
+      description: Target zones (1-4 per assessment)
+
+    - name: assessment_risk_rows
+      description: Risk categorization entries
+
+    - name: assessment_mitigations
+      description: Mitigation options (1-4 per assessment)
+
+    - name: media_attachments
+      description: Photo/video references
+
+    - name: field_memories
+      description: Per-field remembered values
+
+    - name: app_settings
+      description: User preferences
+
+    - name: sync_queue
+      description: Offline change tracking
+
+  storage_buckets:
+    - name: assessment-media
+      public: false
+
+  auth:
+    providers:
+      - email
+      - google
+      - apple
+
+# =============================================================================
+# METADATA
+# =============================================================================
+meta:
+  last_updated: 2024-12-04
+  updated_by: Claude Code AI
+  schema_version: 1.0.0

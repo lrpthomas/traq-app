@@ -59,7 +59,7 @@ export default function HomePage() {
       ) : (
         <div className="grid gap-4">
           {assessments.map((assessment) => (
-            <Link key={assessment.id} href={`/assessment/${assessment.id}`}>
+            <Link key={assessment.id} href={`/assessment/edit?id=${assessment.id}`}>
               <Card className="hover:border-green-300 hover:shadow-md transition-all cursor-pointer">
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between">

@@ -10,13 +10,25 @@ const config: CapacitorConfig = {
   plugins: {
     SplashScreen: {
       launchShowDuration: 2000,
+      launchAutoHide: false, // We'll hide manually after init
       backgroundColor: '#16a34a',
-      showSpinner: false,
+      showSpinner: true,
+      spinnerColor: '#ffffff',
+    },
+    StatusBar: {
+      style: 'dark',
+      backgroundColor: '#16a34a',
     },
     Keyboard: {
       resize: 'body',
       style: 'dark',
       resizeOnFullScreen: true,
+    },
+    Camera: {
+      saveToGallery: true,
+    },
+    Geolocation: {
+      enableHighAccuracy: true,
     },
   },
   ios: {

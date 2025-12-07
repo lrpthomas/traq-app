@@ -1,36 +1,145 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TRAQ - Tree Risk Assessment
 
-## Getting Started
+A cross-platform Tree Risk Assessment Qualified (TRAQ) application based on ISA standards. Built with Next.js and Capacitor for web, iOS, and Android deployment.
 
-First, run the development server:
+## Features
+
+- Offline-first architecture with IndexedDB storage
+- Cloud sync with Supabase backend
+- Team collaboration with role-based permissions
+- Photo capture and GPS location tagging
+- Works as PWA, iOS app, and Android app
+
+## Prerequisites
+
+- Node.js 18+
+- npm or yarn
+- Android Studio (for Android builds)
+- Xcode (for iOS builds, macOS only)
+
+## Development
 
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Building for Web
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Standard Next.js build
+npm run build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Static export for hosting
+npm run build:native
+```
 
-## Learn More
+## Building for Mobile
 
-To learn more about Next.js, take a look at the following resources:
+### Android
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# Build static assets
+npm run build:native
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Sync to Android project
+npx cap sync android
 
-## Deploy on Vercel
+# Open in Android Studio
+npx cap open android
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Or run directly (with Android SDK configured)
+npx cap run android
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### iOS (macOS only)
+
+```bash
+# Add iOS platform (first time)
+npx cap add ios
+
+# Build and sync
+npm run build:native
+npx cap sync ios
+
+# Open in Xcode
+npx cap open ios
+```
+
+## Environment Variables
+
+Create `.env.local` with your Supabase credentials:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+## Project Structure
+
+```
+src/
+  app/             # Next.js App Router pages
+  components/      # React components
+    form/          # Assessment form components
+    layout/        # Layout components (Header, etc.)
+    sync/          # Sync status indicators
+    team/          # Team management components
+    ui/            # Shadcn UI components
+  contexts/        # React contexts (Auth, Team, Sync)
+  hooks/           # Custom React hooks
+  lib/
+    db/            # IndexedDB/Dexie setup
+    native/        # Capacitor plugin wrappers
+    supabase/      # Supabase client
+  services/        # Business logic (sync, team)
+  types/           # TypeScript type definitions
+
+android/           # Android native project
+ios/              # iOS native project (after cap add ios)
+resources/        # Source icons for asset generation
+```
+
+## Capacitor Plugins
+
+- @capacitor/camera - Photo capture
+- @capacitor/filesystem - File storage
+- @capacitor/geolocation - GPS location
+- @capacitor/preferences - Key-value storage
+- @capacitor/splash-screen - App splash screen
+- @capacitor/status-bar - Status bar styling
+
+## Scripts
+
+| Script | Description |
+|--------|-------------|
+| `dev` | Start development server |
+| `build` | Production build |
+| `build:native` | Static export for Capacitor |
+| `lint` | Run ESLint |
+
+## Database Schema
+
+The app uses Supabase with these main tables:
+- `profiles` - User profiles
+- `teams` - Team organizations
+- `team_members` - Team membership with roles
+- `team_invites` - Pending invitations
+- `assessments` - Tree assessments (header data)
+- `assessment_targets` - Target information
+- `assessment_tree_health` - Tree health observations
+- `assessment_site_factors` - Site conditions
+- `assessment_load_factors` - Load analysis
+- `assessment_risk_ratings` - Risk calculations
+- `photos` - Photo attachments
+
+All tables have Row Level Security (RLS) policies for team-based access control.
+
+## License
+
+Private - All rights reserved

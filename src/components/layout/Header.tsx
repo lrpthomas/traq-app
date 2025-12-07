@@ -2,11 +2,22 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { TreeDeciduous, Plus, List, Settings, Menu } from 'lucide-react';
-import { useState, useSyncExternalStore } from 'react';
+import { TreeDeciduous, Plus, List, Settings, Menu, LogOut, User } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { TeamSelector } from '@/components/team/TeamSelector';
+import { SyncStatus } from '@/components/sync/SyncStatus';
+import { useAuth } from '@/hooks/useAuth';
 
 const navItems = [
   { href: '/', label: 'Assessments', icon: List },
@@ -17,6 +28,7 @@ const navItems = [
 export function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isAuthenticated, profile, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -49,14 +61,22 @@ export function Header() {
           })}
         </nav>
 
-        {/* Offline Indicator */}
-        <div className="hidden md:flex items-center gap-2 ml-auto">
-          <OfflineIndicator />
+        {/* Desktop Right Section */}
+        <div className="hidden md:flex items-center gap-3 ml-auto">
+          <SyncStatus variant="compact" />
+          <TeamSelector />
+          {isAuthenticated && (
+            <UserMenu
+              displayName={profile?.display_name || profile?.email || 'User'}
+              onSignOut={signOut}
+            />
+          )}
         </div>
 
         {/* Mobile Menu */}
         <div className="md:hidden ml-auto flex items-center gap-2">
-          <OfflineIndicator />
+          <SyncStatus variant="compact" />
+          <TeamSelector />
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -87,6 +107,23 @@ export function Header() {
                     </Link>
                   );
                 })}
+
+                {/* Mobile Sign Out */}
+                {isAuthenticated && (
+                  <>
+                    <div className="border-t my-2" />
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        signOut();
+                      }}
+                      className="flex items-center gap-3 text-sm font-medium py-2 px-3 rounded-md transition-colors hover:bg-muted text-red-600"
+                    >
+                      <LogOut className="h-5 w-5" />
+                      Sign Out
+                    </button>
+                  </>
+                )}
               </nav>
             </SheetContent>
           </Sheet>
@@ -96,36 +133,42 @@ export function Header() {
   );
 }
 
-function subscribeToOnlineStatus(callback: () => void) {
-  window.addEventListener('online', callback);
-  window.addEventListener('offline', callback);
-  return () => {
-    window.removeEventListener('online', callback);
-    window.removeEventListener('offline', callback);
-  };
+interface UserMenuProps {
+  displayName: string;
+  onSignOut: () => void;
 }
 
-function getOnlineStatus() {
-  return navigator.onLine;
-}
-
-function getServerSnapshot() {
-  return true; // Assume online during SSR
-}
-
-function OfflineIndicator() {
-  const isOnline = useSyncExternalStore(
-    subscribeToOnlineStatus,
-    getOnlineStatus,
-    getServerSnapshot
-  );
-
-  if (isOnline) return null;
-
+function UserMenu({ displayName, onSignOut }: UserMenuProps) {
   return (
-    <div className="flex items-center gap-1 text-xs text-amber-600 bg-amber-100 px-2 py-1 rounded">
-      <span className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
-      Offline
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="sm" className="gap-2">
+          <div className="w-7 h-7 rounded-full bg-green-100 flex items-center justify-center">
+            <User className="h-4 w-4 text-green-600" />
+          </div>
+          <span className="max-w-[100px] truncate hidden lg:inline">
+            {displayName}
+          </span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuLabel className="truncate">{displayName}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/settings" className="gap-2">
+            <Settings className="h-4 w-4" />
+            Settings
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={onSignOut}
+          className="gap-2 text-red-600 focus:text-red-600"
+        >
+          <LogOut className="h-4 w-4" />
+          Sign Out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

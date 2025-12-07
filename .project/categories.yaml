@@ -1,0 +1,270 @@
+# =============================================================================
+# TRAQ Feature Categories & Modules
+# =============================================================================
+# Defines the feature domains, their prefixes, and module structure
+# Used for organizing code, generating docs, and tracking progress
+# =============================================================================
+
+categories:
+  # ===========================================================================
+  # CORE FEATURES (Existing)
+  # ===========================================================================
+  - id: core
+    name: Core Assessment
+    prefix: core
+    icon: "📋"
+    description: ISA 2017 tree risk assessment form and calculations
+    status: complete
+    modules:
+      - id: form
+        name: Assessment Form
+        path: src/components/form
+        status: complete
+
+      - id: risk-matrix
+        name: Risk Calculations
+        path: src/lib/riskMatrix.ts
+        status: complete
+
+      - id: validation
+        name: Form Validation
+        path: src/lib/validation.ts
+        status: complete
+
+      - id: types
+        name: Type Definitions
+        path: src/types/traq.ts
+        status: complete
+
+  - id: data
+    name: Data Management
+    prefix: data
+    icon: "💾"
+    description: Offline storage, species data, and field memory
+    status: complete
+    modules:
+      - id: database
+        name: IndexedDB (Dexie)
+        path: src/lib/db
+        status: complete
+
+      - id: species
+        name: Tree Species
+        path: src/data/tree-species.csv
+        status: complete
+
+      - id: memory
+        name: Field Memory
+        path: src/hooks/useMemory.ts
+        status: complete
+
+  - id: export
+    name: Export & Reports
+    prefix: export
+    icon: "📄"
+    description: PDF generation and form filling
+    status: complete
+    modules:
+      - id: pdf-fill
+        name: PDF Form Filling
+        path: src/lib/pdfGenerator.ts
+        status: complete
+
+      - id: pdf-report
+        name: Custom Reports
+        path: src/components/report
+        status: partial
+
+  # ===========================================================================
+  # AUTH FEATURES (New)
+  # ===========================================================================
+  - id: auth
+    name: Authentication
+    prefix: auth
+    icon: "🔐"
+    description: User authentication and session management
+    status: not_started
+    modules:
+      - id: provider
+        name: Auth Provider
+        path: src/lib/supabase/client.ts
+        status: not_started
+
+      - id: middleware
+        name: Auth Middleware
+        path: src/middleware.ts
+        status: not_started
+
+      - id: pages
+        name: Auth Pages
+        path: src/app/(auth)
+        status: not_started
+
+      - id: hooks
+        name: Auth Hooks
+        path: src/hooks/useAuth.ts
+        status: not_started
+
+  # ===========================================================================
+  # TEAM FEATURES (New)
+  # ===========================================================================
+  - id: team
+    name: Team Management
+    prefix: team
+    icon: "👥"
+    description: Teams, members, roles, and permissions
+    status: not_started
+    modules:
+      - id: crud
+        name: Team CRUD
+        path: src/hooks/useTeam.ts
+        status: not_started
+
+      - id: members
+        name: Member Management
+        path: src/hooks/useTeamMembers.ts
+        status: not_started
+
+      - id: permissions
+        name: Permissions
+        path: src/lib/permissions.ts
+        status: not_started
+
+      - id: pages
+        name: Team Pages
+        path: src/app/(protected)/team
+        status: not_started
+
+  # ===========================================================================
+  # SYNC FEATURES (New)
+  # ===========================================================================
+  - id: sync
+    name: Cloud Sync
+    prefix: sync
+    icon: "☁️"
+    description: Offline-first sync with conflict resolution
+    status: not_started
+    modules:
+      - id: queue
+        name: Sync Queue
+        path: src/lib/sync/queue.ts
+        status: not_started
+
+      - id: manager
+        name: Sync Manager
+        path: src/hooks/useSyncQueue.ts
+        status: not_started
+
+      - id: conflicts
+        name: Conflict Resolution
+        path: src/lib/sync/conflicts.ts
+        status: not_started
+
+      - id: media
+        name: Media Sync
+        path: src/lib/sync/media.ts
+        status: not_started
+
+  # ===========================================================================
+  # MOBILE FEATURES (New)
+  # ===========================================================================
+  - id: mobile
+    name: Mobile & PWA
+    prefix: mobile
+    icon: "📱"
+    description: Service worker, native apps, and PWA features
+    status: blocked
+    modules:
+      - id: service-worker
+        name: Service Worker
+        path: src/sw.ts
+        status: not_started
+
+      - id: capacitor
+        name: Capacitor Config
+        path: capacitor.config.ts
+        status: partial
+
+      - id: ios
+        name: iOS App
+        path: ios/
+        status: not_started
+
+      - id: android
+        name: Android App
+        path: android/
+        status: not_started
+
+  # ===========================================================================
+  # UI COMPONENTS
+  # ===========================================================================
+  - id: ui
+    name: UI Components
+    prefix: ui
+    icon: "🎨"
+    description: Reusable UI components and layout
+    status: complete
+    modules:
+      - id: shadcn
+        name: shadcn/ui Components
+        path: src/components/ui
+        status: complete
+
+      - id: layout
+        name: Layout Components
+        path: src/components/layout
+        status: complete
+
+      - id: form-fields
+        name: Form Field Components
+        path: src/components/form
+        status: complete
+
+# =============================================================================
+# FILE NAMING CONVENTIONS
+# =============================================================================
+conventions:
+  components:
+    pattern: PascalCase
+    example: AssessmentForm.tsx
+    location: src/components/{category}/
+
+  hooks:
+    pattern: camelCase with use prefix
+    example: useAssessment.ts
+    location: src/hooks/
+
+  lib:
+    pattern: camelCase
+    example: riskMatrix.ts
+    location: src/lib/
+
+  types:
+    pattern: camelCase
+    example: traq.ts
+    location: src/types/
+
+  pages:
+    pattern: lowercase with brackets for dynamic
+    example: "[id]/page.tsx"
+    location: src/app/
+
+# =============================================================================
+# MODULE DEPENDENCIES
+# =============================================================================
+dependencies:
+  auth:
+    requires: []
+    unlocks: [team, sync]
+
+  team:
+    requires: [auth]
+    unlocks: []
+
+  sync:
+    requires: [auth]
+    unlocks: [mobile]
+
+  mobile:
+    requires: [sync]
+    unlocks: []
