@@ -120,6 +120,7 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
   // Load teams on auth change
   useEffect(() => {
     if (!authLoading) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- valid data loading pattern
       loadTeams()
     }
   }, [authLoading, loadTeams])

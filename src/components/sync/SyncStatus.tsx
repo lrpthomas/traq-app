@@ -7,6 +7,7 @@
  * Can be placed in header or as a floating indicator
  */
 
+import { useMemo, useState, useEffect } from 'react'
 import { useSync } from '@/hooks/useSync'
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/button'
@@ -43,6 +44,26 @@ export function SyncStatus({ variant = 'compact', className }: SyncStatusProps) 
     triggerSync,
   } = useSync()
 
+  // Use state for current time to avoid impure Date.now() during render
+  const [currentTime, setCurrentTime] = useState(() => Date.now())
+
+  // Update time every minute for relative time display
+  useEffect(() => {
+    const interval = setInterval(() => setCurrentTime(Date.now()), 60000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const lastSyncText = useMemo(() => {
+    if (!lastSyncedAt) return 'Never synced'
+    const diff = currentTime - lastSyncedAt.getTime()
+    const minutes = Math.floor(diff / 60000)
+    if (minutes < 1) return 'Just now'
+    if (minutes < 60) return `${minutes}m ago`
+    const hours = Math.floor(minutes / 60)
+    if (hours < 24) return `${hours}h ago`
+    return lastSyncedAt.toLocaleDateString()
+  }, [lastSyncedAt, currentTime])
+
   if (!isAuthenticated) return null
 
   const getStatusIcon = () => {
@@ -69,17 +90,6 @@ export function SyncStatus({ variant = 'compact', className }: SyncStatusProps) 
     return 'Synced'
   }
 
-  const getLastSyncText = () => {
-    if (!lastSyncedAt) return 'Never synced'
-    const diff = Date.now() - lastSyncedAt.getTime()
-    const minutes = Math.floor(diff / 60000)
-    if (minutes < 1) return 'Just now'
-    if (minutes < 60) return `${minutes}m ago`
-    const hours = Math.floor(minutes / 60)
-    if (hours < 24) return `${hours}h ago`
-    return lastSyncedAt.toLocaleDateString()
-  }
-
   if (variant === 'compact') {
     return (
       <TooltipProvider>
@@ -103,7 +113,7 @@ export function SyncStatus({ variant = 'compact', className }: SyncStatusProps) 
           <TooltipContent>
             <div className="text-sm">
               <p className="font-medium">{getStatusText()}</p>
-              <p className="text-gray-500">{getLastSyncText()}</p>
+              <p className="text-gray-500">{lastSyncText}</p>
               {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
             </div>
           </TooltipContent>
@@ -119,7 +129,7 @@ export function SyncStatus({ variant = 'compact', className }: SyncStatusProps) 
         {getStatusIcon()}
         <div>
           <p className="text-sm font-medium">{getStatusText()}</p>
-          <p className="text-xs text-gray-500">{getLastSyncText()}</p>
+          <p className="text-xs text-gray-500">{lastSyncText}</p>
         </div>
       </div>
 

@@ -5,7 +5,7 @@ import { db, initializeSettings } from '@/lib/db';
 // VGK Colors (converted to RGB 0-1 range)
 const VGK_GOLD = { r: 180/255, g: 151/255, b: 90/255 };      // #B4975A
 const VGK_STEEL = { r: 51/255, g: 63/255, b: 72/255 };       // #333F48
-const VGK_DARK = { r: 26/255, g: 29/255, b: 33/255 };        // #1A1D21
+const _VGK_DARK = { r: 26/255, g: 29/255, b: 33/255 };       // #1A1D21 (reserved for future use)
 
 /**
  * PDF Form Field Mapping

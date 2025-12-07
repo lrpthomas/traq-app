@@ -11,10 +11,8 @@ import {
   Circle,
   Square,
   Minus,
-  Type,
   TreeDeciduous,
   Undo2,
-  Palette,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -86,11 +84,6 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
     }
   }, [height, initialData]);
 
-  // Redraw canvas when actions change
-  useEffect(() => {
-    redrawCanvas();
-  }, [actions]);
-
   const redrawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -153,6 +146,11 @@ export function TreeSketch({ initialData, onSave, height = 400 }: TreeSketchProp
       }
     });
   }, [actions]);
+
+  // Redraw canvas when actions change
+  useEffect(() => {
+    redrawCanvas();
+  }, [actions, redrawCanvas]);
 
   const getCanvasPoint = (e: React.MouseEvent | React.TouchEvent): Point => {
     const canvas = canvasRef.current;

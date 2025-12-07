@@ -3,7 +3,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { db, initializeSettings } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import type { AppSettings } from '@/types/traq';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -39,8 +38,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const theme = (settings?.theme as Theme) || 'system';
 
-  // Detect system theme
+  // Detect system theme and track mount state
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- valid mount detection pattern
     setMounted(true);
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
