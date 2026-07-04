@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '@/lib/db';
+import { useSync } from '@/contexts/SyncContext';
 import type {
   Assessment,
   TargetAssessment,
@@ -361,6 +362,12 @@ export function useAssessment(assessmentId?: string) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { queueAssessment } = useSync();
+
+  // TRAQ-BRIDGE-001: a fresh assessment syncs as 'create' on its first
+  // save, 'update' after (the queue's merge logic makes an over-eager
+  // 'update' safe).
+  const isNewRef = useRef(!assessmentId);
 
   // Load assessment from database
   useEffect(() => {
@@ -424,7 +431,10 @@ export function useAssessment(assessmentId?: string) {
     });
   }, []);
 
-  // Save assessment to database
+  // Save assessment to the local database (durably), then queue the
+  // cloud sync (TRAQ-BRIDGE-001). Ordering is deliberate: the enqueue
+  // only runs after the IndexedDB put resolves, and neither failure
+  // mode is silent.
   const save = useCallback(async () => {
     if (!assessment) return;
 
@@ -435,11 +445,25 @@ export function useAssessment(assessmentId?: string) {
       assessment.updatedAt = new Date();
       await db.assessments.put(assessment);
     } catch (err) {
+      // Not durable — do NOT enqueue a sync for data that isn't saved.
       setError(err instanceof Error ? err.message : 'Failed to save assessment');
+      setIsSaving(false);
+      return;
+    }
+
+    try {
+      queueAssessment(assessment, isNewRef.current ? 'create' : 'update');
+      isNewRef.current = false;
+    } catch {
+      // The assessment IS saved on-device; surface the queueing failure
+      // (e.g. storage quota) — the next save retries the enqueue.
+      setError(
+        'Saved on this device, but queueing cloud sync failed — it will retry on your next save'
+      );
     } finally {
       setIsSaving(false);
     }
-  }, [assessment]);
+  }, [assessment, queueAssessment]);
 
   // Mark as complete
   const complete = useCallback(async () => {

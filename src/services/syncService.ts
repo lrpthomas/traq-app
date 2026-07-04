@@ -55,7 +55,7 @@ export interface ConflictInfo {
 const SYNC_QUEUE_KEY = 'traq-sync-queue'
 const LAST_SYNC_KEY = 'traq-last-sync'
 
-function getSyncQueue(): SyncQueueItem[] {
+export function getSyncQueue(): SyncQueueItem[] {
   if (typeof window === 'undefined') return []
   const data = localStorage.getItem(SYNC_QUEUE_KEY)
   if (!data) return []
@@ -129,6 +129,19 @@ function updateQueueItem(itemId: string, updates: Partial<SyncQueueItem>): void 
 // =============================================================================
 
 /**
+ * Normalize a Date that may have round-tripped through the JSON sync
+ * queue into an ISO string (TRAQ-BRIDGE-001: queue items are
+ * JSON.parsed from localStorage, so Date fields arrive as strings —
+ * calling .toISOString() on them threw, which made every queued
+ * assessment fail sync forever).
+ */
+function toIso(value: Date | string | null | undefined): string | null {
+  if (value == null) return null
+  const date = value instanceof Date ? value : new Date(value)
+  return isNaN(date.getTime()) ? null : date.toISOString()
+}
+
+/**
  * Convert local Assessment to Supabase format (flattened)
  */
 export function localToCloud(
@@ -153,7 +166,7 @@ export function localToCloud(
     gps_longitude: local.gpsLocation?.longitude ?? null,
     gps_address: local.gpsLocation?.address ?? null,
     gps_accuracy: local.gpsLocation?.accuracy ?? null,
-    gps_timestamp: local.gpsLocation?.timestamp?.toISOString() ?? null,
+    gps_timestamp: toIso(local.gpsLocation?.timestamp),
 
     // Header
     header_client: local.header.client,
@@ -247,7 +260,7 @@ export function localToCloud(
     notes: local.notes || null,
 
     // Timestamps
-    local_updated_at: local.updatedAt.toISOString(),
+    local_updated_at: toIso(local.updatedAt) ?? new Date().toISOString(),
   }
 
   // Targets
@@ -399,62 +412,40 @@ async function syncAssessment(
     assessment, userId, teamId
   )
 
-  if (item.operation === 'create') {
-    // Insert assessment
-    const { error: assessmentError } = await supabase
-      .from('assessments')
-      .insert(cloudData as never)
+  // One idempotent write path for create AND update (TRAQ-BRIDGE-001):
+  // - upsert(onConflict:'id') makes replays converge — a retried partial
+  //   create no longer dies on duplicate-key, and an update that arrives
+  //   before its create materializes the row instead of silently
+  //   updating 0 rows.
+  // - children are delete-then-reinsert on both paths, with errors
+  //   checked (the old update path swallowed them — a partial write
+  //   could be reported as synced).
+  const { error: assessmentError } = await supabase
+    .from('assessments')
+    .upsert(cloudData as never, { onConflict: 'id' })
 
-    if (assessmentError) throw assessmentError
+  if (assessmentError) throw assessmentError
 
-    // Insert targets
-    if (targets.length > 0) {
-      const { error: targetsError } = await supabase
-        .from('assessment_targets')
-        .insert(targets as never[])
+  const childTables = [
+    { table: 'assessment_targets', rows: targets },
+    { table: 'assessment_risk_rows', rows: riskRows },
+    { table: 'assessment_mitigations', rows: mitigations },
+  ] as const
 
-      if (targetsError) throw targetsError
-    }
+  for (const { table, rows } of childTables) {
+    const { error: deleteError } = await supabase
+      .from(table)
+      .delete()
+      .eq('assessment_id', item.entityId)
 
-    // Insert risk rows
-    if (riskRows.length > 0) {
-      const { error: riskError } = await supabase
-        .from('assessment_risk_rows')
-        .insert(riskRows as never[])
+    if (deleteError) throw deleteError
 
-      if (riskError) throw riskError
-    }
+    if (rows.length > 0) {
+      const { error: insertError } = await supabase
+        .from(table)
+        .insert(rows as never[])
 
-    // Insert mitigations
-    if (mitigations.length > 0) {
-      const { error: mitigationError } = await supabase
-        .from('assessment_mitigations')
-        .insert(mitigations as never[])
-
-      if (mitigationError) throw mitigationError
-    }
-  } else {
-    // Update - delete related and re-insert
-    const { error: assessmentError } = await supabase
-      .from('assessments')
-      .update(cloudData as never)
-      .eq('id', item.entityId)
-
-    if (assessmentError) throw assessmentError
-
-    // Delete and re-insert related data
-    await supabase.from('assessment_targets').delete().eq('assessment_id', item.entityId)
-    await supabase.from('assessment_risk_rows').delete().eq('assessment_id', item.entityId)
-    await supabase.from('assessment_mitigations').delete().eq('assessment_id', item.entityId)
-
-    if (targets.length > 0) {
-      await supabase.from('assessment_targets').insert(targets as never[])
-    }
-    if (riskRows.length > 0) {
-      await supabase.from('assessment_risk_rows').insert(riskRows as never[])
-    }
-    if (mitigations.length > 0) {
-      await supabase.from('assessment_mitigations').insert(mitigations as never[])
+      if (insertError) throw insertError
     }
   }
 
