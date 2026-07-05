@@ -60,8 +60,30 @@ export interface Assessment {
   // Media Attachments (for report)
   mediaIds: string[];
 
+  // CanopyGIS mirror-on-sync status (TRAQ-BRIDGE-004; written by
+  // src/services/mirrorService.ts after each cloud sync)
+  mirror?: MirrorStatus;
+
   // Tree Sketch (base64 image data)
   treeSketch?: string;
+}
+
+// ============ CanopyGIS Mirror Status (TRAQ-BRIDGE-004) ============
+export type MirrorState =
+  | 'mirrored'
+  | 'needs_location'
+  | 'not_linked'
+  | 'not_configured'
+  | 'conflict'
+  | 'unauthorized'
+  | 'error';
+
+export interface MirrorStatus {
+  state: MirrorState;
+  featureId?: string;
+  geoSource?: string;
+  detail?: string;
+  ts: string; // ISO timestamp of the last mirror attempt
 }
 
 // ============ GPS Location (App/Report only) ============
