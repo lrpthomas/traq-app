@@ -7,6 +7,7 @@
 
 import { db } from '@/lib/db'
 import { getSupabaseClient } from '@/lib/supabase/client'
+import { mirrorAssessment } from './mirrorService'
 import type { Assessment, MediaAttachment } from '@/types/traq'
 import type {
   Assessment as DbAssessment,
@@ -360,6 +361,15 @@ export async function processQueue(
     try {
       if (item.entityType === 'assessment') {
         await syncAssessment(supabase, item, userId, teamId)
+
+        // Mirror-on-sync (TRAQ-BRIDGE-004): after the TRAQ cloud write
+        // succeeds, best-effort mirror to the CanopyGIS map. The mirror
+        // NEVER fails the primary sync — every outcome is recorded on
+        // the assessment as `mirror` and replays are idempotent
+        // server-side, so the next sync retries naturally.
+        if (item.operation !== 'delete') {
+          await mirrorAssessment(item.entityData as Assessment).catch(() => undefined)
+        }
       } else if (item.entityType === 'media') {
         await syncMedia(supabase, item, userId)
       }
